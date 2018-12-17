@@ -1,0 +1,2 @@
+https://github.com/speedruncomorg/api
+https://github.com/speedruncomorg/api/blob/master/version1/embedding.md

@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "b1822e72-f32f-470a-a292-50d32202708f",
+		"name": "speedrun.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "IndexAPI",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lastests runs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc&embed=game",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"runs"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "verified"
+						},
+						{
+							"key": "orderby",
+							"value": "verify-date"
+						},
+						{
+							"key": "direction",
+							"value": "desc"
+						},
+						{
+							"key": "embed",
+							"value": "game"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Series",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/series",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Runs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/runs",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"runs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Platforms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/platforms",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"platforms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Regions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/regions",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"regions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/users",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Games",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://www.speedrun.com/api/v1/games",
+					"protocol": "https",
+					"host": [
+						"www",
+						"speedrun",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"games"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
