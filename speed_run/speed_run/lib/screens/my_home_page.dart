@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:speed_run/screens/runs_navigation_screen.dart';
+import 'package:speed_run/utils/colors.dart' as colors;
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -59,15 +60,26 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),*/
-      bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
+      bottomNavigationBar: new Theme(
+          data: Theme.of(context).copyWith(
+            // sets the background color of the `BottomNavigationBar`
+              canvasColor: colors.blackDark,
+              // sets the active color of the `BottomNavigationBar` if `Brightness` is light
+              primaryColor: colors.greenAccent,
+              textTheme: Theme
+                  .of(context)
+                  .textTheme
+                  .copyWith(caption: new TextStyle(color: Colors.white))),
+          child: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.directions_run), title: Text('Runs')),
             BottomNavigationBarItem(icon: Icon(Icons.games), title: Text('Games')),
             BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle), title: Text('Users'))
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onMenuSelected,
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onMenuSelected,
+          )
+      )// This trailing comma makes auto-formatting nicer for build methods.)
     );
   }
 
