@@ -41,7 +41,7 @@ class _RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterL
           key: _refreshIndicatorKey,
           child: ListView.builder(
             itemCount: runs.length,
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 4.0),
             itemBuilder: (BuildContext context, int index) {
               var run = runs[index];
               return RunItemView(run);
