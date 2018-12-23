@@ -1,25 +1,25 @@
 
 import 'package:flutter/material.dart';
-import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/after_layout.dart';
-import 'package:speed_run/view_items/item_view_run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/view_items/item_view_game.dart';
 
-class RunsNavigationScreen extends StatefulWidget{
+class GamesNavigationScreen extends StatefulWidget{
 
-  var runs = List<Run>();
+  var games = List<Game>();
   var _loadingItems = false;
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _RunsNavigationScreenState();
+    return _GamesNavigationScreenState();
   }
 
 }
 
-class _RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLayoutMixin<RunsNavigationScreen>{
+class _GamesNavigationScreenState extends State<GamesNavigationScreen> with AfterLayoutMixin<GamesNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   ScrollController _scrollController;
@@ -31,27 +31,27 @@ class _RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterL
   }
 
   Future _onRefresh(){
-    return _getRuns(clearList: true);
+    return _getGames(clearList: true);
   }
 
   void _loadNextItems(){
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.runs.length > 10) {
-      _getRuns();
+    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.games.length > 10) {
+      _getGames();
     }
   }
 
-  Future _getRuns({clearList = false}){
+  Future _getGames({clearList = false}){
     widget._loadingItems = true;
-    var future= RestAPI.instance.getRuns(
-        offset: widget.runs.length,
-        onSuccess:(runs){
+    var future= RestAPI.instance.getGames(
+        offset: widget.games.length,
+        onSuccess:(games){
           if(mounted){
             setState(() {
               if(clearList){
-                this.widget.runs.clear();
+                this.widget.games.clear();
               }
-              this.widget.runs.addAll(runs);
+              this.widget.games.addAll(games);
             });
           }
           widget._loadingItems = false;
@@ -71,15 +71,23 @@ class _RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterL
       child: Center(
         child: RefreshIndicator(
           key: _refreshIndicatorKey,
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: widget.runs.length,
-            padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-            itemBuilder: (BuildContext context, int index) {
-              var run = widget.runs[index];
-              final isLastElement = index >= widget.runs.length-1;
-              return RunItemView(run,isLastElement);
-            },
+          child: OrientationBuilder(
+              builder: (context,orientation){
+                return GridView.builder(
+                  controller: _scrollController,
+                  itemCount: widget.games.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
+                    childAspectRatio: 0.6,
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 4.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    var item = widget.games[index];
+                    final isLastElement = index >= widget.games.length-1;
+                    return GameItemView(item,isLastElement);
+                  },
+                );
+              }
           ),
           onRefresh: _onRefresh,
         )
@@ -93,7 +101,7 @@ class _RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterL
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if(widget.runs.length == 0){
+    if(widget.games.length == 0){
       _refreshIndicatorKey.currentState.show();
     }
   }

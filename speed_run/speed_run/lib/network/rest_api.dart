@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,7 +31,19 @@ class RestAPI{
     else{
       onError(ResponseError(response));
     }
+  }
 
+  Future getGames({int offset,Function(List<Game>) onSuccess,Function(ResponseError) onError}) async{
+    final response = await http.get("${urlApi}games?offset=$offset");
+    if(response.statusCode == HttpStatus.ok){
+      var json = jsonDecode(response.body);
+      var jsonData = json["data"] as List;
+      var runs = jsonData.map((model)=> Game.fromJson(model)).toList();
+      onSuccess(runs);
+    }
+    else{
+      onError(ResponseError(response));
+    }
   }
 
 }

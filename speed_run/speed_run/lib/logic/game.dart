@@ -30,4 +30,8 @@ class Game{
         Asset.fromJson(json["assets"]["cover-large"])
     );
   }
+
+  String get name{
+    return names?.international ?? "";
+  }
 }

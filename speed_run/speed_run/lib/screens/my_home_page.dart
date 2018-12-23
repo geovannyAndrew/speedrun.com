@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:speed_run/screens/games_navigation_screen.dart';
 import 'package:speed_run/screens/runs_navigation_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
@@ -26,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   final _widgetOptions = [
     RunsNavigationScreen(),
-    Text('Index 1: Games'),
+    GamesNavigationScreen(),
     Text('Index 2: Users'),
   ];
 
