@@ -22,7 +22,7 @@ class RunItemView extends StatelessWidget{
               ClipRRect(
                 borderRadius: BorderRadius.circular(4.0),
                 child: Image.network(
-                    "https://www.speedrun.com/themes/battletoads_nes/cover-128.png",
+                    _run.game?.coverLarge?.uri ?? "",
                     width: 80.0,
                     height: 80.0,
                     fit:BoxFit.cover),
@@ -36,22 +36,26 @@ class RunItemView extends StatelessWidget{
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Text("Name Game",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.0
+                          Expanded(
+                            child: Text(_run?.game?.names?.international,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0
+                              ),
                             ),
                           )
                         ],
                       ),
                       Row(
                         children: <Widget>[
-                          Text(
-                            "Category Run Game Any %",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.0
+                          Expanded(
+                            child: Text(
+                              _run?.category?.name,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.0
+                              ),
                             ),
                           )
                         ],
@@ -61,13 +65,14 @@ class RunItemView extends StatelessWidget{
                         child: Row(
                           children: <Widget>[
                             Container(
-                              width: 25.0,
-                              height: 25.0,
+                              width: 20.0,
+                              height: 20.0,
                               margin: const EdgeInsets.only(right: 4.0),
                               decoration: BoxDecoration(
+                                color: Colors.white,
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                      "https://www.speedrun.com/themes/user/qwertylool/image.png",
+                                      _run?.player?.urlIcon,
                                     ),
                                     fit:BoxFit.cover
                                 ),
@@ -76,7 +81,7 @@ class RunItemView extends StatelessWidget{
                             ),
                             Expanded(
                               child: Text(
-                                "Name Player as long",
+                                _run?.player?.names?.international,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12.0
@@ -84,7 +89,7 @@ class RunItemView extends StatelessWidget{
                               ),
                             ),
                             Image.network(
-                              "https://www.countryflags.io/co/flat/64.png",
+                              _run?.player?.country?.urlIcon,
                               width: 15.0,
                               height: 13.0,
                               fit: BoxFit.fill,
@@ -97,7 +102,7 @@ class RunItemView extends StatelessWidget{
                         child: Row(
                           children: <Widget>[
                           Text(
-                            "11h 12m 13s",
+                            _run?.times?.primaryString,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13.0,
