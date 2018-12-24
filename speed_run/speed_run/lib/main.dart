@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speed_run/screens/my_home_page.dart';
+import 'package:speed_run/screens/home_screen.dart';
 import 'package:speed_run/screens/splash_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (context) => SplashScreen(),
-        "/home" : (context) => MyHomePage()
+        "/home" : (context) => HomeScreen()
       },
     );
   }

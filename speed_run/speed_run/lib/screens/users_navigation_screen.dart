@@ -1,28 +1,29 @@
 
 import 'package:flutter/material.dart';
-import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/view_items/item_view_run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/view_items/item_view_user.dart';
 
-class RunsNavigationScreen extends StatefulWidget{
+class UsersNavigationScreen extends StatefulWidget{
 
-  final runs = List<Run>();
+  final users = List<User>();
   var _loadingItems = false;
   var querySearch = "";
 
-  RunsNavigationScreen({Key key}):super(key:key);
+  UsersNavigationScreen({Key key}):super(key:key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return RunsNavigationScreenState();
+    return UsersNavigationScreenState();
   }
 
 }
 
-class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLayoutMixin<RunsNavigationScreen>{
+class UsersNavigationScreenState extends State<UsersNavigationScreen> with AfterLayoutMixin<UsersNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   ScrollController _scrollController;
@@ -34,7 +35,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
   }
 
   Future _onRefresh(){
-    return _getRuns(clearList: true);
+    return _getUsers(clearList: true);
   }
 
   void onQuerySearch(String query){
@@ -43,23 +44,22 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
   }
 
   void _loadNextItems(){
-    //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.runs.length > 10) {
-      _getRuns();
+    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.users.length > 10) {
+      _getUsers();
     }
   }
 
-  Future _getRuns({clearList = false}){
+  Future _getUsers({clearList = false}){
     widget._loadingItems = true;
-    var future= RestAPI.instance.getRuns(
-        offset: widget.runs.length,
-        onSuccess:(runs){
+    var future= RestAPI.instance.getUsers(
+        offset: widget.users.length,
+        onSuccess:(users){
           if(mounted){
             setState(() {
               if(clearList){
-                this.widget.runs.clear();
+                this.widget.users.clear();
               }
-              this.widget.runs.addAll(runs);
+              this.widget.users.addAll(users);
             });
           }
           widget._loadingItems = false;
@@ -81,12 +81,12 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
           key: _refreshIndicatorKey,
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: widget.runs.length,
+            itemCount: widget.users.length,
             padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
             itemBuilder: (BuildContext context, int index) {
-              var run = widget.runs[index];
-              final isLastElement = index >= widget.runs.length-1;
-              return RunItemView(run,isLastElement);
+              var item = widget.users[index];
+              final isLastElement = index >= widget.users.length-1;
+              return UserItemView(item,isLastElement);
             },
           ),
           onRefresh: _onRefresh,
@@ -101,7 +101,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if(widget.runs.length == 0){
+    if(widget.users.length == 0){
       _refreshIndicatorKey.currentState.show();
     }
   }

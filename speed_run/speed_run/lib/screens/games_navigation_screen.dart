@@ -77,7 +77,7 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
                   controller: _scrollController,
                   itemCount: widget.games.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
+                    crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2,
                     childAspectRatio: 0.6,
                   ),
                   padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 4.0),
@@ -98,6 +98,7 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
     );
 
   }
+
 
   @override
   void afterFirstLayout(BuildContext context) {

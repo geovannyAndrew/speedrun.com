@@ -1,12 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:speed_run/screens/games_navigation_screen.dart';
 import 'package:speed_run/screens/runs_navigation_screen.dart';
+import 'package:speed_run/screens/users_navigation_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
-class MyHomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
 
-  MyHomePage({Key key}) : super(key: key);
+  HomeScreen({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,23 +18,75 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeScreenState extends State<HomeScreen> {
 
-  final titles = ["Runs","Games","Users"];
+  final TextEditingController _filter = new TextEditingController();
+  String _searchText = "";
+  Icon _searchIcon;
+  Widget _appBarTitle;
+  final GlobalObjectKey<RunsNavigationScreenState> _runScreenKey = GlobalObjectKey<RunsNavigationScreenState>(titles);
+
+  static final titles = ["Runs","Games","Users"];
   int _selectedIndex = 0;
-  final _widgetOptions = [
-    RunsNavigationScreen(),
-    GamesNavigationScreen(),
-    Text('Index 2: Users'),
-  ];
+  var _widgetOptions;
 
   void _onMenuSelected(int index){
     setState(() {
       _selectedIndex = index;
+      _configureAppBarTitle();
     });
+  }
+
+  @override
+  void initState() {
+    _widgetOptions = [
+      RunsNavigationScreen(key: _runScreenKey),
+      GamesNavigationScreen(),
+      UsersNavigationScreen(),
+    ];
+    _configureAppBarTitle();
+    super.initState();
+  }
+
+  void _configureAppBarTitle(){
+    this._searchIcon = new Icon(Icons.search);
+    this._appBarTitle = Text(titles[_selectedIndex],
+      style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold
+      ),
+    );
+    _filter.clear();
+  }
+
+  void _configureAppBarSearch(){
+    this._searchIcon = new Icon(Icons.close);
+    this._appBarTitle = new TextField(
+      autofocus: true,
+      controller: _filter,
+      cursorColor: Colors.white,
+      style: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0
+      ),
+      decoration: new InputDecoration(
+          prefixIcon: new Icon(Icons.search,color: Colors.white,),
+          hintText: 'Search...',
+          hintStyle: TextStyle(
+              color: Colors.white70
+          )
+      ),
+      textInputAction: TextInputAction.search,
+      onSubmitted: (query){
+        setState(() {
+          _searchText = query;
+          _runScreenKey.currentState.onQuerySearch(_searchText);
+        });
+      },
+    );
   }
 
 
@@ -50,22 +102,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(titles[_selectedIndex],
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold
-          ),
-        ),
+        title: _appBarTitle,
         centerTitle: true,
         actions: <Widget>[
+          _selectedIndex != 0 ?
           IconButton(
-            icon: Icon(
-                Icons.search
-            ),
+            icon: _searchIcon,
             onPressed: (){
-
+              setState(() {
+                if (this._searchIcon.icon == Icons.search) {
+                  _configureAppBarSearch();
+                } else {
+                  _configureAppBarTitle();
+                }
+              });
             },
-          )
+          ) : Divider()
         ],
       ),
       body: Center(
@@ -78,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),*/
-      bottomNavigationBar: new Theme(
+      bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
             // sets the background color of the `BottomNavigationBar`
               canvasColor: colors.blackDark,
