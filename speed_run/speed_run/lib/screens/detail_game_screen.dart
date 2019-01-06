@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
+import 'package:speed_run/logic/category.dart';
+import 'package:speed_run/logic/game.dart';
+import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
+import 'package:speed_run/utils/after_layout.dart';
 
 class GameDetailScreen extends StatefulWidget {
 
-  GameDetailScreen({Key key}) : super(key: key);
+  var _game;
+  var idGame;
+  var _categories = List<Category>();
+  //var tabs = List<Tab>();
+
+  GameDetailScreen({Key key, this.idGame}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -22,17 +34,47 @@ class GameDetailScreen extends StatefulWidget {
 
 class _GameDetailScreenState extends State<GameDetailScreen> {
 
-
-
   @override
   void initState() {
     super.initState();
+    _getCategories();
+  }
 
+  Future _getGame(){
+    var future= RestAPI.instance.getGame(
+      id: widget.idGame,
+      onSuccess:(game){
+        if(mounted){
+          setState(() {
+            this.widget._game = game;
+          });
+        }
+      },
+      onError:(error){
+
+      }
+    );
+    return future;
+  }
+
+  Future _getCategories(){
+    var future= RestAPI.instance.getGameCategories(
+        idGame: widget.idGame,
+        onSuccess:(categories){
+          widget._categories = categories;
+          _getGame();
+        },
+        onError:(error){
+
+        }
+    );
+    return future;
   }
 
 
   @override
   Widget build(BuildContext context) {
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -40,37 +82,61 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: DefaultTabController(
-        length: 6,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              AppBarGameView(),
-              SliverPersistentHeader(
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    labelColor: Colors.black87,
-                    unselectedLabelColor: Colors.grey,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(text: "Tab 1 lorem"),
-                      Tab(text: "Tab 2 eso"),
-                      Tab(text: "Tab 3 otro"),
-                      Tab(text: "Tab 4"),
-                      Tab(text: "Tab 5"),
-                      Tab(text: "Tab 6"),
-                    ],
+      body:widget._game == null ?
+        Container(
+          color: colors.blackBackground,
+          alignment: Alignment(0.0, 0.0),
+          child: CircularProgressIndicator(),
+        ) :
+        DefaultTabController(
+          length: widget._categories.length,
+          child: NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                AppBarGameView(),
+                SliverPersistentHeader(
+                  delegate: _SliverAppBarDelegate(
+                    TabBar(
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.white,
+                      isScrollable: true,
+                      tabs: _buildTabs(),
+                    ),
                   ),
+                  pinned: true,
                 ),
+              ];
+            },
+            body: Container(
+              color: colors.blackBackground,
+              child: TabBarView(
+                children: _buildViewTabs(),
               ),
-            ];
-          },
-          body: Center(
-            child: Text("Sample text"),
+            ),
           ),
         ),
-      ),
     );
+  }
+
+  List<Tab> _buildTabs(){
+    var tabs = List<Tab>();
+    widget._categories?.forEach((category)=>
+      tabs.add(Tab(
+        text: category.name,
+      ))
+    );
+    return tabs;
+  }
+
+  List<Widget> _buildViewTabs(){
+    var views = List<Widget>();
+    widget._categories?.forEach((category)=>
+        views.add(UserRunsListView(
+          idGame: widget.idGame,
+          idCategory: category.id,
+        ))
+    );
+    return views;
   }
 }
 
@@ -88,6 +154,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
+      color: colors.blackDark,
       child: _tabBar,
     );
   }
@@ -96,4 +163,115 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
   }
+}
+
+class UserRunsListView extends StatefulWidget{
+
+  final idGame;
+  final idCategory;
+  var _loadingItems = false;
+
+
+  UserRunsListView({Key key, this.idGame, this.idCategory}) : super(key: key);
+
+
+  @override
+  _UserRunsListViewState createState() => _UserRunsListViewState();
+
+}
+
+class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMixin<UserRunsListView>{
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  ScrollController _scrollController;
+  final runs = List<Run>();
+
+  @override
+  void initState() {
+    _scrollController = ScrollController()..addListener(_loadNextItems);
+    super.initState();
+  }
+
+  Future _onRefresh(){
+    return _getRuns(clearList: true);
+  }
+
+  void _loadNextItems(){
+    //print(_scrollController.position.extentAfter);
+    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && this.runs.length > 10) {
+      _getRuns();
+    }
+  }
+
+  Future _getRuns({clearList = false}){
+    widget._loadingItems = true;
+    var future= RestAPI.instance.getCategoryRuns(
+        idCategory: widget.idCategory,
+        offset: this.runs.length,
+        onSuccess:(runs){
+          if(mounted){
+            setState(() {
+              if(clearList){
+                this.runs.clear();
+              }
+              this.runs.addAll(runs);
+            });
+          }
+          widget._loadingItems = false;
+        },
+        onError:(error){
+          widget._loadingItems = false;
+        }
+    );
+    return future;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      child: Center(
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: this.runs.length,
+              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+              itemBuilder: (BuildContext context, int index) {
+                var run = this.runs[index];
+                final isLastElement = index >= this.runs.length-1;
+                return RunItemView(run,isLastElement,(run){
+                  _goToRunDetal();
+                });
+              },
+            ),
+            onRefresh: _onRefresh,
+          )
+      ),
+      decoration: BoxDecoration(
+          color: colors.blackBackground
+      ),
+    );
+  }
+
+  void _goToRunDetal(){
+    //Navigator.pushNamed(context, "/run_detail");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => RunDetailScreen()));
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    if(this.runs.length == 0){
+      _refreshIndicatorKey.currentState.show();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_loadNextItems);
+    super.dispose();
+
+  }
+
 }

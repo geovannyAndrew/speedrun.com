@@ -86,7 +86,7 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
                     var item = widget.games[index];
                     final isLastElement = index >= widget.games.length-1;
                     return GameItemView(item,isLastElement,(game){
-                      _goToGameDetal();
+                      _goToGameDetal(game.id);
                     });
                   },
                 );
@@ -110,9 +110,9 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
     }
   }
 
-  void _goToGameDetal(){
+  void _goToGameDetal(String idGame){
     //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen(idGame: idGame,)));
   }
 
   @override
