@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
-import 'package:speed_run/view_items/item_view_game.dart';
+import 'package:speed_run/view_items/game_item_view.dart';
 
 class GamesNavigationScreen extends StatefulWidget{
 
@@ -84,7 +85,9 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
                   itemBuilder: (BuildContext context, int index) {
                     var item = widget.games[index];
                     final isLastElement = index >= widget.games.length-1;
-                    return GameItemView(item,isLastElement);
+                    return GameItemView(item,isLastElement,(game){
+                      _goToGameDetal();
+                    });
                   },
                 );
               }
@@ -105,6 +108,11 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
     if(widget.games.length == 0){
       _refreshIndicatorKey.currentState.show();
     }
+  }
+
+  void _goToGameDetal(){
+    //Navigator.pushNamed(context, "/run_detail");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen()));
   }
 
   @override

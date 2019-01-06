@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/after_layout.dart';
-import 'package:speed_run/view_items/item_view_run.dart';
+import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
-import 'package:speed_run/view_items/item_view_user.dart';
+import 'package:speed_run/view_items/user_item_view.dart';
 
 class UsersNavigationScreen extends StatefulWidget{
 

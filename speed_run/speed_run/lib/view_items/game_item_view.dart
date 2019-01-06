@@ -7,8 +7,9 @@ class GameItemView extends StatelessWidget{
 
   final Game _game;
   final bool _showLoading;
+  final Function(Game game) _onTap;
 
-  GameItemView(this._game,this._showLoading);
+  GameItemView(this._game,this._showLoading, this._onTap);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class GameItemView extends StatelessWidget{
             color: colors.blackCard,
           ),
           onTap: (){
-
+            _onTap(_game);
           },
         ),
 

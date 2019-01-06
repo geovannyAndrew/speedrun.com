@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/screens/detail_game_screen.dart';
+import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/screens/home_screen.dart';
 import 'package:speed_run/screens/splash_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -25,12 +27,19 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Colors.black,
         backgroundColor: colors.blackBackground,
         accentColor: colors.greenAccent,
-        fontFamily: 'OpenSans'
+        fontFamily: 'OpenSans',
+        textTheme: TextTheme(
+          headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          body1: TextStyle(fontSize: 14.0),
+        ),
       ),
       initialRoute: "/",
       routes: {
         "/": (context) => SplashScreen(),
-        "/home" : (context) => HomeScreen()
+        "/home" : (context) => HomeScreen(),
+        "/run_detail" : (context) => RunDetailScreen(),
+        "/game_detail" : (context) => GameDetailScreen()
       },
     );
   }

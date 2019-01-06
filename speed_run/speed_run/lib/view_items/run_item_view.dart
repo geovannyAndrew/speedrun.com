@@ -5,8 +5,9 @@ class RunItemView extends StatelessWidget{
 
    final Run _run;
    final bool _showLoading;
+   final Function(Run run) _onTap;
 
-   RunItemView(this._run,this._showLoading);
+   RunItemView(this._run,this._showLoading, this._onTap);
 
 
    @override
@@ -124,6 +125,10 @@ class RunItemView extends StatelessWidget{
             ),
             color: colors.blackCard,
           ),
+          onTap: (){
+              _onTap(_run);
+              return null;
+          },
         ),
         _showLoading ? CircularProgressIndicator() : Container()
       ],
