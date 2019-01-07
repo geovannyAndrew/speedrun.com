@@ -57,17 +57,7 @@ class UserItemView extends StatelessWidget{
                             Container(
                               alignment: Alignment(-1.0, 0),
                               child: Text(
-                                _user?.country?.name ?? "",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.0
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment(-1.0, 0),
-                              child: Text(
-                                _user?.region?.name ?? "",
+                                _user?.countryRegionName,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 13.0

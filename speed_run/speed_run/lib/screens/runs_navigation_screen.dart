@@ -4,6 +4,7 @@ import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
+import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
@@ -90,6 +91,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
               return RunItemView(run,isLastElement,(run){
                 _goToRunDetal();
               });
+
             },
           ),
           onRefresh: _onRefresh,

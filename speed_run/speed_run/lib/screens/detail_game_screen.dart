@@ -6,6 +6,7 @@ import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:speed_run/utils/after_layout.dart';
@@ -13,7 +14,7 @@ import 'package:speed_run/utils/after_layout.dart';
 class GameDetailScreen extends StatefulWidget {
 
   var _game;
-  var idGame;
+  final idGame;
   var _categories = List<Category>();
   //var tabs = List<Tab>();
 
@@ -32,7 +33,9 @@ class GameDetailScreen extends StatefulWidget {
   _GameDetailScreenState createState() => _GameDetailScreenState();
 }
 
-class _GameDetailScreenState extends State<GameDetailScreen> {
+class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerProviderStateMixin {
+
+  TabController _tabController;
 
   @override
   void initState() {
@@ -61,6 +64,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
     var future= RestAPI.instance.getGameCategories(
         idGame: widget.idGame,
         onSuccess:(categories){
+          _tabController = TabController(vsync: this, length: widget._categories.length);
           widget._categories = categories;
           _getGame();
         },
@@ -71,6 +75,11 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
     return future;
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +91,66 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body:widget._game == null ?
+      backgroundColor: colors.blackBackground,
+      body: widget._game == null ?
+      Container(
+        color: colors.blackBackground,
+        alignment: Alignment(0.0, 0.0),
+        child: CircularProgressIndicator(),
+      ) :
+      DefaultTabController(
+        length: widget._categories.length, // This is the number of tabs.
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            // These are the slivers that show up in the "outer" scroll view.
+            return <Widget>[
+              SliverOverlapAbsorber(
+                // This widget takes the overlapping behavior of the SliverAppBar,
+                // and redirects it to the SliverOverlapInjector below. If it is
+                // missing, then it is possible for the nested "inner" scroll view
+                // below to end up under the SliverAppBar even when the inner
+                // scroll view thinks it has not been scrolled.
+                // This is not necessary if the "headerSliverBuilder" only builds
+                // widgets that do not overlap the next sliver.
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  child: AppBarGameView()
+              ),
+              SliverPersistentHeader(
+                delegate: _SliverAppBarDelegate(
+                  TabBar(
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white,
+                    isScrollable: true,
+                    tabs: _buildTabs(),
+                  ),
+                ),
+                pinned: true,
+              )
+            ];
+          },
+          body: TabBarView(
+            // These are the contents of the tab views, below the tabs.
+            children: widget._categories.map((Category name) {
+              return SafeArea(
+                top: false,
+                bottom: false,
+                child: Builder(
+                  // This Builder is needed to provide a BuildContext that is "inside"
+                  // the NestedScrollView, so that sliverOverlapAbsorberHandleFor() can
+                  // find the NestedScrollView.
+                  builder: (BuildContext context) {
+                    return UserRunsListView(
+                      idGame: widget.idGame,
+                      idCategory: name.id,
+                    );
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      )
+      /*body:widget._game == null ?
         Container(
           color: colors.blackBackground,
           alignment: Alignment(0.0, 0.0),
@@ -110,11 +178,12 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
             body: Container(
               color: colors.blackBackground,
               child: TabBarView(
+
                 children: _buildViewTabs(),
               ),
             ),
           ),
-        ),
+        ),*/
     );
   }
 
@@ -230,27 +299,68 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
+    /*return Container(
       child: Center(
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
-            child: ListView.builder(
+            /*child: ListView.builder(
               controller: _scrollController,
               itemCount: this.runs.length,
               padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
                 var run = this.runs[index];
                 final isLastElement = index >= this.runs.length-1;
-                return RunItemView(run,isLastElement,(run){
+                return GameCategoryRunItemView(run,isLastElement,(run){
                   _goToRunDetal();
                 });
               },
+            ),*/
+            child: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context,index){
+                  var run = this.runs[index];
+                  final isLastElement = index >= this.runs.length-1;
+                  return GameCategoryRunItemView(run,isLastElement,(run){
+                    _goToRunDetal();
+                  });
+                },
+                childCount:this.runs.length,
+              )
             ),
             onRefresh: _onRefresh,
           )
       ),
       decoration: BoxDecoration(
           color: colors.blackBackground
+      ),
+    );*/
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      displacement: 90.0,
+      onRefresh: _onRefresh,
+      child: CustomScrollView(
+        key: PageStorageKey<String>(widget.idCategory),
+        slivers: <Widget>[
+          SliverOverlapInjector(
+          // This is the flip side of the SliverOverlapAbsorber above.
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context,index){
+                var run = this.runs[index];
+                final isLastElement = index >= this.runs.length-1;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 0.0),
+                  child: GameCategoryRunItemView(run,isLastElement,(run){
+                    _goToRunDetal();
+                  }),
+                );
+              },
+            childCount:this.runs.length,
+          )
+          )
+        ],
       ),
     );
   }

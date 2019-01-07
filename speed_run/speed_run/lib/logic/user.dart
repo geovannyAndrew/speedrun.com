@@ -19,6 +19,17 @@ class User{
     return names?.international;
   }
 
+  String get countryRegionName{
+    var countryRegion = "";
+    if(country != null){
+      countryRegion+="${country?.name}";
+    }
+    if(region != null){
+      countryRegion+=" - ${region?.name}";
+    }
+    return countryRegion;
+  }
+
   factory User.fromJson(Map<String, dynamic> json){
     Location country;
     Location region;
