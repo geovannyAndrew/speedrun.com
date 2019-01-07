@@ -51,7 +51,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            AppBarGameView()
+            AppBarGameView(game: null)
           ];
         },
         body: Container(

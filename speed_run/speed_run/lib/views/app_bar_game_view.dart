@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/logic/game.dart';
 
 class AppBarGameView extends StatelessWidget{
+
+  final Game game;
+
+  AppBarGameView({Key key,this.game}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,7 @@ class AppBarGameView extends StatelessWidget{
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         collapseMode: CollapseMode.parallax,
-        title: Text("Mario Kart 64",
+        title: Text(game?.name ?? "",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -22,7 +27,7 @@ class AppBarGameView extends StatelessWidget{
         background: Stack(
           children: <Widget>[
             Image.network(
-              "https://www.speedrun.com/themes/mk64/background.png",
+              game?.background?.uri ?? "",
               filterQuality: FilterQuality.low,
               fit: BoxFit.cover,
             ),
@@ -33,17 +38,19 @@ class AppBarGameView extends StatelessWidget{
               child: Column(
                 children: <Widget>[
                   Image.network(
-                    "https://www.speedrun.com/themes/mk64/cover-256.png",
+                    game?.coverMedium?.uri ?? "",
                     height: 120,
                   ),
                   Text(
-                    "Xbox, PC, PS3 Switch",
+                    game?.platformsAvaible ?? "",
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.white
                     ),
                   ),
                   Text(
-                    "2019",
+                    game?.released ?? "",
                     style: TextStyle(
                         color: Colors.white
                     ),

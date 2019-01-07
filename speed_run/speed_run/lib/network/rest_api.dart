@@ -75,7 +75,7 @@ class RestAPI{
   }
 
   Future getGame({String id,Function(Game) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}games/$id");
+    final response = await http.get("${urlApi}games/$id?embed=platforms");
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var game = Game.fromJson(json["data"]);

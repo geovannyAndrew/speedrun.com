@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:speed_run/logic/category.dart';
-import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/view_items/game_category_run_item_view.dart';
-import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:speed_run/utils/after_layout.dart';
 
@@ -161,7 +158,8 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
           child: NestedScrollView(
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                AppBarGameView(),
+                AppBarGameView(
+                  game: widget._game),
                 SliverPersistentHeader(
                   delegate: _SliverAppBarDelegate(
                     TabBar(
@@ -239,6 +237,7 @@ class UserRunsListView extends StatefulWidget{
   final idGame;
   final idCategory;
   var _loadingItems = false;
+  var _allLoaded = false;
 
 
   UserRunsListView({Key key, this.idGame, this.idCategory}) : super(key: key);
@@ -267,7 +266,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
 
   void _loadNextItems(){
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && this.runs.length > 10) {
+    if (!widget._loadingItems && !widget._allLoaded && this.runs.length > 10) {
       _getRuns();
     }
   }
@@ -282,8 +281,12 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
             setState(() {
               if(clearList){
                 this.runs.clear();
+                widget._allLoaded = false;
               }
               this.runs.addAll(runs);
+              if(runs.length < 20){
+                widget._allLoaded = true;
+              }
             });
           }
           widget._loadingItems = false;
@@ -303,12 +306,17 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
       child: Center(
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
+            displacement: 60.0,
             child: ListView.builder(
+              key: PageStorageKey<String>(widget.idCategory),
               itemCount: this.runs.length,
               padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
                 var run = this.runs[index];
-                final isLastElement = index >= this.runs.length-1;
+                final isLastElement = index >= this.runs.length-1 && !widget._allLoaded;
+                if(isLastElement){
+                  _loadNextItems();
+                }
                 return GameCategoryRunItemView(run,isLastElement,(run){
                   _goToRunDetal();
                 });
