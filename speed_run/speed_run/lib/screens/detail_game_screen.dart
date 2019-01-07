@@ -32,7 +32,6 @@ class GameDetailScreen extends StatefulWidget {
 
 class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerProviderStateMixin {
 
-  TabController _tabController;
 
   @override
   void initState() {
@@ -61,7 +60,6 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     var future= RestAPI.instance.getGameCategories(
         idGame: widget.idGame,
         onSuccess:(categories){
-          _tabController = TabController(vsync: this, length: widget._categories.length);
           widget._categories = categories;
           _getGame();
         },
@@ -74,7 +72,6 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
