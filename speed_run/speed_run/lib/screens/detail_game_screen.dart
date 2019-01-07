@@ -92,7 +92,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     // than having to individually change instances of widgets.
     return Scaffold(
       backgroundColor: colors.blackBackground,
-      body: widget._game == null ?
+      /*body: widget._game == null ?
       Container(
         color: colors.blackBackground,
         alignment: Alignment(0.0, 0.0),
@@ -149,8 +149,8 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
             }).toList(),
           ),
         ),
-      )
-      /*body:widget._game == null ?
+      )*/
+      body:widget._game == null ?
         Container(
           color: colors.blackBackground,
           alignment: Alignment(0.0, 0.0),
@@ -183,7 +183,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
               ),
             ),
           ),
-        ),*/
+        ),
     );
   }
 
@@ -299,12 +299,11 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    /*return Container(
+    return Container(
       child: Center(
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
-            /*child: ListView.builder(
-              controller: _scrollController,
+            child: ListView.builder(
               itemCount: this.runs.length,
               padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
@@ -314,18 +313,6 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
                   _goToRunDetal();
                 });
               },
-            ),*/
-            child: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context,index){
-                  var run = this.runs[index];
-                  final isLastElement = index >= this.runs.length-1;
-                  return GameCategoryRunItemView(run,isLastElement,(run){
-                    _goToRunDetal();
-                  });
-                },
-                childCount:this.runs.length,
-              )
             ),
             onRefresh: _onRefresh,
           )
@@ -333,8 +320,8 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
       decoration: BoxDecoration(
           color: colors.blackBackground
       ),
-    );*/
-    return RefreshIndicator(
+    );
+    /*return RefreshIndicator(
       key: _refreshIndicatorKey,
       displacement: 90.0,
       onRefresh: _onRefresh,
@@ -362,7 +349,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
           )
         ],
       ),
-    );
+    );*/
   }
 
   void _goToRunDetal(){
