@@ -11,19 +11,28 @@ class GamesNavigationScreen extends StatefulWidget{
 
   var games = List<Game>();
   var _loadingItems = false;
+  var _allLoaded = false;
+
+  GamesNavigationScreen({Key key}):super(key:key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _GamesNavigationScreenState();
+    return GamesNavigationScreenState();
   }
 
 }
 
-class _GamesNavigationScreenState extends State<GamesNavigationScreen> with AfterLayoutMixin<GamesNavigationScreen>{
+class GamesNavigationScreenState extends State<GamesNavigationScreen> with AfterLayoutMixin<GamesNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   ScrollController _scrollController;
+  String querySearch;
+
+  void onQuerySearch(String query){
+    querySearch = query;
+    _refreshIndicatorKey.currentState.show();
+  }
 
   @override
   void initState(){
@@ -37,22 +46,28 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
 
   void _loadNextItems(){
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.games.length > 10) {
+    if (_scrollController.position.extentAfter < 500 && !widget._allLoaded && !widget._loadingItems && widget.games.length > 10) {
       _getGames();
     }
   }
 
   Future _getGames({clearList = false}){
     widget._loadingItems = true;
+    int offset = clearList ? 0 : widget.games.length;
     var future= RestAPI.instance.getGames(
-        offset: widget.games.length,
+        offset: offset,
+        query: querySearch,
         onSuccess:(games){
           if(mounted){
             setState(() {
               if(clearList){
                 this.widget.games.clear();
+                widget._allLoaded = false;
               }
               this.widget.games.addAll(games);
+              if(games.length < 20){
+                widget._allLoaded = true;
+              }
             });
           }
           widget._loadingItems = false;
@@ -86,7 +101,7 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
                     var item = widget.games[index];
                     final isLastElement = index >= widget.games.length-1;
                     return GameItemView(item,isLastElement,(game){
-                      _goToGameDetal(game.id);
+                      _goToGameDetal(game);
                     });
                   },
                 );
@@ -110,9 +125,9 @@ class _GamesNavigationScreenState extends State<GamesNavigationScreen> with Afte
     }
   }
 
-  void _goToGameDetal(String idGame){
+  void _goToGameDetal(Game game){
     //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen(idGame: idGame,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen(idGame: game.id,title: game.name)));
   }
 
   @override

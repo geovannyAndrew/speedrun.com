@@ -27,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _searchText = "";
   Icon _searchIcon;
   Widget _appBarTitle;
-  final GlobalObjectKey<RunsNavigationScreenState> _runScreenKey = GlobalObjectKey<RunsNavigationScreenState>(titles);
+  final GlobalObjectKey<RunsNavigationScreenState> _runScreenKey = GlobalObjectKey<RunsNavigationScreenState>(titles[0]);
+  final GlobalObjectKey<GamesNavigationScreenState> _gameScreenKey = GlobalObjectKey<GamesNavigationScreenState>(titles[1]);
 
   static final titles = ["Runs","Games","Users"];
   int _selectedIndex = 0;
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _widgetOptions = [
       RunsNavigationScreen(key: _runScreenKey),
-      GamesNavigationScreen(),
+      GamesNavigationScreen(key: _gameScreenKey),
       UsersNavigationScreen(),
     ];
     _configureAppBarTitle();
@@ -83,7 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
       onSubmitted: (query){
         setState(() {
           _searchText = query;
-          _runScreenKey.currentState.onQuerySearch(_searchText);
+          if(_selectedIndex == 1){
+            _gameScreenKey.currentState.onQuerySearch(_searchText);
+          }
+
         });
       },
     );

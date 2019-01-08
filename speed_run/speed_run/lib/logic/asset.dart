@@ -13,8 +13,8 @@ class Asset{
 
   factory Asset.fromJson(Map<String, dynamic> json){
     return Asset(json['uri']?.toString() ?? "",
-        json['width'].toInt(),
-        json["height"].toInt()
+        json['width']!= null ? json['width'].toInt() : 0,
+        json["height"]!=null ? json["height"].toInt() : 0
     );
   }
 }

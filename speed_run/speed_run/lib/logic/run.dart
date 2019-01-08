@@ -50,7 +50,7 @@ class Run{
         Times.fromJson(json["times"]),
         Category.fromJson(json["category"]["data"]),
         Game.fromJson(json["game"]["data"]),
-        (json["players"]["data"] as List).map((model)=> User.fromJson(model)).toList()
+        json["players"] is List ? null : (json["players"]["data"] as List).map((model)=> User.fromJson(model)).toList()
     );
   }
 

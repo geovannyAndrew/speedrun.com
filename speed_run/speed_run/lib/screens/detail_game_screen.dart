@@ -10,12 +10,11 @@ import 'package:speed_run/utils/after_layout.dart';
 
 class GameDetailScreen extends StatefulWidget {
 
-  var _game;
   final idGame;
-  var _categories = List<Category>();
+  final title;
   //var tabs = List<Tab>();
 
-  GameDetailScreen({Key key, this.idGame}) : super(key: key);
+  GameDetailScreen({Key key, this.idGame, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -32,6 +31,8 @@ class GameDetailScreen extends StatefulWidget {
 
 class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerProviderStateMixin {
 
+  var _game;
+  var _categories = List<Category>();
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
       onSuccess:(game){
         if(mounted){
           setState(() {
-            this.widget._game = game;
+            this._game = game;
           });
         }
       },
@@ -60,7 +61,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     var future= RestAPI.instance.getGameCategories(
         idGame: widget.idGame,
         onSuccess:(categories){
-          widget._categories = categories;
+          this._categories = categories;
           _getGame();
         },
         onError:(error){
@@ -85,78 +86,32 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: colors.blackBackground,
-      /*body: widget._game == null ?
-      Container(
-        color: colors.blackBackground,
-        alignment: Alignment(0.0, 0.0),
-        child: CircularProgressIndicator(),
-      ) :
-      DefaultTabController(
-        length: widget._categories.length, // This is the number of tabs.
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            // These are the slivers that show up in the "outer" scroll view.
-            return <Widget>[
-              SliverOverlapAbsorber(
-                // This widget takes the overlapping behavior of the SliverAppBar,
-                // and redirects it to the SliverOverlapInjector below. If it is
-                // missing, then it is possible for the nested "inner" scroll view
-                // below to end up under the SliverAppBar even when the inner
-                // scroll view thinks it has not been scrolled.
-                // This is not necessary if the "headerSliverBuilder" only builds
-                // widgets that do not overlap the next sliver.
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  child: AppBarGameView()
-              ),
-              SliverPersistentHeader(
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white,
-                    isScrollable: true,
-                    tabs: _buildTabs(),
-                  ),
-                ),
-                pinned: true,
-              )
-            ];
-          },
-          body: TabBarView(
-            // These are the contents of the tab views, below the tabs.
-            children: widget._categories.map((Category name) {
-              return SafeArea(
-                top: false,
-                bottom: false,
-                child: Builder(
-                  // This Builder is needed to provide a BuildContext that is "inside"
-                  // the NestedScrollView, so that sliverOverlapAbsorberHandleFor() can
-                  // find the NestedScrollView.
-                  builder: (BuildContext context) {
-                    return UserRunsListView(
-                      idGame: widget.idGame,
-                      idCategory: name.id,
-                    );
-                  },
-                ),
-              );
-            }).toList(),
+      appBar: this._game == null ?
+        AppBar(
+          centerTitle: true,
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0
+            ),
           ),
-        ),
-      )*/
-      body:widget._game == null ?
+        ):
+        null,
+      backgroundColor: colors.blackBackground,
+      body:this._game == null ?
         Container(
           color: colors.blackBackground,
           alignment: Alignment(0.0, 0.0),
           child: CircularProgressIndicator(),
         ) :
         DefaultTabController(
-          length: widget._categories.length,
+          length: this._categories.length,
           child: NestedScrollView(
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 AppBarGameView(
-                  game: widget._game),
+                  game: this._game),
                 SliverPersistentHeader(
                   delegate: _SliverAppBarDelegate(
                     TabBar(
@@ -184,7 +139,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
 
   List<Tab> _buildTabs(){
     var tabs = List<Tab>();
-    widget._categories?.forEach((category)=>
+    this._categories?.forEach((category)=>
       tabs.add(Tab(
         text: category.name,
       ))
@@ -194,7 +149,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
 
   List<Widget> _buildViewTabs(){
     var views = List<Widget>();
-    widget._categories?.forEach((category)=>
+    this._categories?.forEach((category)=>
         views.add(UserRunsListView(
           idGame: widget.idGame,
           idCategory: category.id,
@@ -270,9 +225,10 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
 
   Future _getRuns({clearList = false}){
     widget._loadingItems = true;
+    var offset = clearList ? 0 : this.runs.length;
     var future= RestAPI.instance.getCategoryRuns(
         idCategory: widget.idCategory,
-        offset: this.runs.length,
+        offset: offset,
         onSuccess:(runs){
           if(mounted){
             setState(() {

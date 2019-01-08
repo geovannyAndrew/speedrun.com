@@ -49,6 +49,20 @@ class RestAPI{
     }
   }
 
+  Future getUserRuns({int offset,String idUser,
+    Function(List<Run>) onSuccess,Function(ResponseError) onError}) async{
+    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category&user=$idUser");
+    if(response.statusCode == HttpStatus.ok){
+      var json = jsonDecode(response.body);
+      var jsonData = json["data"] as List;
+      var runs = jsonData.map((model)=> Run.fromJson(model)).toList();
+      onSuccess(runs);
+    }
+    else{
+      onError(ResponseError(response));
+    }
+  }
+
   Future getRun({String id,Function(Run) onSuccess,Function(ResponseError) onError}) async{
     final response = await http.get("${urlApi}runs/$id?embed=players,game,category,platform");
     if(response.statusCode == HttpStatus.ok){
@@ -61,8 +75,12 @@ class RestAPI{
     }
   }
 
-  Future getGames({int offset,Function(List<Game>) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}games?offset=$offset&orderby=created");
+  Future getGames({int offset,String query,Function(List<Game>) onSuccess,Function(ResponseError) onError}) async{
+    var url = "${urlApi}games?offset=$offset&orderby=created";
+    if(query!=null){
+      url+="&name=$query";
+    }
+    final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -106,6 +124,19 @@ class RestAPI{
       var jsonData = json["data"] as List;
       var users = jsonData.map((model)=> User.fromJson(model)).toList();
       onSuccess(users);
+    }
+    else{
+      onError(ResponseError(response));
+    }
+  }
+
+  Future getUser({String id,Function(User) onSuccess,Function(ResponseError) onError}) async{
+    final response = await http.get("${urlApi}users/$id");
+    if(response.statusCode == HttpStatus.ok){
+      var json = jsonDecode(response.body);
+      var jsonData = json["data"];
+      var user = User.fromJson(jsonData);
+      onSuccess(user);
     }
     else{
       onError(ResponseError(response));

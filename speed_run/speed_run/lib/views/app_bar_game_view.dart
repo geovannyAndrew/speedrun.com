@@ -35,7 +35,9 @@ class AppBarGameView extends StatelessWidget{
               color: Colors.black54,
               padding: EdgeInsets.only(top:50.0),
               alignment: Alignment(0, 0),
-              child: Column(
+              child: this.game == null ?
+              CircularProgressIndicator() :
+              Column(
                 children: <Widget>[
                   Image.network(
                     game?.coverMedium?.uri ?? "",
@@ -46,7 +48,8 @@ class AppBarGameView extends StatelessWidget{
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Colors.white
+                      color: Colors.white,
+                      fontSize: 12.0,
                     ),
                   ),
                   Text(

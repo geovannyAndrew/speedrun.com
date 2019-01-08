@@ -6,8 +6,9 @@ class UserItemView extends StatelessWidget{
 
    final User _user;
    final bool _showLoading;
+   final Function(User user) _onTap;
 
-   UserItemView(this._user,this._showLoading);
+   UserItemView(this._user,this._showLoading, this._onTap);
 
 
    @override
@@ -73,6 +74,9 @@ class UserItemView extends StatelessWidget{
             ),
             color: colors.blackCard,
           ),
+          onTap: (){
+            _onTap(_user);
+          },
         ),
         _showLoading ? CircularProgressIndicator() : Container()
       ],

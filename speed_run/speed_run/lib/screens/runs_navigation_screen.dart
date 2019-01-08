@@ -53,8 +53,9 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
 
   Future _getRuns({clearList = false}){
     widget._loadingItems = true;
+    var offset = clearList ? 0 : widget.runs.length;
     var future= RestAPI.instance.getRuns(
-        offset: widget.runs.length,
+        offset: offset,
         onSuccess:(runs){
           if(mounted){
             setState(() {
