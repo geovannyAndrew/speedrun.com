@@ -90,7 +90,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
               var run = widget.runs[index];
               final isLastElement = index >= widget.runs.length-1;
               return RunItemView(run,isLastElement,(run){
-                _goToRunDetal();
+                _goToRunDetail(run);
               });
 
             },
@@ -105,9 +105,9 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
 
   }
 
-  void _goToRunDetal(){
-    //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunDetailScreen()));
+  void _goToRunDetail(Run run){
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
   }
 
   @override

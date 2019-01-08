@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
@@ -65,7 +66,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
                 widget._allLoaded = false;
               }
               this.widget.games.addAll(games);
-              if(games.length < 20){
+              if(games.length < AppConfig.itemsPerPage){
                 widget._allLoaded = true;
               }
             });

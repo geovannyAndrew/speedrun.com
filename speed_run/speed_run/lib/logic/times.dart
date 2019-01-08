@@ -14,7 +14,7 @@ class Times{
       );
 
   factory Times.fromJson(Map<String, dynamic> json){
-    return Times(json['primary'].toString(),
+    return Times(json['primary']!= null ? json['primary'].toString(): null,
         json['primary_t'].toDouble(),
         json["realtime"].toString(),
         json["realtime_t"].toDouble()

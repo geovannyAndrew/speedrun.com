@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
@@ -23,7 +24,8 @@ class RestAPI{
   RestAPI._internal();
 
   Future getRuns({int offset,Function(List<Run>) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players");
+    var url = "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&max=${AppConfig.itemsPerPage}";
+    final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -37,7 +39,7 @@ class RestAPI{
 
   Future getCategoryRuns({int offset,String idCategory,
     Function(List<Run>) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&category=$idCategory");
+    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&category=$idCategory&max=${AppConfig.itemsPerPage}");
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -51,7 +53,7 @@ class RestAPI{
 
   Future getUserRuns({int offset,String idUser,
     Function(List<Run>) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category&user=$idUser");
+    final response = await http.get("${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category&user=$idUser&max=${AppConfig.itemsPerPage}");
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -67,7 +69,7 @@ class RestAPI{
     final response = await http.get("${urlApi}runs/$id?embed=players,game,category,platform");
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
-      var run = Run.fromJson(json);
+      var run = Run.fromJson(json["data"]);
       onSuccess(run);
     }
     else{
@@ -76,7 +78,7 @@ class RestAPI{
   }
 
   Future getGames({int offset,String query,Function(List<Game>) onSuccess,Function(ResponseError) onError}) async{
-    var url = "${urlApi}games?offset=$offset&orderby=created";
+    var url = "${urlApi}games?offset=$offset&orderby=created&max=${AppConfig.itemsPerPage}";
     if(query!=null){
       url+="&name=$query";
     }
@@ -117,8 +119,12 @@ class RestAPI{
     }
   }
 
-  Future getUsers({int offset,Function(List<User>) onSuccess,Function(ResponseError) onError}) async{
-    final response = await http.get("${urlApi}users?offset=$offset");
+  Future getUsers({int offset, String query,Function(List<User>) onSuccess,Function(ResponseError) onError}) async{
+    String url = "${urlApi}users?offset=$offset&max=${AppConfig.itemsPerPage}";
+    if(query != null){
+      url+="&name=$query";
+    }
+    final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;

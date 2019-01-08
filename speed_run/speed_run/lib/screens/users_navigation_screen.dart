@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
@@ -13,6 +14,7 @@ class UsersNavigationScreen extends StatefulWidget{
   final users = List<User>();
   var _loadingItems = false;
   var querySearch = "";
+  var _allLoaded = false;
 
   UsersNavigationScreen({Key key}):super(key:key);
 
@@ -27,11 +29,9 @@ class UsersNavigationScreen extends StatefulWidget{
 class UsersNavigationScreenState extends State<UsersNavigationScreen> with AfterLayoutMixin<UsersNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-  ScrollController _scrollController;
 
   @override
   void initState(){
-    _scrollController = ScrollController()..addListener(_loadNextItems);
     super.initState();
   }
 
@@ -45,7 +45,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
   }
 
   void _loadNextItems(){
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.users.length > 10) {
+    if (!widget._allLoaded && !widget._loadingItems && widget.users.length > 10) {
       _getUsers();
     }
   }
@@ -55,11 +55,16 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
     var offset = clearList ? 0 : widget.users.length;
     var future= RestAPI.instance.getUsers(
         offset: offset,
+        query: widget.querySearch,
         onSuccess:(users){
           if(mounted){
             setState(() {
               if(clearList){
                 this.widget.users.clear();
+                widget._allLoaded = false;
+              }
+              if(users.length < AppConfig.itemsPerPage){
+                widget._allLoaded = true;
               }
               this.widget.users.addAll(users);
             });
@@ -82,12 +87,14 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
         child: RefreshIndicator(
           key: _refreshIndicatorKey,
           child: ListView.builder(
-            controller: _scrollController,
             itemCount: widget.users.length,
             padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
             itemBuilder: (BuildContext context, int index) {
               var item = widget.users[index];
-              final isLastElement = index >= widget.users.length-1;
+              final isLastElement = index >= widget.users.length-1 && !widget._allLoaded;
+              if(isLastElement){
+                _loadNextItems();
+              }
               return UserItemView(item,isLastElement,(user){
                 _goToUserDetal(user);
               });
@@ -117,7 +124,6 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
 
   @override
   void dispose() {
-    _scrollController.removeListener(_loadNextItems);
     super.dispose();
 
   }

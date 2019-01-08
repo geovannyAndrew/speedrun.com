@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
@@ -237,7 +238,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
                 widget._allLoaded = false;
               }
               this.runs.addAll(runs);
-              if(runs.length < 20){
+              if(runs.length < AppConfig.itemsPerPage){
                 widget._allLoaded = true;
               }
             });
@@ -271,7 +272,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
                   _loadNextItems();
                 }
                 return GameCategoryRunItemView(run,isLastElement,(run){
-                  _goToRunDetal();
+                  _goToRunDetal(run);
                 });
               },
             ),
@@ -313,9 +314,10 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
     );*/
   }
 
-  void _goToRunDetal(){
+  void _goToRunDetal(Run run){
     //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunDetailScreen()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
   }
 
   @override

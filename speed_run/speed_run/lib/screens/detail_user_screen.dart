@@ -154,7 +154,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
   }
 
   void _goToRunDetal(Run run){
-    //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RunDetailScreen()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
   }
 }

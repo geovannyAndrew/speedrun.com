@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:speed_run/config/app_config.dart';
+import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/views/app_bar_game_view.dart';
 
 class RunDetailScreen extends StatefulWidget {
 
-  RunDetailScreen({Key key}) : super(key: key);
+  final String idRun;
+
+  RunDetailScreen({Key key,this.idRun}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -23,12 +27,12 @@ class RunDetailScreen extends StatefulWidget {
 
 class _RunDetailScreenState extends State<RunDetailScreen> {
 
-
+  Run _run;
 
   @override
   void initState() {
     super.initState();
-
+    _getRun();
   }
 
   void _playVideo(){
@@ -36,6 +40,23 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
         apiKey: AppConfig.apiKeyYoutube,
         videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
     );
+  }
+
+  Future _getRun(){
+    var future= RestAPI.instance.getRun(
+        id: widget.idRun,
+        onSuccess:(run){
+          if(mounted){
+            setState(() {
+              this._run = run;
+            });
+          }
+        },
+        onError:(error){
+          print(error);
+        }
+    );
+    return future;
   }
 
 
@@ -51,7 +72,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            AppBarGameView(game: null)
+            AppBarGameView(game: _run?.game)
           ];
         },
         body: Container(
@@ -69,11 +90,10 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40.0),
                           child: Image.network(
-                            //_user.urlIcon ?? "",
-                              "https://www.speedrun.com/themes/user/cheese/image.png",
-                              width: 50.0,
-                              height: 50.0,
-                              fit:BoxFit.cover),
+                            _run?.player?.urlIcon ?? "",
+                            width: 50.0,
+                            height: 50.0,
+                            fit:BoxFit.cover),
                         ),
                         Expanded(
                             child: Container(
@@ -85,8 +105,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                     children: <Widget>[
                                       Expanded(
                                         child: Text(
-                                          //_user?.name,
-                                          "Nombre",
+                                          _run?.player?.name ?? "",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -95,8 +114,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                         ),
                                       ),
                                       Image.network(
-                                        //_user.country?.urlIcon ?? "",
-                                        "https://www.countryflags.io/be/flat/64.png",
+                                        _run?.player?.country?.urlIcon ?? "",
                                         width: 15.0,
                                         height: 13.0,
                                         fit: BoxFit.fill,
@@ -106,19 +124,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                   Container(
                                     alignment: Alignment(-1.0, 0),
                                     child: Text(
-                                      //_user?.country?.name ?? "",
-                                      "Colombia",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.0
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment(-1.0, 0),
-                                    child: Text(
-                                      //_user?.region?.name ?? "",
-                                      "Region Name",
+                                      _run?.player?.countryRegionName ?? "",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 13.0
@@ -138,7 +144,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "All tracks no items",
+                          _run?.category?.name ?? "",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -146,7 +152,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                           ),
                         ),
                         Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                          _run?.category?.rules ?? "",
                           style: TextStyle(
                               color: Colors.white,
 
@@ -158,7 +164,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                   _buildCardInformation(
                       title: "Time",
                       content: Text(
-                        "0h 30m 2s",
+                        _run?.times?.primaryString ?? "",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -166,16 +172,20 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                         ),
                       )
                   ),
-                  _buildVideoCard(
-                      title: "Youtube",
-                      url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
-                      isYoutube: true
-                  ),
-                  _buildVideoCard(
-                      title: "Twitch",
-                      url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
-                      isYoutube: false
-                  )
+                  _run?.youtubeUrl!=null?
+                    _buildVideoCard(
+                        title: "Youtube",
+                        url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
+                        isYoutube: true
+                    ):
+                    Container(),
+                  _run?.twitchUrl!=null?
+                    _buildVideoCard(
+                        title: "Twitch",
+                        url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
+                        isYoutube: false
+                    ):
+                    Container()
                 ]
               )
             ),

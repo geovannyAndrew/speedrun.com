@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:speed_run/logic/asset.dart';
 import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/times.dart';
@@ -20,6 +21,7 @@ class Run{
   final Category category;
   final Game game;
   final List<User> players;
+  final List<Asset> videos;
 
   Run(this.id,
       this.date,
@@ -28,7 +30,8 @@ class Run{
       this.times,
       this.category,
       this.game,
-      this.players);
+      this.players,
+      this.videos);
 
   User get player{
     if((this.players?.length ?? 0) > 0){
@@ -38,6 +41,15 @@ class Run{
       return null;
     }
   }
+  
+  String get youtubeUrl{
+    return this.videos?.firstWhere((asset)=>asset.isYoutube,orElse:()=> null)?.uri;
+  }
+
+  String get twitchUrl{
+    return this.videos?.firstWhere((asset)=>asset.isTwitch,orElse:()=> null)?.uri;
+  }
+
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson` constructor.
@@ -47,10 +59,11 @@ class Run{
         json['date'] as String,
         json["comment"] as String,
         json["submitted"] as String,
-        Times.fromJson(json["times"]),
+        json["times"]!=null ? Times.fromJson(json["times"]) : null,
         Category.fromJson(json["category"]["data"]),
         Game.fromJson(json["game"]["data"]),
-        json["players"] is List ? null : (json["players"]["data"] as List).map((model)=> User.fromJson(model)).toList()
+        json["players"] is List ? null : (json["players"]["data"] as List).map((model)=> User.fromJson(model)).toList(),
+        json["videos"]!=null && json["videos"]["links"] is List ? (json["videos"]["links"] as List).map((model)=> Asset.fromJson(model)).toList() : null
     );
   }
 
