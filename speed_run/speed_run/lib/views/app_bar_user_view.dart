@@ -7,8 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 class AppBarUserView extends StatelessWidget{
 
   final User user;
+  final String idUser;
 
-  AppBarUserView({Key key,this.user}) : super(key: key);
+  AppBarUserView({Key key,this.user,this.idUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +41,14 @@ class AppBarUserView extends StatelessWidget{
               child: Column(
                 children: <Widget>[
                   ClipOval(
-                    child: Image.network(
-                      user?.urlIcon ?? "",
-                      height: 90,
-                      width: 90,
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag:idUser,
+                      child: Image.network(
+                        user?.urlIcon ?? "",
+                        height: 90,
+                        width: 90,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Padding(

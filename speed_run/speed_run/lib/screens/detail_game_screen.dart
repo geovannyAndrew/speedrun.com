@@ -189,8 +189,6 @@ class UserRunsListView extends StatefulWidget{
 
   final idGame;
   final idCategory;
-  var _loadingItems = false;
-  var _allLoaded = false;
 
 
   UserRunsListView({Key key, this.idGame, this.idCategory}) : super(key: key);
@@ -206,6 +204,8 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   ScrollController _scrollController;
   final runs = List<Run>();
+  var _loadingItems = false;
+  var _allLoaded = false;
 
   @override
   void initState() {
@@ -219,13 +219,13 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
 
   void _loadNextItems(){
     //print(_scrollController.position.extentAfter);
-    if (!widget._loadingItems && !widget._allLoaded && this.runs.length > 10) {
+    if (!this._loadingItems && !this._allLoaded && this.runs.length > 10) {
       _getRuns();
     }
   }
 
   Future _getRuns({clearList = false}){
-    widget._loadingItems = true;
+    this._loadingItems = true;
     var offset = clearList ? 0 : this.runs.length;
     var future= RestAPI.instance.getCategoryRuns(
         idCategory: widget.idCategory,
@@ -235,18 +235,18 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
             setState(() {
               if(clearList){
                 this.runs.clear();
-                widget._allLoaded = false;
+                this._allLoaded = false;
               }
               this.runs.addAll(runs);
               if(runs.length < AppConfig.itemsPerPage){
-                widget._allLoaded = true;
+                this._allLoaded = true;
               }
             });
           }
-          widget._loadingItems = false;
+          this._loadingItems = false;
         },
         onError:(error){
-          widget._loadingItems = false;
+          this._loadingItems = false;
         }
     );
     return future;
@@ -267,7 +267,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
               padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
                 var run = this.runs[index];
-                final isLastElement = index >= this.runs.length-1 && !widget._allLoaded;
+                final isLastElement = index >= this.runs.length-1 && !this._allLoaded;
                 if(isLastElement){
                   _loadNextItems();
                 }
@@ -331,7 +331,8 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
   void dispose() {
     _scrollController.removeListener(_loadNextItems);
     super.dispose();
-
   }
+
+
 
 }

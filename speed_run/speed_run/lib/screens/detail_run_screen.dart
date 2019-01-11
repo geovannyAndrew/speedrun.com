@@ -5,6 +5,7 @@ import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/views/app_bar_game_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RunDetailScreen extends StatefulWidget {
 
@@ -175,15 +176,15 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                   _run?.youtubeUrl!=null?
                     _buildVideoCard(
                         title: "Youtube",
-                        url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
-                        isYoutube: true
+                        url: _run?.youtubeUrl,
+                        asset: "assets/images/youtube_logo_dark.jpg"
                     ):
                     Container(),
                   _run?.twitchUrl!=null?
                     _buildVideoCard(
                         title: "Twitch",
-                        url: "https://img.youtube.com/vi/aJkicyBZ4kw/hqdefault.jpg",
-                        isYoutube: false
+                        url: _run?.twitchUrl,
+                        asset: "assets/images/twitch_logo.jpg"
                     ):
                     Container()
                 ]
@@ -222,7 +223,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     );
   }
 
-  Card _buildVideoCard({String title,String url,bool isYoutube}){
+  Card _buildVideoCard({String title,String url,String asset}){
     return _buildCardInformation(
       title: title,
       content: GestureDetector(
@@ -233,8 +234,8 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
               aspectRatio: 1.77,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4.0),
-                child: Image.network(
-                    url,
+                child: Image.asset(
+                    asset,
                     fit:BoxFit.cover),
               ),
             ),
@@ -244,8 +245,19 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
             )
           ],
         ),
+        onTap: (){
+          _launchURL(url);
+        },
       )
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
 }

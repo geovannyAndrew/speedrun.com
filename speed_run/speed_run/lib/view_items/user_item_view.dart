@@ -24,11 +24,15 @@ class UserItemView extends StatelessWidget{
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(40.0),
-                    child: Image.network(
+                    child: Hero(
+                      tag: _user.id,
+                      child: Image.network(
                         _user.urlIcon ?? "",
                         width: 50.0,
                         height: 50.0,
-                        fit:BoxFit.cover),
+                        fit:BoxFit.cover
+                      ),
+                    ),
                   ),
                   Expanded(
                       child: Container(

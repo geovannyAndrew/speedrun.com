@@ -43,7 +43,10 @@ class Run{
   }
   
   String get youtubeUrl{
-    return this.videos?.firstWhere((asset)=>asset.isYoutube,orElse:()=> null)?.uri;
+    var video = this.videos?.firstWhere((asset)=>asset.isYoutube,orElse:()=> null);
+    //var idYoutube = video.youtubeId;
+    //print(idYoutube);
+    return video?.uri;
   }
 
   String get twitchUrl{

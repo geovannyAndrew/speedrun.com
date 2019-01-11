@@ -123,6 +123,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
           return <Widget>[
             AppBarUserView(
               user: this._user,
+              idUser: widget.idUser,
             ),
           ];
         },
