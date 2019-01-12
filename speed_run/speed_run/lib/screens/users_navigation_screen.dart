@@ -8,6 +8,8 @@ import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/view_items/user_item_view.dart';
+import 'package:speed_run/views/screen_search_view.dart';
+import 'package:loadmore/loadmore.dart';
 
 class UsersNavigationScreen extends StatefulWidget{
 
@@ -29,6 +31,7 @@ class UsersNavigationScreen extends StatefulWidget{
 class UsersNavigationScreenState extends State<UsersNavigationScreen> with AfterLayoutMixin<UsersNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalObjectKey<ScreenSearchViewState> _screenSearchKey = GlobalObjectKey<ScreenSearchViewState>("User");
 
   @override
   void initState(){
@@ -44,19 +47,27 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
     _refreshIndicatorKey.currentState.show();
   }
 
-  void _loadNextItems(){
+
+  Future<bool> _loadNextItems() async{
     if (!widget._allLoaded && !widget._loadingItems && widget.users.length > 10) {
-      _getUsers();
+     await _getUsers();
     }
+    else{
+      await Future.delayed(Duration(seconds: 0, milliseconds: 100));
+    }
+    return true;
   }
 
   Future _getUsers({clearList = false}){
     widget._loadingItems = true;
+    _screenSearchKey.currentState.visibleIcon = false;
     var offset = clearList ? 0 : widget.users.length;
     var future= RestAPI.instance.getUsers(
         offset: offset,
         query: widget.querySearch,
         onSuccess:(users){
+          _screenSearchKey.currentState.visibleIcon = true;
+          widget._loadingItems = false;
           if(mounted){
             setState(() {
               if(clearList){
@@ -69,9 +80,10 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
               this.widget.users.addAll(users);
             });
           }
-          widget._loadingItems = false;
+
         },
         onError:(error){
+          _screenSearchKey.currentState.visibleIcon = true;
           widget._loadingItems = false;
         }
         );
@@ -82,29 +94,40 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      child: Center(
-        child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          child: ListView.builder(
-            itemCount: widget.users.length,
-            padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-            itemBuilder: (BuildContext context, int index) {
-              var item = widget.users[index];
-              final isLastElement = index >= widget.users.length-1 && !widget._allLoaded;
-              if(isLastElement){
-                _loadNextItems();
-              }
-              return UserItemView(item,isLastElement,(user){
-                _goToUserDetal(user);
-              });
-            },
-          ),
-          onRefresh: _onRefresh,
-        )
-      ),
-      decoration: BoxDecoration(
-        color: colors.blackBackground
+    return ScreenSearchView(
+      key: _screenSearchKey,
+      title: "Users",
+      onSearch: (query){
+        onQuerySearch(query);
+      },
+      querySearch: widget.querySearch,
+      body: Container(
+        child: Center(
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: LoadMore(
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              whenEmptyLoad: false,
+              delegate: DefaultLoadMoreDelegate(),
+              child: ListView.builder(
+                itemCount: widget.users.length,
+                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  var item = widget.users[index];
+                  return UserItemView(item,false,(user){
+                    _goToUserDetal(user);
+                  });
+                },
+              ),
+              onLoadMore: _loadNextItems,
+              isFinish: widget._allLoaded,
+            ),
+            onRefresh: _onRefresh,
+          )
+        ),
+        decoration: BoxDecoration(
+          color: colors.blackBackground
+        ),
       ),
     );
 

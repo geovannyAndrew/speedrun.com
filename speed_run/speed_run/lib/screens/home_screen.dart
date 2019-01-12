@@ -23,10 +23,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final TextEditingController _filter = new TextEditingController();
-  String _searchText = "";
-  Icon _searchIcon;
-  Widget _appBarTitle;
   final GlobalObjectKey<RunsNavigationScreenState> _runScreenKey = GlobalObjectKey<RunsNavigationScreenState>(titles[0]);
   final GlobalObjectKey<GamesNavigationScreenState> _gameScreenKey = GlobalObjectKey<GamesNavigationScreenState>(titles[1]);
   final GlobalObjectKey<UsersNavigationScreenState> _userScreenKey = GlobalObjectKey<UsersNavigationScreenState>(titles[2]);
@@ -38,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onMenuSelected(int index){
     setState(() {
       _selectedIndex = index;
-      _configureAppBarTitle();
     });
   }
 
@@ -49,54 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
       GamesNavigationScreen(key: _gameScreenKey),
       UsersNavigationScreen(key: _userScreenKey),
     ];
-    _configureAppBarTitle();
     super.initState();
   }
-
-  void _configureAppBarTitle(){
-    this._searchIcon = new Icon(Icons.search);
-    this._appBarTitle = Text(titles[_selectedIndex],
-      style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold
-      ),
-    );
-    _filter.clear();
-  }
-
-  void _configureAppBarSearch(){
-    this._searchIcon = new Icon(Icons.close);
-    this._appBarTitle = new TextField(
-      autofocus: true,
-      controller: _filter,
-      cursorColor: Colors.white,
-      style: TextStyle(
-          color: Colors.white,
-          fontSize: 16.0
-      ),
-      decoration: new InputDecoration(
-          prefixIcon: new Icon(Icons.search,color: Colors.white,),
-          hintText: 'Search...',
-          hintStyle: TextStyle(
-              color: Colors.white70
-          )
-      ),
-      textInputAction: TextInputAction.search,
-      onSubmitted: (query){
-        setState(() {
-          _searchText = query;
-          if(_selectedIndex == 1){
-            _gameScreenKey.currentState.onQuerySearch(_searchText);
-          }
-          else if(_selectedIndex == 2){
-            _userScreenKey.currentState.onQuerySearch(_searchText);
-          }
-
-        });
-      },
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,27 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: _appBarTitle,
-        centerTitle: true,
-        actions: <Widget>[
-          _selectedIndex != 0 || (_selectedIndex == 1 && !_gameScreenKey.currentState.loadingItems) ?
-          IconButton(
-            icon: _searchIcon,
-            onPressed: (){
-              setState(() {
-                if (this._searchIcon.icon == Icons.search) {
-                  _configureAppBarSearch();
-                } else {
-                  _configureAppBarTitle();
-                }
-              });
-            },
-          ) : Divider()
-        ],
-      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.

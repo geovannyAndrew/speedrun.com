@@ -7,6 +7,7 @@ import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/views/screen_search_view.dart';
 
 class RunsNavigationScreen extends StatefulWidget{
 
@@ -78,27 +79,27 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      
+    return ScreenSearchView(
+      title: "Runs",
       body: Container(
         child: Center(
-            child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: widget.runs.length,
-                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  var run = widget.runs[index];
-                  final isLastElement = index >= widget.runs.length-1;
-                  return RunItemView(run,isLastElement,(run){
-                    _goToRunDetail(run);
-                  });
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: widget.runs.length,
+              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+              itemBuilder: (BuildContext context, int index) {
+                var run = widget.runs[index];
+                final isLastElement = index >= widget.runs.length-1;
+                return RunItemView(run,isLastElement,(run){
+                  _goToRunDetail(run);
+                });
 
-                },
-              ),
-              onRefresh: _onRefresh,
-            )
+              },
+            ),
+            onRefresh: _onRefresh,
+          )
         ),
         decoration: BoxDecoration(
             color: colors.blackBackground

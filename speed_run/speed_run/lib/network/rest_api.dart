@@ -120,7 +120,7 @@ class RestAPI{
   }
 
   Future getUsers({int offset, String query,Function(List<User>) onSuccess,Function(ResponseError) onError}) async{
-    String url = "${urlApi}users?offset=$offset&max=${AppConfig.itemsPerPage}";
+    String url = "${urlApi}users?offset=$offset&max=${AppConfig.itemsPerPage}&orderby=signup";
     if(query != null){
       url+="&name=$query";
     }
