@@ -78,29 +78,32 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      child: Center(
-        child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: widget.runs.length,
-            padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-            itemBuilder: (BuildContext context, int index) {
-              var run = widget.runs[index];
-              final isLastElement = index >= widget.runs.length-1;
-              return RunItemView(run,isLastElement,(run){
-                _goToRunDetail(run);
-              });
+    return Scaffold(
+      
+      body: Container(
+        child: Center(
+            child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: widget.runs.length,
+                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  var run = widget.runs[index];
+                  final isLastElement = index >= widget.runs.length-1;
+                  return RunItemView(run,isLastElement,(run){
+                    _goToRunDetail(run);
+                  });
 
-            },
-          ),
-          onRefresh: _onRefresh,
-        )
-      ),
-      decoration: BoxDecoration(
-        color: colors.blackBackground
-      ),
+                },
+              ),
+              onRefresh: _onRefresh,
+            )
+        ),
+        decoration: BoxDecoration(
+            color: colors.blackBackground
+        ),
+      )
     );
 
   }

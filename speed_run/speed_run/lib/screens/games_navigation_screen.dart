@@ -11,7 +11,7 @@ import 'package:speed_run/view_items/game_item_view.dart';
 class GamesNavigationScreen extends StatefulWidget{
 
   var games = List<Game>();
-  var _loadingItems = false;
+  var loadingItems = false;
   var _allLoaded = false;
 
   GamesNavigationScreen({Key key}):super(key:key);
@@ -30,6 +30,8 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
   ScrollController _scrollController;
   String querySearch;
 
+  bool get loadingItems => null;
+
   void onQuerySearch(String query){
     querySearch = query;
     _refreshIndicatorKey.currentState.show();
@@ -47,13 +49,13 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
 
   void _loadNextItems(){
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._allLoaded && !widget._loadingItems && widget.games.length > 10) {
+    if (_scrollController.position.extentAfter < 500 && !widget._allLoaded && !widget.loadingItems && widget.games.length > 10) {
       _getGames();
     }
   }
 
   Future _getGames({clearList = false}){
-    widget._loadingItems = true;
+    widget.loadingItems = true;
     int offset = clearList ? 0 : widget.games.length;
     var future= RestAPI.instance.getGames(
         offset: offset,
@@ -71,10 +73,10 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
               }
             });
           }
-          widget._loadingItems = false;
+          widget.loadingItems = false;
         },
         onError:(error){
-          widget._loadingItems = false;
+          widget.loadingItems = false;
         }
         );
     return future;

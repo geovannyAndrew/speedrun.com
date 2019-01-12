@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: _appBarTitle,
         centerTitle: true,
         actions: <Widget>[
-          _selectedIndex != 0 ?
+          _selectedIndex != 0 || (_selectedIndex == 1 && !_gameScreenKey.currentState.loadingItems) ?
           IconButton(
             icon: _searchIcon,
             onPressed: (){
