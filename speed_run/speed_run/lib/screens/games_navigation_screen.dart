@@ -8,6 +8,7 @@ import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/view_items/game_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
+import 'package:speed_run/utils/storage.dart' as storage;
 
 class GamesNavigationScreen extends StatefulWidget{
 
@@ -38,6 +39,16 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
   void onQuerySearch(String query){
     widget.querySearch = query;
     _refreshIndicatorKey.currentState.show();
+  }
+  
+  void _restoreGames(){
+    widget.querySearch = null;
+    storage.getGames((games){
+      setState(() {
+        widget.games.clear();
+        widget.games.addAll(games);
+      });
+    });
   }
 
   @override
@@ -98,6 +109,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
       onSearch: (query){
         onQuerySearch(query);
       },
+      onClose: _restoreGames,
       querySearch: widget.querySearch,
       body: Container(
         child: Center(

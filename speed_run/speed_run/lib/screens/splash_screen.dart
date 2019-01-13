@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:speed_run/utils/dialogs.dart' as dialogs;
 
 class SplashScreen extends StatefulWidget{
 

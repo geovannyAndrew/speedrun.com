@@ -19,6 +19,7 @@ class AppBarGameView extends StatelessWidget{
         centerTitle: true,
         collapseMode: CollapseMode.parallax,
         title: Text(game?.name ?? "",
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

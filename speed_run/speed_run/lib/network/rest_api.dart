@@ -7,6 +7,7 @@ import 'package:speed_run/logic/run.dart';
 import 'package:http/http.dart' as http;
 import 'package:speed_run/logic/user.dart';
 import 'dart:convert';
+import 'package:speed_run/utils/storage.dart' as storage;
 
 import 'package:speed_run/network/response_error.dart';
 
@@ -27,6 +28,9 @@ class RestAPI{
     var url = "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&max=${AppConfig.itemsPerPage}";
     final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
+      if(offset == 0){
+        storage.saveInFile("runs", response.body);
+      }
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
       var runs = jsonData.map((model)=> Run.fromJson(model)).toList();
@@ -84,6 +88,9 @@ class RestAPI{
     }
     final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
+      if(offset == 0 && (query == null || query.isEmpty)){
+        storage.saveInFile("games", response.body);
+      }
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
       var games = jsonData.map((model)=> Game.fromJson(model)).toList();
@@ -126,6 +133,9 @@ class RestAPI{
     }
     final response = await http.get(url);
     if(response.statusCode == HttpStatus.ok){
+      if(offset == 0 && (query == null || query.isEmpty)){
+        storage.saveInFile("users", response.body);
+      }
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
       var users = jsonData.map((model)=> User.fromJson(model)).toList();

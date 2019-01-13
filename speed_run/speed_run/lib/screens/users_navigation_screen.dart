@@ -5,11 +5,11 @@ import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
-import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/view_items/user_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
 import 'package:loadmore/loadmore.dart';
+import 'package:speed_run/utils/storage.dart' as storage;
 
 class UsersNavigationScreen extends StatefulWidget{
 
@@ -40,6 +40,16 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
 
   Future _onRefresh(){
     return _getUsers(clearList: true);
+  }
+
+  void _restoreUsers(){
+    widget.querySearch = null;
+    storage.getUsers((users){
+      setState(() {
+        widget.users.clear();
+        widget.users.addAll(users);
+      });
+    });
   }
 
   void onQuerySearch(String query){
@@ -100,6 +110,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
       onSearch: (query){
         onQuerySearch(query);
       },
+      onClose: _restoreUsers,
       querySearch: widget.querySearch,
       body: Container(
         child: Center(

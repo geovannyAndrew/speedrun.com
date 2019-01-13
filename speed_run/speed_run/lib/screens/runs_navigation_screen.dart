@@ -8,6 +8,8 @@ import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/views/screen_search_view.dart';
+import 'package:speed_run/utils/storage.dart' as storage;
+import 'package:speed_run/utils/dialogs.dart' as dialogs;
 
 class RunsNavigationScreen extends StatefulWidget{
 
@@ -33,6 +35,11 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
   @override
   void initState(){
     _scrollController = ScrollController()..addListener(_loadNextItems);
+    storage.getRuns((runs){
+      setState(() {
+        widget.runs.addAll(runs);
+      });
+    });
     super.initState();
   }
 
@@ -56,22 +63,22 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
     widget._loadingItems = true;
     var offset = clearList ? 0 : widget.runs.length;
     var future= RestAPI.instance.getRuns(
-        offset: offset,
-        onSuccess:(runs){
-          if(mounted){
-            setState(() {
-              if(clearList){
-                this.widget.runs.clear();
-              }
-              this.widget.runs.addAll(runs);
-            });
-          }
-          widget._loadingItems = false;
-        },
-        onError:(error){
-          widget._loadingItems = false;
+      offset: offset,
+      onSuccess:(runs){
+        if(mounted){
+          setState(() {
+            if(clearList){
+              this.widget.runs.clear();
+            }
+            this.widget.runs.addAll(runs);
+          });
         }
-        );
+        widget._loadingItems = false;
+      },
+      onError:(error){
+        widget._loadingItems = false;
+      }
+      );
     return future;
   }
 
@@ -119,6 +126,16 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
     if(widget.runs.length == 0){
       _refreshIndicatorKey.currentState.show();
     }
+
+    dialogs.showDialogApp(
+      buildContext: context,
+      title: "Title",
+      body: "Loremsljamsjnd jasd jsdh kjds kssbdnd ksadj ddksjd",
+      buttonPositive: "Acept",
+      onActionPositive: (){
+
+      }
+    );
   }
 
   @override

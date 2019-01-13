@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
@@ -82,7 +83,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
                 this._allLoaded = false;
               }
               this._runs.addAll(runs);
-              if(runs.length < 20){
+              if(runs.length < AppConfig.itemsPerPage){
                 this._allLoaded = true;
               }
             });

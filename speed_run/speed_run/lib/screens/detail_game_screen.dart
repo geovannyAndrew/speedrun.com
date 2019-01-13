@@ -38,6 +38,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
+   // _game = widget.game;
     _getCategories();
   }
 
@@ -62,11 +63,32 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     var future= RestAPI.instance.getGameCategories(
         idGame: widget.game.id,
         onSuccess:(categories){
-          this._categories = categories;
-          _getGame();
+          setState(() {
+            this._categories = categories;
+            this._game = widget.game;
+          });
         },
         onError:(error){
-
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text("Error to get categories"),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                        Navigator.of(this.context).pop();
+                      },
+                      child: Text(
+                          "Ok"
+                      ))
+                ],
+              );
+            }
+          );
         }
     );
     return future;

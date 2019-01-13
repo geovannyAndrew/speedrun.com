@@ -111,7 +111,7 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
                       if (this._searchIcon.icon == Icons.search) {
                         _configureAppBarSearch();
                       } else {
-                        //this._searchText = null;
+                        _filter.clear();
                         _configureAppBarTitle();
                         if(widget.onClose != null){
                           widget.onClose();

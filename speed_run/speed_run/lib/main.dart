@@ -27,11 +27,33 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Colors.black,
         backgroundColor: colors.blackBackground,
         accentColor: colors.greenAccent,
+        dialogBackgroundColor: colors.blackBackground,
         fontFamily: 'OpenSans',
         textTheme: TextTheme(
-          headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          body1: TextStyle(fontSize: 14.0),
+          headline: TextStyle(
+              fontSize: 72.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
+          ),
+          title: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
+          ),
+          body1: TextStyle(
+              fontSize: 14.0,
+              color: Colors.white
+          ),
+          button: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white
+          ),
+          subtitle: TextStyle(
+            color: Colors.white
+          ),
+          subhead: TextStyle(
+            color: Colors.white
+          ),
         ),
       ),
       initialRoute: "/",
