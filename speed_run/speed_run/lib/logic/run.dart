@@ -53,6 +53,10 @@ class Run{
     return this.videos?.firstWhere((asset)=>asset.isTwitch,orElse:()=> null)?.uri;
   }
 
+  String get idTag{
+    return "${id}-${game.id}";
+  }
+
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson` constructor.

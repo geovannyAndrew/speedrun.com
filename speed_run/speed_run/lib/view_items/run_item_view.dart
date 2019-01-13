@@ -26,11 +26,14 @@ class RunItemView extends StatelessWidget{
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(
-                          _run.game?.coverLarge?.uri ?? "",
-                          width: 80.0,
-                          height: 80.0,
-                          fit:BoxFit.cover),
+                      child: Hero(
+                        tag: _run.idTag,
+                        child: Image.network(
+                            _run.game?.coverLarge?.uri ?? "",
+                            width: 80.0,
+                            height: 80.0,
+                            fit:BoxFit.cover),
+                      ),
                     ),
                     Expanded(
                         child: Container(

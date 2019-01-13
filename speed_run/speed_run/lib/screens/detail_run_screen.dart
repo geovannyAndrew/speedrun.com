@@ -9,9 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class RunDetailScreen extends StatefulWidget {
 
-  final String idRun;
+  final Run run;
 
-  RunDetailScreen({Key key,this.idRun}) : super(key: key);
+  RunDetailScreen({Key key,this.run}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -33,6 +33,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _run = widget.run;
     _getRun();
   }
 
@@ -45,7 +46,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
 
   Future _getRun(){
     var future= RestAPI.instance.getRun(
-        id: widget.idRun,
+        id: widget.run.id,
         onSuccess:(run){
           if(mounted){
             setState(() {
@@ -73,7 +74,10 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            AppBarGameView(game: _run?.game)
+            AppBarGameView(
+                game: _run?.game,
+                idTag: _run?.idTag,
+            )
           ];
         },
         body: Container(

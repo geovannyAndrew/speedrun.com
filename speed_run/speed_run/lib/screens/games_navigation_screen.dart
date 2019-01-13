@@ -144,7 +144,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
 
   void _goToGameDetal(Game game){
     //Navigator.pushNamed(context, "/run_detail");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen(idGame: game.id,title: game.name)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GameDetailScreen(game: game)));
   }
 
   @override

@@ -111,7 +111,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
 
   void _goToRunDetail(Run run){
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
+        MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)));
   }
 
   @override

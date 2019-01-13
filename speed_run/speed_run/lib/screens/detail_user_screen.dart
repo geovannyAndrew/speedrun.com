@@ -13,11 +13,10 @@ import 'package:speed_run/views/app_bar_user_view.dart';
 
 class UserDetailScreen extends StatefulWidget {
 
-  final idUser;
-  final title;
+  final User user;
   //var tabs = List<Tab>();
 
-  UserDetailScreen({Key key, this.idUser,this.title}) : super(key: key);
+  UserDetailScreen({Key key, this.user}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -32,7 +31,7 @@ class UserDetailScreen extends StatefulWidget {
   _UserDetailScreenState createState() => _UserDetailScreenState();
 }
 
-class _UserDetailScreenState extends State<UserDetailScreen>{
+class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMixin<UserDetailScreen>{
 
   User _user;
   var _runs = List<Run>();
@@ -43,8 +42,10 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
   @override
   void initState() {
     super.initState();
-    _getUser();
+    _user = widget.user;
   }
+
+
 
   @override
   void dispose() {
@@ -53,14 +54,13 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
 
   Future _getUser(){
     var future= RestAPI.instance.getUser(
-        id: widget.idUser,
+        id: _user.id,
         onSuccess:(user){
           if(mounted){
             setState(() {
               this._user = user;
             });
           }
-          _refreshIndicatorKey.currentState.show();
         },
         onError:(error){
 
@@ -73,7 +73,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
     var offset = clearList ? 0 : this._runs.length;
     var future= RestAPI.instance.getUserRuns(
         offset: offset,
-        idUser: widget.idUser,
+        idUser: _user.id,
         onSuccess:(runs){
           if(mounted){
             setState(() {
@@ -123,7 +123,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
           return <Widget>[
             AppBarUserView(
               user: this._user,
-              idUser: widget.idUser,
+              idUser: _user.id,
             ),
           ];
         },
@@ -132,7 +132,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
               key: _refreshIndicatorKey,
               displacement: 60.0,
               child: ListView.builder(
-                key: PageStorageKey<String>(widget.idUser),
+                key: PageStorageKey<String>(_user.id),
                 itemCount: this._runs.length,
                 padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
                 itemBuilder: (BuildContext context, int index) {
@@ -156,6 +156,11 @@ class _UserDetailScreenState extends State<UserDetailScreen>{
 
   void _goToRunDetal(Run run){
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
+        MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)));
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    _refreshIndicatorKey.currentState.show();
   }
 }

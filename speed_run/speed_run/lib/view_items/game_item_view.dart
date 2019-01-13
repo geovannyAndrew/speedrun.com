@@ -25,9 +25,13 @@ class GameItemView extends StatelessWidget{
                     aspectRatio: 0.77,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(
-                          _game?.coverLarge?.uri ?? "",
-                          fit:BoxFit.cover),
+                      child: Hero(
+                        tag: _game.id,
+                        child: Image.network(
+                            _game?.coverLarge?.uri ?? "",
+                            fit:BoxFit.cover
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(

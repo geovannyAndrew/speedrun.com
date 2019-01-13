@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/category.dart';
+import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
@@ -11,11 +12,10 @@ import 'package:speed_run/utils/after_layout.dart';
 
 class GameDetailScreen extends StatefulWidget {
 
-  final idGame;
-  final title;
+  final Game game;
   //var tabs = List<Tab>();
 
-  GameDetailScreen({Key key, this.idGame, this.title}) : super(key: key);
+  GameDetailScreen({Key key, this.game}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -32,7 +32,7 @@ class GameDetailScreen extends StatefulWidget {
 
 class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerProviderStateMixin {
 
-  var _game;
+  Game _game;
   var _categories = List<Category>();
 
   @override
@@ -43,7 +43,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
 
   Future _getGame(){
     var future= RestAPI.instance.getGame(
-      id: widget.idGame,
+      id: widget.game.id,
       onSuccess:(game){
         if(mounted){
           setState(() {
@@ -60,7 +60,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
 
   Future _getCategories(){
     var future= RestAPI.instance.getGameCategories(
-        idGame: widget.idGame,
+        idGame: widget.game.id,
         onSuccess:(categories){
           this._categories = categories;
           _getGame();
@@ -91,7 +91,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
         AppBar(
           centerTitle: true,
           title: Text(
-            widget.title,
+            widget.game.name,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.0
@@ -112,7 +112,9 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 AppBarGameView(
-                  game: this._game),
+                  game: this._game,
+                  idTag: this._game.id,
+                ),
                 SliverPersistentHeader(
                   delegate: _SliverAppBarDelegate(
                     TabBar(
@@ -152,7 +154,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
     var views = List<Widget>();
     this._categories?.forEach((category)=>
         views.add(UserRunsListView(
-          idGame: widget.idGame,
+          idGame: widget.game.id,
           idCategory: category.id,
         ))
     );
@@ -317,7 +319,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
   void _goToRunDetal(Run run){
     //Navigator.pushNamed(context, "/run_detail");
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(idRun: run.id)));
+        MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)));
   }
 
   @override

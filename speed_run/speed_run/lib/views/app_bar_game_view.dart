@@ -4,8 +4,9 @@ import 'package:speed_run/logic/game.dart';
 class AppBarGameView extends StatelessWidget{
 
   final Game game;
+  final idTag;
 
-  AppBarGameView({Key key,this.game}) : super(key: key);
+  AppBarGameView({Key key,this.game,this.idTag}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +40,12 @@ class AppBarGameView extends StatelessWidget{
               CircularProgressIndicator() :
               Column(
                 children: <Widget>[
-                  Image.network(
-                    game?.coverMedium?.uri ?? "",
-                    height: 120,
+                  Hero(
+                    tag:idTag,
+                    child: Image.network(
+                      game?.coverMedium?.uri ?? "",
+                      height: 120,
+                    ),
                   ),
                   Text(
                     game?.platformsAvaible ?? "",

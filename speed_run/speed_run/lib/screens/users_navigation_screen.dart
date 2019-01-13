@@ -135,7 +135,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
 
   void _goToUserDetal(User user){
     Navigator.push(context, MaterialPageRoute(
-        builder: (context) => UserDetailScreen(idUser: user.id,title: user.name)));
+        builder: (context) => UserDetailScreen(user: user)));
   }
 
   @override
