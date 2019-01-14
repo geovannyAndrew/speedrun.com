@@ -24,6 +24,12 @@ class ResponseError{
   }
 
   String get messageError{
-    return "Status: $statusCode \n message:$body";
+    var json = bodyJson;
+    if(json["message"] != null){
+      return json["message"].toString();
+    }
+    else{
+      return "Status: $statusCode \n message:$body";
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/user_run_item_view.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
@@ -64,7 +65,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
           }
         },
         onError:(error){
-
+          Dialogs.showResponseErrroAlertDialog(
+              buildContext: context,
+              error: error,
+              onActionAlert: (){
+                Navigator.of(context).pop();
+              }
+          );
         }
     );
     return future;
@@ -91,7 +98,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
           this._loadingItems = false;
         },
         onError:(error){
-
+          Dialogs.showResponseErrorSnackbar(context, error);
         }
     );
     return future;

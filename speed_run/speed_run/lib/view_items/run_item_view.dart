@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 class RunItemView extends StatelessWidget{
@@ -15,7 +16,8 @@ class RunItemView extends StatelessWidget{
     // TODO: implement build
     return Column(
       children: <Widget>[
-        GestureDetector(
+        FlatButton(
+          padding: EdgeInsets.all(0.0),
           child: Card(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -28,8 +30,9 @@ class RunItemView extends StatelessWidget{
                       borderRadius: BorderRadius.circular(4.0),
                       child: Hero(
                         tag: _run.idTag,
-                        child: Image.network(
-                            _run.game?.coverLarge?.uri ?? "",
+                        child: FadeInImage.assetNetwork(
+                            image:_run.game?.coverMedium?.uri ?? "",
+                            placeholder: AppConfig.placeholderImageAsset,
                             width: 80.0,
                             height: 80.0,
                             fit:BoxFit.cover),
@@ -79,7 +82,7 @@ class RunItemView extends StatelessWidget{
                                         color: Colors.white,
                                         image: DecorationImage(
                                             image: NetworkImage(
-                                              _run?.player?.urlIcon ?? "",
+                                              _run?.player?.urlIcon ?? AppConfig.placeholderImageUrl,
                                             ),
                                             fit:BoxFit.cover
                                         ),
@@ -128,7 +131,7 @@ class RunItemView extends StatelessWidget{
             ),
             color: colors.blackCard,
           ),
-          onTap: (){
+          onPressed: (){
               _onTap(_run);
               return null;
           },

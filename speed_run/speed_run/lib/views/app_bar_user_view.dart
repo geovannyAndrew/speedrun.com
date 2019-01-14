@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/asset.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/user.dart';
@@ -43,8 +44,9 @@ class AppBarUserView extends StatelessWidget{
                   ClipOval(
                     child: Hero(
                       tag:idUser,
-                      child: Image.network(
-                        user?.urlIcon ?? "",
+                      child: FadeInImage.assetNetwork(
+                        image:user?.urlIcon ?? AppConfig.placeholderImageUrl,
+                        placeholder: AppConfig.placeholderImageAsset,
                         height: 90,
                         width: 90,
                         fit: BoxFit.cover,
@@ -55,7 +57,7 @@ class AppBarUserView extends StatelessWidget{
                     padding: const EdgeInsets.only(top:8.0),
                     child: Text(
                       user?.countryRegionName ?? "",
-                      maxLines: 2,
+                      maxLines: 1,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.white,
@@ -63,12 +65,14 @@ class AppBarUserView extends StatelessWidget{
                       ),
                     ),
                   ),
-                  Image.network(
-                    user?.country?.urlIcon ?? "",
-                    width: 20.0,
-                    height: 15.0,
-                    fit: BoxFit.fill,
-                  ),
+                  user?.country?.urlIcon == null ?
+                      Container():
+                      Image.network(
+                        user?.country?.urlIcon,
+                        width: 20.0,
+                        height: 15.0,
+                        fit: BoxFit.fill,
+                      ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

@@ -6,6 +6,7 @@ import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/game_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
@@ -94,6 +95,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> with After
         onError:(error){
           _screenSearchKey.currentState.visibleIcon = true;
           widget.loadingItems = false;
+          Dialogs.showResponseErrorSnackbar(context, error);
         }
         );
     return future;

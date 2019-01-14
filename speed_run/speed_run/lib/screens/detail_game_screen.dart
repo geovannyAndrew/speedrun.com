@@ -6,6 +6,7 @@ import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:speed_run/utils/after_layout.dart';
@@ -53,7 +54,13 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
         }
       },
       onError:(error){
-
+        Dialogs.showResponseErrroAlertDialog(
+            buildContext: context,
+            error: error,
+            onActionAlert: (){
+              Navigator.of(context).pop();
+            }
+        );
       }
     );
     return future;
@@ -67,26 +74,14 @@ class _GameDetailScreenState extends State<GameDetailScreen> with SingleTickerPr
             this._categories = categories;
             this._game = widget.game;
           });
+          _getGame();
         },
         onError:(error){
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text("Error to get categories"),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                        Navigator.of(this.context).pop();
-                      },
-                      child: Text(
-                          "Ok"
-                      ))
-                ],
-              );
+          Dialogs.showResponseErrroAlertDialog(
+            buildContext: context,
+            error: error,
+            onActionAlert: (){
+              Navigator.of(context).pop();
             }
           );
         }
@@ -271,6 +266,7 @@ class _UserRunsListViewState extends State<UserRunsListView> with AfterLayoutMix
         },
         onError:(error){
           this._loadingItems = false;
+          Dialogs.showResponseErrorSnackbar(context, error);
         }
     );
     return future;

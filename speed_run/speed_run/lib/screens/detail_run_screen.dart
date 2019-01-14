@@ -4,6 +4,7 @@ import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,6 +57,13 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
         },
         onError:(error){
           print(error);
+          Dialogs.showResponseErrroAlertDialog(
+              buildContext: context,
+              error: error,
+              onActionAlert: (){
+                Navigator.of(context).pop();
+              }
+          );
         }
     );
     return future;
@@ -92,14 +100,17 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                     title: "User",
                     content: Row(
                       children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(40.0),
-                          child: Image.network(
-                            _run?.player?.urlIcon ?? "",
-                            width: 50.0,
-                            height: 50.0,
-                            fit:BoxFit.cover),
-                        ),
+                        _run?.player == null ?
+                          CircularProgressIndicator() :
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(40.0),
+                            child: FadeInImage.assetNetwork(
+                              image:_run?.player?.urlIcon ?? AppConfig.placeholderImageUrl,
+                              placeholder: AppConfig.placeholderImageAsset,
+                              width: 50.0,
+                              height: 50.0,
+                              fit:BoxFit.cover),
+                          ),
                         Expanded(
                             child: Container(
                               margin: const EdgeInsets.only( left: 8.0),

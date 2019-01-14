@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 class UserRunItemView extends StatelessWidget{
@@ -15,7 +16,8 @@ class UserRunItemView extends StatelessWidget{
     // TODO: implement build
     return Column(
       children: <Widget>[
-        GestureDetector(
+        FlatButton(
+          padding: EdgeInsets.all(0.0),
           child: Card(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -26,8 +28,9 @@ class UserRunItemView extends StatelessWidget{
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(
-                          _run.game?.coverLarge?.uri ?? "",
+                      child: FadeInImage.assetNetwork(
+                          image: _run.game?.coverMedium?.uri ?? AppConfig.placeholderImageUrl,
+                          placeholder: AppConfig.placeholderImageAsset,
                           width: 80.0,
                           height: 80.0,
                           fit:BoxFit.cover),
@@ -88,7 +91,7 @@ class UserRunItemView extends StatelessWidget{
             ),
             color: colors.blackCard,
           ),
-          onTap: (){
+          onPressed: (){
               _onTap(_run);
               return null;
           },

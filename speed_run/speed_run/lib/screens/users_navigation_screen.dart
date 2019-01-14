@@ -6,6 +6,7 @@ import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
+import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/user_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
 import 'package:loadmore/loadmore.dart';
@@ -95,6 +96,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
         onError:(error){
           _screenSearchKey.currentState.visibleIcon = true;
           widget._loadingItems = false;
+          Dialogs.showResponseErrorSnackbar(context, error);
         }
         );
     return future;

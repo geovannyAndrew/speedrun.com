@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
@@ -9,7 +10,7 @@ import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/views/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
-import 'package:speed_run/utils/dialogs.dart' as dialogs;
+import 'package:speed_run/utils/dialogs.dart';
 
 class RunsNavigationScreen extends StatefulWidget{
 
@@ -30,11 +31,9 @@ class RunsNavigationScreen extends StatefulWidget{
 class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLayoutMixin<RunsNavigationScreen>{
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-  ScrollController _scrollController;
 
   @override
   void initState(){
-    _scrollController = ScrollController()..addListener(_loadNextItems);
     storage.getRuns((runs){
       setState(() {
         widget.runs.addAll(runs);
@@ -52,11 +51,15 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
     _refreshIndicatorKey.currentState.show();
   }
 
-  void _loadNextItems(){
+  Future<bool>  _loadNextItems() async{
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 && !widget._loadingItems && widget.runs.length > 10) {
-      _getRuns();
+    if (!widget._loadingItems && widget.runs.length > 10) {
+      await _getRuns();
     }
+    else{
+      await Future.delayed(Duration(seconds: 0, milliseconds: 100));
+    }
+    return true;
   }
 
   Future _getRuns({clearList = false}){
@@ -77,6 +80,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
       },
       onError:(error){
         widget._loadingItems = false;
+        Dialogs.showResponseErrorSnackbar(context, error);
       }
       );
     return future;
@@ -92,18 +96,23 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
         child: Center(
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: widget.runs.length,
-              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-              itemBuilder: (BuildContext context, int index) {
-                var run = widget.runs[index];
-                final isLastElement = index >= widget.runs.length-1;
-                return RunItemView(run,isLastElement,(run){
-                  _goToRunDetail(run);
-                });
+            child: LoadMore(
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              whenEmptyLoad: false,
+              delegate: DefaultLoadMoreDelegate(),
+              child: ListView.builder(
+                itemCount: widget.runs.length,
+                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  var run = widget.runs[index];
+                  return RunItemView(run,false,(run){
+                    _goToRunDetail(run);
+                  });
 
-              },
+                },
+              ),
+              onLoadMore: _loadNextItems,
+              isFinish: false,
             ),
             onRefresh: _onRefresh,
           )
@@ -127,22 +136,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
       _refreshIndicatorKey.currentState.show();
     }
 
-    dialogs.showDialogApp(
-      buildContext: context,
-      title: "Title",
-      body: "Loremsljamsjnd jasd jsdh kjds kssbdnd ksadj ddksjd",
-      buttonPositive: "Acept",
-      onActionPositive: (){
-
-      }
-    );
   }
 
-  @override
-  void dispose() {
-    _scrollController.removeListener(_loadNextItems);
-    super.dispose();
-
-  }
 
 }

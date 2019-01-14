@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -16,7 +17,8 @@ class UserItemView extends StatelessWidget{
     // TODO: implement build
     return Column(
       children: <Widget>[
-        GestureDetector(
+        FlatButton(
+          padding: EdgeInsets.all(0.0),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -26,8 +28,9 @@ class UserItemView extends StatelessWidget{
                     borderRadius: BorderRadius.circular(40.0),
                     child: Hero(
                       tag: _user.id,
-                      child: Image.network(
-                        _user.urlIcon ?? "",
+                      child: FadeInImage.assetNetwork(
+                        placeholder: AppConfig.placeholderImageAsset,
+                        image:_user.urlIcon ?? "",
                         width: 50.0,
                         height: 50.0,
                         fit:BoxFit.cover
@@ -78,7 +81,7 @@ class UserItemView extends StatelessWidget{
             ),
             color: colors.blackCard,
           ),
-          onTap: (){
+          onPressed: (){
             _onTap(_user);
           },
         ),

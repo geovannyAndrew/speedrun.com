@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 class GameCategoryRunItemView extends StatelessWidget{
@@ -23,8 +24,9 @@ class GameCategoryRunItemView extends StatelessWidget{
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40.0),
-                      child: Image.network(
-                          _run?.player?.urlIcon ?? "",
+                      child: FadeInImage.assetNetwork(
+                          image:_run?.player?.urlIcon ?? AppConfig.placeholderImageUrl,
+                          placeholder: AppConfig.placeholderImageAsset,
                           width: 50.0,
                           height: 50.0,
                           fit:BoxFit.cover),

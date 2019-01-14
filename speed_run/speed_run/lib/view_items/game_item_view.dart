@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
@@ -27,8 +28,9 @@ class GameItemView extends StatelessWidget{
                       borderRadius: BorderRadius.circular(4.0),
                       child: Hero(
                         tag: _game.id,
-                        child: Image.network(
-                            _game?.coverLarge?.uri ?? "",
+                        child: FadeInImage.assetNetwork(
+                            image:_game?.coverLarge?.uri ?? "",
+                            placeholder: AppConfig.placeholderImageAsset,
                             fit:BoxFit.cover
                         ),
                       ),
