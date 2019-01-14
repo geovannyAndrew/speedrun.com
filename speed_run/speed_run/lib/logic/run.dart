@@ -55,7 +55,7 @@ class Run{
   }
 
   String get idTag{
-    return "${id}-${game.id}";
+    return "$id-${game.id}";
   }
 
   String get submittedAgo{

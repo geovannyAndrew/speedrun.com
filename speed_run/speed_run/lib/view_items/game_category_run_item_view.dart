@@ -69,7 +69,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                               Container(
                                 alignment: Alignment(-1.0, 0),
                                 child: Text(
-                                  "",
+                                  _run?.submittedAgo,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.0
