@@ -56,15 +56,24 @@ class UserRunItemView extends StatelessWidget{
                               ),
                               Row(
                                 children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      _run?.category?.name,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.0
-                                      ),
+                                  Text(
+                                    _run?.category?.name,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.0
                                     ),
                                   )
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    _run?.submittedAgo,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13.0
+                                    ),
+                                  ),
                                 ],
                               ),
                               Padding(

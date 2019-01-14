@@ -107,6 +107,17 @@ class RunItemView extends StatelessWidget{
                                   ],
                                 ),
                               ),
+                              /*Row(
+                                children: <Widget>[
+                                  Text(
+                                    _run?.submittedAgo,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13.0
+                                    ),
+                                  ),
+                                ],
+                              ),*/
                               Padding(
                                 padding: EdgeInsets.only(top: 2.0),
                                 child: Row(

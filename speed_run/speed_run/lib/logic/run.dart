@@ -4,6 +4,7 @@ import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/times.dart';
 import 'package:speed_run/logic/user.dart';
+import 'package:timeago/timeago.dart' as timeago;
 /// This allows the `User` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
 /// the star denotes the source file name.
@@ -55,6 +56,16 @@ class Run{
 
   String get idTag{
     return "${id}-${game.id}";
+  }
+
+  String get submittedAgo{
+    if(submitted!=null){
+      var datetime = DateTime.parse(submitted);
+      return timeago.format(datetime);
+    }
+    else{
+      return "";
+    }
   }
 
 

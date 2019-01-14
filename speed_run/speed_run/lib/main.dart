@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
               color: Colors.white
           ),
           button: TextStyle(
-              fontWeight: FontWeight.bold,
               color: Colors.white
           ),
           subtitle: TextStyle(

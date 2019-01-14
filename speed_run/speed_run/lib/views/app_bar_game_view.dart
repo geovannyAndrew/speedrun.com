@@ -5,8 +5,9 @@ class AppBarGameView extends StatelessWidget{
 
   final Game game;
   final idTag;
+  final Function onPressGame;
 
-  AppBarGameView({Key key,this.game,this.idTag}) : super(key: key);
+  AppBarGameView({Key key,this.game,this.idTag,this.onPressGame = null}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +50,18 @@ class AppBarGameView extends StatelessWidget{
               CircularProgressIndicator() :
               Column(
                 children: <Widget>[
-                  Hero(
-                    tag:idTag,
-                    child: Image.network(
-                      game?.coverMedium?.uri ?? "",
-                      height: 120,
+                  FlatButton(
+                    onPressed:(){
+                      if(onPressGame != null){
+                        onPressGame();
+                      }
+                    },
+                    child: Hero(
+                      tag:idTag,
+                      child: Image.network(
+                        game?.coverMedium?.uri ?? "",
+                        height: 120,
+                      ),
                     ),
                   ),
                   Text(

@@ -77,7 +77,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
         offset: offset,
         query: widget.querySearch,
         onSuccess:(users){
-          _screenSearchKey.currentState.visibleIcon = true;
+          _screenSearchKey?.currentState?.visibleIcon = true;
           widget._loadingItems = false;
           if(mounted){
             setState(() {
@@ -94,7 +94,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen> with After
 
         },
         onError:(error){
-          _screenSearchKey.currentState.visibleIcon = true;
+          _screenSearchKey?.currentState?.visibleIcon = true;
           widget._loadingItems = false;
           Dialogs.showResponseErrorSnackbar(context, error);
         }
