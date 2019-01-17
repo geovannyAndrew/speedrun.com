@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget{
 class _SplashScreenState extends State<SplashScreen>{
 
   _delayTimer() async{
-    var _duration = Duration(seconds: 3);
+    var _duration = Duration(seconds: 2);
     return Timer(_duration,_goToHomeScreen);
   }
 
@@ -42,10 +42,27 @@ class _SplashScreenState extends State<SplashScreen>{
       body: Container(
         color: Colors.black,
         child: Center(
-          child: Image.asset(
+          /*child: Image.asset(
             "assets/images/logo_speed_run.png",
             width: 200.0,
             fit: BoxFit.fitWidth,
+          )*/
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                "assets/images/icon_speedrun.png",
+                width: 80.0,
+                fit: BoxFit.fitWidth,
+              ),
+              Text(
+                "Speedrun API",
+                style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold
+                ),
+              )
+            ],
           )
         ),
       ),
