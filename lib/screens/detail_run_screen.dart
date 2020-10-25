@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:speed_run/config/app_config.dart';
+import 'package:speed_run/internal/keys.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
@@ -45,7 +46,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
 
   void _playVideo(){
     FlutterYoutube.playYoutubeVideoByUrl(
-        apiKey: AppConfig.apiKeyYoutube,
+        apiKey: API_KEY_YOUTUBE,
         videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
     );
   }
