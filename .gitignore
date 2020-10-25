@@ -74,3 +74,4 @@ build/
 #Keys
 lib/internal/*
 android/key.properties
+*.code-workspace

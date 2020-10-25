@@ -30,39 +30,23 @@ class MyApp extends StatelessWidget {
         dialogBackgroundColor: colors.blackBackground,
         fontFamily: 'OpenSans',
         textTheme: TextTheme(
-          headline: TextStyle(
-              fontSize: 72.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-          ),
-          title: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-          ),
-          body1: TextStyle(
-              fontSize: 14.0,
-              color: Colors.white
-          ),
-          button: TextStyle(
-              color: Colors.white
-          ),
-          subtitle: TextStyle(
-            color: Colors.white
-          ),
-          subhead: TextStyle(
-            color: Colors.white
-          ),
+          headline5: TextStyle(
+              fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.white),
+          headline6: TextStyle(
+              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+          bodyText2: TextStyle(fontSize: 14.0, color: Colors.white),
+          button: TextStyle(color: Colors.white),
+          subtitle2: TextStyle(color: Colors.white),
+          subtitle1: TextStyle(color: Colors.white),
         ),
       ),
       initialRoute: "/",
       routes: {
         "/": (context) => SplashScreen(),
-        "/home" : (context) => HomeScreen(),
-        "/run_detail" : (context) => RunDetailScreen(),
-        "/game_detail" : (context) => GameDetailScreen()
+        "/home": (context) => HomeScreen(),
+        "/run_detail": (context) => RunDetailScreen(),
+        "/game_detail": (context) => GameDetailScreen()
       },
     );
   }
 }
-
