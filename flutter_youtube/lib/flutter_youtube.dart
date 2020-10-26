@@ -12,7 +12,7 @@ class FlutterYoutube {
 
   static String getIdFromUrl(String url, [bool trimWhitespaces = true]) {
     if (url == null || url.length == 0) return null;
-
+    // ignore: parameter_assignments
     if (trimWhitespaces) url = url.trim();
 
     for (var exp in _regexps) {
@@ -34,7 +34,7 @@ class FlutterYoutube {
   static playYoutubeVideoByUrl(
       {@required String apiKey,
       @required String videoUrl,
-        bool autoPlay = false,
+      bool autoPlay = false,
       bool fullScreen = false}) {
     if (apiKey.isEmpty || apiKey == null) {
       throw "Invalid API Key";
@@ -62,7 +62,7 @@ class FlutterYoutube {
   static playYoutubeVideoById(
       {@required String apiKey,
       @required String videoId,
-        bool autoPlay = false,
+      bool autoPlay = false,
       bool fullScreen = false}) {
     if (apiKey.isEmpty || apiKey == null) {
       throw "Invalid API Key";
@@ -84,11 +84,7 @@ class FlutterYoutube {
   Stream<String> done;
 
   Stream<String> get onVideoEnded {
-
-    var d = _stream
-        .receiveBroadcastStream()
-        .map<String>(
-            (element) => element);
+    var d = _stream.receiveBroadcastStream().map<String>((element) => element);
     return d;
   }
 }
