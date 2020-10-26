@@ -14,7 +14,6 @@ import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/views/app_bar_user_view.dart';
 
 class UserDetailScreen extends StatefulWidget {
-
   final User user;
   //var tabs = List<Tab>();
 
@@ -33,13 +32,14 @@ class UserDetailScreen extends StatefulWidget {
   _UserDetailScreenState createState() => _UserDetailScreenState();
 }
 
-class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMixin<UserDetailScreen>{
-
+class _UserDetailScreenState extends State<UserDetailScreen>
+    with AfterLayoutMixin<UserDetailScreen> {
   User _user;
   var _runs = List<Run>();
   var _loadingItems = false;
   var _allLoaded = false;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -47,68 +47,63 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
     _user = widget.user;
   }
 
-
-
   @override
   void dispose() {
     super.dispose();
   }
 
-  Future _getUser(){
-    var future= RestAPI.instance.getUser(
+  Future _getUser() {
+    var future = RestAPI.instance.getUser(
         id: _user.id,
-        onSuccess:(user){
-          if(mounted){
+        onSuccess: (user) {
+          if (mounted) {
             setState(() {
               this._user = user;
             });
           }
         },
-        onError:(error){
+        onError: (error) {
           Dialogs.showResponseErrroAlertDialog(
               buildContext: context,
               error: error,
-              onActionAlert: (){
+              onActionAlert: () {
                 Navigator.of(context).pop();
-              }
-          );
-        }
-    );
+              });
+        });
     return future;
   }
 
-  Future _getRunsUser({clearList = false}){
+  Future _getRunsUser({bool clearList = false}) {
     var offset = clearList ? 0 : this._runs.length;
-    var future= RestAPI.instance.getUserRuns(
+    var future = RestAPI.instance.getUserRuns(
         offset: offset,
         idUser: _user.id,
-        onSuccess:(runs){
-          if(mounted){
+        onSuccess: (runs) {
+          if (mounted) {
             setState(() {
-              if(clearList){
+              if (clearList) {
                 this._runs.clear();
                 this._allLoaded = false;
               }
               this._runs.addAll(runs);
-              if(runs.length < AppConfig.itemsPerPage){
+              if (runs.length < AppConfig.itemsPerPage) {
                 this._allLoaded = true;
               }
             });
           }
           this._loadingItems = false;
         },
-        onError:(error){
+        onError: (error) {
           Dialogs.showResponseErrorSnackbar(context, error);
-        }
-    );
+        });
     return future;
   }
 
-  Future _onRefresh(){
+  Future _onRefresh() {
     return _getRunsUser(clearList: true);
   }
 
-  void _loadNextItems(){
+  void _loadNextItems() {
     //print(_scrollController.position.extentAfter);
     if (!this._loadingItems && !this._allLoaded && this._runs.length > 10) {
       _getRunsUser();
@@ -117,7 +112,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
 
   @override
   Widget build(BuildContext context) {
-
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -125,44 +119,42 @@ class _UserDetailScreenState extends State<UserDetailScreen> with AfterLayoutMix
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: colors.blackBackground,
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            AppBarUserView(
-              user: this._user,
-              idUser: _user.id,
-            ),
-          ];
-        },
-        body: Center(
-            child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              displacement: 60.0,
-              child: ListView.builder(
-                key: PageStorageKey<String>(_user.id),
-                itemCount: this._runs.length,
-                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  var run = this._runs[index];
-                  final isLastElement = index >= this._runs.length-1 && !this._allLoaded;
-                  if(isLastElement){
-                    _loadNextItems();
-                  }
-                  return UserRunItemView(run,isLastElement,(run){
-                    _goToRunDetal(run);
-                  });
-                },
+        backgroundColor: colors.blackBackground,
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              AppBarUserView(
+                user: this._user,
+                idUser: _user.id,
               ),
-              onRefresh: _onRefresh,
-            )
-        ),
-      )
-
-    );
+            ];
+          },
+          body: Center(
+              child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            displacement: 60.0,
+            child: ListView.builder(
+              key: PageStorageKey<String>(_user.id),
+              itemCount: this._runs.length,
+              padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              itemBuilder: (BuildContext context, int index) {
+                var run = this._runs[index];
+                final isLastElement =
+                    index >= this._runs.length - 1 && !this._allLoaded;
+                if (isLastElement) {
+                  _loadNextItems();
+                }
+                return UserRunItemView(run, isLastElement, (run) {
+                  _goToRunDetal(run);
+                });
+              },
+            ),
+            onRefresh: _onRefresh,
+          )),
+        ));
   }
 
-  void _goToRunDetal(Run run){
+  void _goToRunDetal(Run run) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)));
   }

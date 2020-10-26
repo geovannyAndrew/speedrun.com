@@ -35,6 +35,7 @@ dev_dependencies:
     path: loadmore
   flutter_youtube:
     path: flutter_youtube
+  lint: ^1.3.0
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/logic/run.dart';
@@ -12,29 +11,28 @@ import 'package:speed_run/views/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/utils/dialogs.dart';
 
-class RunsNavigationScreen extends StatefulWidget{
-
+class RunsNavigationScreen extends StatefulWidget {
   final runs = List<Run>();
   var _loadingItems = false;
   var querySearch = "";
 
-  RunsNavigationScreen({Key key}):super(key:key);
+  RunsNavigationScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return RunsNavigationScreenState();
   }
-
 }
 
-class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLayoutMixin<RunsNavigationScreen>{
-
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+class RunsNavigationScreenState extends State<RunsNavigationScreen>
+    with AfterLayoutMixin<RunsNavigationScreen> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   @override
-  void initState(){
-    storage.getRuns((runs){
+  void initState() {
+    storage.getRuns((runs) {
       setState(() {
         widget.runs.addAll(runs);
       });
@@ -42,59 +40,56 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
     super.initState();
   }
 
-  Future _onRefresh(){
+  Future _onRefresh() {
     return _getRuns(clearList: true);
   }
 
-  void onQuerySearch(String query){
+  void onQuerySearch(String query) {
     widget.querySearch = query;
     _refreshIndicatorKey.currentState.show();
   }
 
-  Future<bool>  _loadNextItems() async{
+  Future<bool> _loadNextItems() async {
     //print(_scrollController.position.extentAfter);
     if (!widget._loadingItems && widget.runs.length > 10) {
       await _getRuns();
-    }
-    else{
+    } else {
       await Future.delayed(Duration(seconds: 0, milliseconds: 100));
     }
     return true;
   }
 
-  Future _getRuns({clearList = false}){
+  Future _getRuns({bool clearList = false}) {
     widget._loadingItems = true;
     var offset = clearList ? 0 : widget.runs.length;
-    var future= RestAPI.instance.getRuns(
-      offset: offset,
-      onSuccess:(runs){
-        if(mounted){
-          setState(() {
-            if(clearList){
-              this.widget.runs.clear();
-            }
-            this.widget.runs.addAll(runs);
-          });
-        }
-        widget._loadingItems = false;
-      },
-      onError:(error){
-        widget._loadingItems = false;
-        Dialogs.showResponseErrorSnackbar(context, error);
-      }
-      );
+    var future = RestAPI.instance.getRuns(
+        offset: offset,
+        onSuccess: (runs) {
+          if (mounted) {
+            setState(() {
+              if (clearList) {
+                this.widget.runs.clear();
+              }
+              this.widget.runs.addAll(runs);
+            });
+          }
+          widget._loadingItems = false;
+        },
+        onError: (error) {
+          widget._loadingItems = false;
+          Dialogs.showResponseErrorSnackbar(context, error);
+        });
     return future;
   }
-
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return ScreenSearchView(
-      title: "Runs",
-      body: Container(
-        child: Center(
-          child: RefreshIndicator(
+        title: "Runs",
+        body: Container(
+          child: Center(
+              child: RefreshIndicator(
             key: _refreshIndicatorKey,
             child: LoadMore(
               textBuilder: DefaultLoadMoreTextBuilder.english,
@@ -102,41 +97,34 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> with AfterLa
               delegate: DefaultLoadMoreDelegate(),
               child: ListView.builder(
                 itemCount: widget.runs.length,
-                padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+                padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                 itemBuilder: (BuildContext context, int index) {
                   var run = widget.runs[index];
-                  return RunItemView(run,false,(run){
+                  return RunItemView(run, false, (run) {
                     _goToRunDetail(run);
                   });
-
                 },
               ),
               onLoadMore: _loadNextItems,
               isFinish: false,
             ),
             onRefresh: _onRefresh,
-          )
-        ),
-        decoration: BoxDecoration(
-            color: colors.blackBackground
-        ),
-      )
-    );
-
+          )),
+          decoration: BoxDecoration(color: colors.blackBackground),
+        ));
   }
 
-  void _goToRunDetail(Run run){
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(run: run,linkToUser: true)));
+  void _goToRunDetail(Run run) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RunDetailScreen(run: run, linkToUser: true)));
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if(widget.runs.length == 0){
+    if (widget.runs.length == 0) {
       _refreshIndicatorKey.currentState.show();
     }
-
   }
-
-
 }
