@@ -9,7 +9,6 @@ part of 'house.dart';
 _$_House _$_$_HouseFromJson(Map<String, dynamic> json) {
   return _$_House(
     id: json['id_house'] as String,
-    id: json['id_house'] as String,
   );
 }
 

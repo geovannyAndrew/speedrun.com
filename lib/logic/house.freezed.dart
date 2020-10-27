@@ -17,11 +17,8 @@ class _$HouseTearOff {
   const _$HouseTearOff();
 
 // ignore: unused_element
-  _House call(
-      {@JsonKey(name: 'id_house') String id,
-      @JsonKey(name: 'id_house') String id}) {
+  _House call({@JsonKey(name: 'id_house') String id}) {
     return _House(
-      id: id,
       id: id,
     );
   }
@@ -40,8 +37,6 @@ const $House = _$HouseTearOff();
 mixin _$House {
   @JsonKey(name: 'id_house')
   String get id;
-  @JsonKey(name: 'id_house')
-  String get id;
 
   Map<String, dynamic> toJson();
   $HouseCopyWith<House> get copyWith;
@@ -51,9 +46,7 @@ mixin _$House {
 abstract class $HouseCopyWith<$Res> {
   factory $HouseCopyWith(House value, $Res Function(House) then) =
       _$HouseCopyWithImpl<$Res>;
-  $Res call(
-      {@JsonKey(name: 'id_house') String id,
-      @JsonKey(name: 'id_house') String id});
+  $Res call({@JsonKey(name: 'id_house') String id});
 }
 
 /// @nodoc
@@ -67,10 +60,8 @@ class _$HouseCopyWithImpl<$Res> implements $HouseCopyWith<$Res> {
   @override
   $Res call({
     Object id = freezed,
-    Object id = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
       id: id == freezed ? _value.id : id as String,
     ));
   }
@@ -81,9 +72,7 @@ abstract class _$HouseCopyWith<$Res> implements $HouseCopyWith<$Res> {
   factory _$HouseCopyWith(_House value, $Res Function(_House) then) =
       __$HouseCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {@JsonKey(name: 'id_house') String id,
-      @JsonKey(name: 'id_house') String id});
+  $Res call({@JsonKey(name: 'id_house') String id});
 }
 
 /// @nodoc
@@ -98,10 +87,8 @@ class __$HouseCopyWithImpl<$Res> extends _$HouseCopyWithImpl<$Res>
   @override
   $Res call({
     Object id = freezed,
-    Object id = freezed,
   }) {
     return _then(_House(
-      id: id == freezed ? _value.id : id as String,
       id: id == freezed ? _value.id : id as String,
     ));
   }
@@ -111,8 +98,7 @@ class __$HouseCopyWithImpl<$Res> extends _$HouseCopyWithImpl<$Res>
 
 /// @nodoc
 class _$_House implements _House {
-  const _$_House(
-      {@JsonKey(name: 'id_house') this.id, @JsonKey(name: 'id_house') this.id});
+  const _$_House({@JsonKey(name: 'id_house') this.id});
 
   factory _$_House.fromJson(Map<String, dynamic> json) =>
       _$_$_HouseFromJson(json);
@@ -120,13 +106,10 @@ class _$_House implements _House {
   @override
   @JsonKey(name: 'id_house')
   final String id;
-  @override
-  @JsonKey(name: 'id_house')
-  final String id;
 
   @override
   String toString() {
-    return 'House(id: $id, id: $id)';
+    return 'House(id: $id)';
   }
 
   @override
@@ -134,16 +117,12 @@ class _$_House implements _House {
     return identical(this, other) ||
         (other is _House &&
             (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(id);
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
 
   @override
   _$HouseCopyWith<_House> get copyWith =>
@@ -156,15 +135,10 @@ class _$_House implements _House {
 }
 
 abstract class _House implements House {
-  const factory _House(
-      {@JsonKey(name: 'id_house') String id,
-      @JsonKey(name: 'id_house') String id}) = _$_House;
+  const factory _House({@JsonKey(name: 'id_house') String id}) = _$_House;
 
   factory _House.fromJson(Map<String, dynamic> json) = _$_House.fromJson;
 
-  @override
-  @JsonKey(name: 'id_house')
-  String get id;
   @override
   @JsonKey(name: 'id_house')
   String get id;
