@@ -17,7 +17,7 @@ class _$AssetTearOff {
   const _$AssetTearOff();
 
 // ignore: unused_element
-  _Asset call({String uri, int width, int height}) {
+  _Asset call({@required String uri, int width, int height}) {
     return _Asset(
       uri: uri,
       width: width,
@@ -108,8 +108,10 @@ class __$AssetCopyWithImpl<$Res> extends _$AssetCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_Asset implements _Asset {
-  const _$_Asset({this.uri, this.width, this.height});
+class _$_Asset extends _Asset {
+  _$_Asset({@required this.uri, this.width, this.height})
+      : assert(uri != null),
+        super._();
 
   factory _$_Asset.fromJson(Map<String, dynamic> json) =>
       _$_$_AssetFromJson(json);
@@ -155,8 +157,9 @@ class _$_Asset implements _Asset {
   }
 }
 
-abstract class _Asset implements Asset {
-  const factory _Asset({String uri, int width, int height}) = _$_Asset;
+abstract class _Asset extends Asset {
+  _Asset._() : super._();
+  factory _Asset({@required String uri, int width, int height}) = _$_Asset;
 
   factory _Asset.fromJson(Map<String, dynamic> json) = _$_Asset.fromJson;
 

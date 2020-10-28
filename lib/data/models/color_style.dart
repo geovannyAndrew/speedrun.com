@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:speed_run/domain/services/models/ccolor.dart';
+import 'package:speed_run/data/models/ccolor.dart';
 
 part 'color_style.freezed.dart';
 part 'color_style.g.dart';

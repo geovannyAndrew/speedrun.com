@@ -1,13 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:speed_run/domain/services/models/asset.dart';
-import 'package:speed_run/domain/services/models/color_style.dart';
-import 'package:speed_run/domain/services/models/location.dart';
+import 'package:speed_run/data/models/asset.dart';
+import 'package:speed_run/data/models/color_style.dart';
+import 'package:speed_run/data/models/location.dart';
 import 'names.dart';
 
 part 'user.freezed.dart';
 
 @freezed
-abstract class User with _$User {
+abstract class User implements _$User {
+  const User._();
   const factory User(
       {String id,
       Names names,
@@ -49,5 +50,10 @@ abstract class User with _$User {
         twitter: json["twitter"] != null
             ? Asset.fromJson(json["twitter"] as Map<String, dynamic>)
             : null);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return null;
   }
 }

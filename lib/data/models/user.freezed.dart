@@ -246,7 +246,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 }
 
 /// @nodoc
-class _$_User implements _User {
+class _$_User extends _User {
   const _$_User(
       {this.id,
       this.names,
@@ -255,7 +255,8 @@ class _$_User implements _User {
       this.colorStyle,
       this.twitch,
       this.youtube,
-      this.twitter});
+      this.twitter})
+      : super._();
 
   @override
   final String id;
@@ -321,7 +322,8 @@ class _$_User implements _User {
       __$UserCopyWithImpl<_User>(this, _$identity);
 }
 
-abstract class _User implements User {
+abstract class _User extends User {
+  const _User._() : super._();
   const factory _User(
       {String id,
       Names names,

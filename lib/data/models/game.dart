@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:speed_run/domain/services/models/asset.dart';
-import 'package:speed_run/domain/services/models/names.dart';
-import 'package:speed_run/domain/services/models/platform.dart';
+import 'package:speed_run/data/models/asset.dart';
+import 'package:speed_run/data/models/names.dart';
+import 'package:speed_run/data/models/platform.dart';
 
 part 'game.freezed.dart';
 
@@ -42,6 +42,8 @@ abstract class Game with _$Game {
             : null,
         platforms: platforms);
   }
+
+  Map<String, dynamic> toJson() => null;
 
   String get platformsAvaible {
     return platforms?.map((e) => e.name).toList().join(", ");

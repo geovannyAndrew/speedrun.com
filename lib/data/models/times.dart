@@ -4,7 +4,7 @@ part 'times.freezed.dart';
 part 'times.g.dart';
 
 @freezed
-abstract class Times with _$Times {
+abstract class Times implements _$Times {
   @JsonSerializable()
   const factory Times(
       {@JsonKey(name: "primary") String primary,
