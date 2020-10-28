@@ -8,6 +8,9 @@ part of 'asset.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+Asset _$AssetFromJson(Map<String, dynamic> json) {
+  return _Asset.fromJson(json);
+}
 
 /// @nodoc
 class _$AssetTearOff {
@@ -21,6 +24,11 @@ class _$AssetTearOff {
       height: height,
     );
   }
+
+// ignore: unused_element
+  Asset fromJson(Map<String, Object> json) {
+    return Asset.fromJson(json);
+  }
 }
 
 /// @nodoc
@@ -33,6 +41,7 @@ mixin _$Asset {
   int get width;
   int get height;
 
+  Map<String, dynamic> toJson();
   $AssetCopyWith<Asset> get copyWith;
 }
 
@@ -96,9 +105,14 @@ class __$AssetCopyWithImpl<$Res> extends _$AssetCopyWithImpl<$Res>
   }
 }
 
+@JsonSerializable()
+
 /// @nodoc
 class _$_Asset implements _Asset {
   const _$_Asset({this.uri, this.width, this.height});
+
+  factory _$_Asset.fromJson(Map<String, dynamic> json) =>
+      _$_$_AssetFromJson(json);
 
   @override
   final String uri;
@@ -134,10 +148,17 @@ class _$_Asset implements _Asset {
   @override
   _$AssetCopyWith<_Asset> get copyWith =>
       __$AssetCopyWithImpl<_Asset>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_AssetToJson(this);
+  }
 }
 
 abstract class _Asset implements Asset {
   const factory _Asset({String uri, int width, int height}) = _$_Asset;
+
+  factory _Asset.fromJson(Map<String, dynamic> json) = _$_Asset.fromJson;
 
   @override
   String get uri;

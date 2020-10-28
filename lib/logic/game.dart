@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:speed_run/domain/services/models/user.dart';
 import 'package:speed_run/logic/asset.dart';
 import 'package:speed_run/logic/names.dart';
 import 'package:speed_run/logic/platform.dart';

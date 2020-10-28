@@ -9,14 +9,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   TextEditingController textEditingControllerUrl = new TextEditingController();
   TextEditingController textEditingControllerId = new TextEditingController();
 
   @override
   initState() {
     super.initState();
-
   }
 
   void playYoutubeVideo() {
@@ -38,6 +36,7 @@ class _MyAppState extends State<MyApp> {
       videoUrl: textEditingControllerUrl.text,
     );
   }
+
   void playYoutubeVideoIdEdit() {
     var youtube = new FlutterYoutube();
 
@@ -50,6 +49,7 @@ class _MyAppState extends State<MyApp> {
       videoId: textEditingControllerId.text,
     );
   }
+
   void playYoutubeVideoIdEditAuto() {
     var youtube = new FlutterYoutube();
 
@@ -58,12 +58,10 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoById(
-      apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
-      videoId: textEditingControllerId.text,
-      autoPlay: true
-    );
+        apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
+        videoId: textEditingControllerId.text,
+        autoPlay: true);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,49 +75,43 @@ class _MyAppState extends State<MyApp> {
             children: <Widget>[
               new Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: new TextField (
+                child: new TextField(
                   controller: textEditingControllerUrl,
-                  decoration: new InputDecoration(
-                      labelText: "Enter Youtube URL"
-                  ),
+                  decoration:
+                      new InputDecoration(labelText: "Enter Youtube URL"),
                 ),
               ),
               new Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: new RaisedButton(
-                  child: new Text("Play Video By Url"),
-                  onPressed: playYoutubeVideoEdit
-                ),
+                    child: new Text("Play Video By Url"),
+                    onPressed: playYoutubeVideoEdit),
               ),
               new Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: new RaisedButton(
                     child: new Text("Play Default Video"),
-                    onPressed: playYoutubeVideo
-                ),
+                    onPressed: playYoutubeVideo),
               ),
               new Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: new TextField (
+                child: new TextField(
                   controller: textEditingControllerId,
                   decoration: new InputDecoration(
-                      labelText: "Youtube Video Id (fhWaJi1Hsfo)"
-                  ),
+                      labelText: "Youtube Video Id (fhWaJi1Hsfo)"),
                 ),
               ),
               new Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: new RaisedButton(
                     child: new Text("Play Video By Id"),
-                    onPressed: playYoutubeVideoIdEdit
-                ),
+                    onPressed: playYoutubeVideoIdEdit),
               ),
               new Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: new RaisedButton(
                     child: new Text("Auto Play Video By Id"),
-                    onPressed: playYoutubeVideoIdEditAuto
-                ),
+                    onPressed: playYoutubeVideoIdEditAuto),
               ),
             ],
           ),

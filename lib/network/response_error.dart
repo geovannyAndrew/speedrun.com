@@ -1,34 +1,31 @@
-
 import 'dart:convert';
 
 import 'package:http/http.dart';
 
-class ResponseError{
-
+class ResponseError {
   Response response;
 
-  ResponseError(Response response){
-    this.response= response;
+  ResponseError(Response response) {
+    this.response = response;
   }
 
-  int get statusCode{
+  int get statusCode {
     return response.statusCode;
   }
 
-  String get body{
+  String get body {
     return response.body;
   }
 
-  dynamic get bodyJson{
+  dynamic get bodyJson {
     return jsonDecode(response.body);
   }
 
-  String get messageError{
+  String get messageError {
     var json = bodyJson;
-    if(json["message"] != null){
+    if (json["message"] != null) {
       return json["message"].toString();
-    }
-    else{
+    } else {
       return "Status: $statusCode \n message:$body";
     }
   }

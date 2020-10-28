@@ -8,18 +8,25 @@ part of 'names.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+Names _$NamesFromJson(Map<String, dynamic> json) {
+  return _Names.fromJson(json);
+}
 
 /// @nodoc
 class _$NamesTearOff {
   const _$NamesTearOff();
 
 // ignore: unused_element
-  _Names call({String international, String japanese, String twitch}) {
+  _Names call({String international, String japanese}) {
     return _Names(
       international: international,
       japanese: japanese,
-      twitch: twitch,
     );
+  }
+
+// ignore: unused_element
+  Names fromJson(Map<String, Object> json) {
+    return Names.fromJson(json);
   }
 }
 
@@ -31,8 +38,8 @@ const $Names = _$NamesTearOff();
 mixin _$Names {
   String get international;
   String get japanese;
-  String get twitch;
 
+  Map<String, dynamic> toJson();
   $NamesCopyWith<Names> get copyWith;
 }
 
@@ -40,7 +47,7 @@ mixin _$Names {
 abstract class $NamesCopyWith<$Res> {
   factory $NamesCopyWith(Names value, $Res Function(Names) then) =
       _$NamesCopyWithImpl<$Res>;
-  $Res call({String international, String japanese, String twitch});
+  $Res call({String international, String japanese});
 }
 
 /// @nodoc
@@ -55,14 +62,12 @@ class _$NamesCopyWithImpl<$Res> implements $NamesCopyWith<$Res> {
   $Res call({
     Object international = freezed,
     Object japanese = freezed,
-    Object twitch = freezed,
   }) {
     return _then(_value.copyWith(
       international: international == freezed
           ? _value.international
           : international as String,
       japanese: japanese == freezed ? _value.japanese : japanese as String,
-      twitch: twitch == freezed ? _value.twitch : twitch as String,
     ));
   }
 }
@@ -72,7 +77,7 @@ abstract class _$NamesCopyWith<$Res> implements $NamesCopyWith<$Res> {
   factory _$NamesCopyWith(_Names value, $Res Function(_Names) then) =
       __$NamesCopyWithImpl<$Res>;
   @override
-  $Res call({String international, String japanese, String twitch});
+  $Res call({String international, String japanese});
 }
 
 /// @nodoc
@@ -88,32 +93,33 @@ class __$NamesCopyWithImpl<$Res> extends _$NamesCopyWithImpl<$Res>
   $Res call({
     Object international = freezed,
     Object japanese = freezed,
-    Object twitch = freezed,
   }) {
     return _then(_Names(
       international: international == freezed
           ? _value.international
           : international as String,
       japanese: japanese == freezed ? _value.japanese : japanese as String,
-      twitch: twitch == freezed ? _value.twitch : twitch as String,
     ));
   }
 }
 
+@JsonSerializable()
+
 /// @nodoc
 class _$_Names implements _Names {
-  const _$_Names({this.international, this.japanese, this.twitch});
+  const _$_Names({this.international, this.japanese});
+
+  factory _$_Names.fromJson(Map<String, dynamic> json) =>
+      _$_$_NamesFromJson(json);
 
   @override
   final String international;
   @override
   final String japanese;
-  @override
-  final String twitch;
 
   @override
   String toString() {
-    return 'Names(international: $international, japanese: $japanese, twitch: $twitch)';
+    return 'Names(international: $international, japanese: $japanese)';
   }
 
   @override
@@ -125,33 +131,34 @@ class _$_Names implements _Names {
                     .equals(other.international, international)) &&
             (identical(other.japanese, japanese) ||
                 const DeepCollectionEquality()
-                    .equals(other.japanese, japanese)) &&
-            (identical(other.twitch, twitch) ||
-                const DeepCollectionEquality().equals(other.twitch, twitch)));
+                    .equals(other.japanese, japanese)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(international) ^
-      const DeepCollectionEquality().hash(japanese) ^
-      const DeepCollectionEquality().hash(twitch);
+      const DeepCollectionEquality().hash(japanese);
 
   @override
   _$NamesCopyWith<_Names> get copyWith =>
       __$NamesCopyWithImpl<_Names>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_NamesToJson(this);
+  }
 }
 
 abstract class _Names implements Names {
-  const factory _Names({String international, String japanese, String twitch}) =
-      _$_Names;
+  const factory _Names({String international, String japanese}) = _$_Names;
+
+  factory _Names.fromJson(Map<String, dynamic> json) = _$_Names.fromJson;
 
   @override
   String get international;
   @override
   String get japanese;
-  @override
-  String get twitch;
   @override
   _$NamesCopyWith<_Names> get copyWith;
 }

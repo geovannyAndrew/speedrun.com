@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ScreenSearchView extends StatefulWidget {
-
   final Widget body;
   final String title;
   final String querySearch;
@@ -15,17 +14,16 @@ class ScreenSearchView extends StatefulWidget {
     this.querySearch,
     this.onSearch,
     this.onClose,
-  }):super(key:key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return ScreenSearchViewState();
   }
-
 }
 
-class ScreenSearchViewState extends State<ScreenSearchView>{
+class ScreenSearchViewState extends State<ScreenSearchView> {
   TextEditingController _filter;
   Icon _searchIcon;
   Widget _appBarTitle;
@@ -42,47 +40,41 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
     // TODO: implement initState
     super.initState();
     _filter = new TextEditingController(text: widget.querySearch);
-    if(this.widget.querySearch == null || this.widget.querySearch?.isEmpty == true){
+    if (this.widget.querySearch == null ||
+        this.widget.querySearch?.isEmpty == true) {
       _configureAppBarTitle();
-    }
-    else{
+    } else {
       _configureAppBarSearch();
     }
   }
 
-  void _configureAppBarTitle(){
+  void _configureAppBarTitle() {
     this._searchIcon = new Icon(Icons.search);
     this._appBarTitle = Text(
       widget.title ?? "",
-      style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold
-      ),
+      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
     );
     _filter.clear();
   }
 
-  void _configureAppBarSearch(){
+  void _configureAppBarSearch() {
     this._searchIcon = new Icon(Icons.close);
     this._appBarTitle = new TextField(
       autofocus: true,
       controller: _filter,
       cursorColor: Colors.white,
-      style: TextStyle(
-          color: Colors.white,
-          fontSize: 16.0
-      ),
+      style: TextStyle(color: Colors.white, fontSize: 16.0),
       decoration: new InputDecoration(
-          prefixIcon: new Icon(Icons.search,color: Colors.white,),
+          prefixIcon: new Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
           hintText: 'Search...',
-          hintStyle: TextStyle(
-              color: Colors.white70
-          )
-      ),
+          hintStyle: TextStyle(color: Colors.white70)),
       textInputAction: TextInputAction.search,
-      onSubmitted: (query){
+      onSubmitted: (query) {
         setState(() {
-          if(query.trim().isEmpty){
+          if (query.trim().isEmpty) {
             _configureAppBarTitle();
           }
           widget.onSearch(query);
@@ -90,7 +82,6 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,32 +91,31 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
         AppBar(
             title: _appBarTitle,
             centerTitle: true,
-            actions: widget.onSearch !=null ?
-            <Widget>[
-              Visibility(
-                visible: _visibleIcon,
-                child: IconButton(
-                  icon: _searchIcon,
-                  onPressed: (){
-                    setState(() {
-                      if (this._searchIcon.icon == Icons.search) {
-                        _configureAppBarSearch();
-                      } else {
-                        _filter.clear();
-                        _configureAppBarTitle();
-                        if(widget.onClose != null){
-                          widget.onClose();
-                        }
-                      }
-                    });
-                  },
-                ),
-              )
-            ] : null
-        ),
+            actions: widget.onSearch != null
+                ? <Widget>[
+                    Visibility(
+                      visible: _visibleIcon,
+                      child: IconButton(
+                        icon: _searchIcon,
+                        onPressed: () {
+                          setState(() {
+                            if (this._searchIcon.icon == Icons.search) {
+                              _configureAppBarSearch();
+                            } else {
+                              _filter.clear();
+                              _configureAppBarTitle();
+                              if (widget.onClose != null) {
+                                widget.onClose();
+                              }
+                            }
+                          });
+                        },
+                      ),
+                    )
+                  ]
+                : null),
         Expanded(child: widget.body)
       ],
     );
   }
-
 }
