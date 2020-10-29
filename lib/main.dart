@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/adapter.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_run/data/services/runs_api.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
@@ -7,11 +10,13 @@ import 'package:speed_run/screens/home_screen.dart';
 import 'package:speed_run/screens/splash_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'data/models/run.dart';
+import 'package:speed_run/data/services/services_extensions.dart';
 
 void main() async {
   //runApp(MyApp());
-
-  final ra = RunApiImpl();
+  final dio = Dio();
+  dio.enableCharlesProxy();
+  final ra = RunApiImpl(dio);
   await ra.getRuns();
 }
 

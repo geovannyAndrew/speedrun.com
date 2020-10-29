@@ -9,7 +9,9 @@ abstract class IRunsApi {
 }
 
 class RunApiImpl implements IRunsApi {
-  final dio = Dio();
+  final Dio dio;
+
+  RunApiImpl(this.dio);
 
   @override
   Future<Either<SpeedRunFailure, List<Run>>> getRuns() async {
@@ -20,7 +22,9 @@ class RunApiImpl implements IRunsApi {
       final run = Run.fromJson(response.getJsonObjectData());
       return right([run]);
     } on DioError catch (e) {
-      print("DioError ${e.message}");
+      print("DioMessage ${e.message}");
+      print("DioError ${e.error}");
+      print("DioError ${e.type}");
       return left(SpeedRunFailure.notFound());
     }
   }
