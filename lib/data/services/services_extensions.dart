@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
@@ -9,8 +8,8 @@ extension SpeedRunApiDataFromResponse on Response {
     return this.data["data"] as Map<String, dynamic>;
   }
 
-  List<Map<String, dynamic>> getJsonListData() {
-    return this.data["data"] as List<Map<String, dynamic>>;
+  List getJsonListData() {
+    return this.data["data"] as List;
   }
 }
 

@@ -29,7 +29,9 @@ abstract class Game with _$Game {
 
     return Game(
         id: json["id"].toString(),
-        names: Names.fromJson(json["names"] as Map<String, dynamic>),
+        names: json["names"] != null
+            ? Names.fromJson(json["names"] as Map<String, dynamic>)
+            : null,
         abbreviation: json["abbreviation"].toString(),
         released: json["released"].toString(),
         coverMedium: Asset.fromJson(

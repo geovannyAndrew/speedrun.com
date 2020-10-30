@@ -35,7 +35,9 @@ abstract class User implements _$User {
 
     return User(
         id: json["id"].toString(),
-        names: Names.fromJson(json["names"] as Map<String, dynamic>),
+        names: json["names"] != null
+            ? Names.fromJson(json["names"] as Map<String, dynamic>)
+            : null,
         country: country,
         region: region,
         colorStyle: json["name-style"] != null

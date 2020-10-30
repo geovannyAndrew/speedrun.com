@@ -15,12 +15,16 @@ import 'package:speed_run/data/services/services_extensions.dart';
 
 void main() async {
   //runApp(MyApp());
-  final dio = Dio();
+  final options = BaseOptions(
+      baseUrl: "https://www.speedrun.com/api/v1/",
+      connectTimeout: 15000,
+      receiveTimeout: 5000);
+  final dio = Dio(options);
   dio.enableCharlesProxy();
   final ra = RunApiImpl(dio);
-  final run = await ra.getRun("id");
+  final run = await ra.getRunsFromUser(1, "0jm0kne8");
   run.fold((l) {}, (r) {
-    print(r.twitchUrl);
+    print(r);
   });
 }
 

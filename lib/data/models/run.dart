@@ -43,7 +43,7 @@ abstract class Run implements _$Run {
           .toList();
 
   static List<Asset> _getAssetsFromJsonData(Map<String, dynamic> json) {
-    return (json["links"] as List)
+    return (json != null ? json["links"] as List : List.empty())
         .map((e) => Asset.fromJson(e as Map<String, dynamic>))
         .toList();
   }
