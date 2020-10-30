@@ -27,11 +27,17 @@ class RunApiImpl implements IRunsApi {
       final run = Run.fromJson(response.getJsonObjectData());
       return right(run);
     } on DioError catch (e) {
-      print("DioMessage ${e.message}");
-      print("DioError ${e.error}");
-      print("DioError ${e.type}");
-      return left(SpeedRunFailure.notFound());
+      return left(e.toSpeedRunFailure());
     }
+    /*
+    return await getResponseOrFailure(() async {
+      final response = await dio.get<Map<String, dynamic>>(
+          'https://www.speedrun.com/api/v1/runs/90y6pm7e?embed=players,game,category,platform');
+      print("====== SUCCESS =======");
+      final run = Run.fromJson(response.getJsonObjectData());
+      return Future<Either<SpeedRunFailure, Run>>.value(right(run));
+    });
+    */
   }
 
   @override
@@ -53,4 +59,18 @@ class RunApiImpl implements IRunsApi {
     // TODO: implement getRunsFromUser
     throw UnimplementedError();
   }
+
+  /*
+  Future<Either<SpeedRunFailure, T>> getResponseOrFailure<T>(
+      Future<Either<SpeedRunFailure, T>> Function() onSuccess) {
+    try {
+      return onSuccess();
+    } on DioError catch (e) {
+      print("DioMessage ${e.message}");
+      print("DioError ${e.error}");
+      print("DioError ${e.type}");
+      return Future<Either<SpeedRunFailure, T>>.value(
+          left(SpeedRunFailure.notFound()));
+    }
+  }*/
 }

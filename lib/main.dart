@@ -4,6 +4,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_run/data/services/runs_api.dart';
+import 'package:speed_run/data/services/speed_run_failure.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/screens/home_screen.dart';
@@ -17,7 +18,10 @@ void main() async {
   final dio = Dio();
   dio.enableCharlesProxy();
   final ra = RunApiImpl(dio);
-  await ra.getRuns();
+  final run = await ra.getRun("id");
+  run.fold((l) {}, (r) {
+    print(r.twitchUrl);
+  });
 }
 
 class MyApp extends StatelessWidget {

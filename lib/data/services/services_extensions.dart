@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:speed_run/data/services/speed_run_failure.dart';
 
 extension SpeedRunApiDataFromResponse on Response {
   Map<String, dynamic> getJsonObjectData() {
@@ -25,5 +26,28 @@ extension DioExtensions on Dio {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
     };
+  }
+}
+
+extension DioErrorToSpeedRunFailure on DioError {
+  SpeedRunFailure toSpeedRunFailure() {
+    if (this.response != null) {
+      switch (this.response.statusCode) {
+        case 500:
+          return SpeedRunFailure.serverError();
+          break;
+        case 400:
+          return SpeedRunFailure.badRequest();
+          break;
+        case 404:
+          return SpeedRunFailure.badRequest();
+          break;
+        default:
+          return SpeedRunFailure.unknown();
+          break;
+      }
+    } else {
+      return SpeedRunFailure.unknown();
+    }
   }
 }
