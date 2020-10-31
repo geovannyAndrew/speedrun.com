@@ -18,16 +18,16 @@ abstract class IGamesApi {
 
 @LazySingleton(as: IGamesApi)
 class GamesApiImpl implements IGamesApi {
-  final Dio dio;
+  final Dio _dio;
 
-  GamesApiImpl(this.dio);
+  GamesApiImpl(this._dio);
 
   @override
   Future<Either<SpeedRunFailure, List<Category>>> getCategoriesFromGame(
       {String idGame}) async {
     try {
       final response =
-          await dio.get<Map<String, dynamic>>('/games/$idGame/categories');
+          await _dio.get<Map<String, dynamic>>('/games/$idGame/categories');
       final categories = response
           .getJsonListData()
           .map((e) => Category.fromJson(e as Map<String, dynamic>))
@@ -41,7 +41,7 @@ class GamesApiImpl implements IGamesApi {
   @override
   Future<Either<SpeedRunFailure, Game>> getGame({String idGame}) async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/games/$idGame');
+      final response = await _dio.get<Map<String, dynamic>>('/games/$idGame');
       return right(Game.fromJson(response.getJsonObjectData()));
     } on DioError catch (e) {
       return left(e.toSpeedRunFailure());
@@ -52,7 +52,7 @@ class GamesApiImpl implements IGamesApi {
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
       {int offset, String query}) async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/games',
+      final response = await _dio.get<Map<String, dynamic>>('/games',
           queryParameters: {
             "offset": offset,
             "max": AppConfig.itemsPerPage,

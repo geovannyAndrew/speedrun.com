@@ -18,14 +18,14 @@ abstract class IRunsApi {
 
 @LazySingleton(as: IRunsApi)
 class RunApiImpl implements IRunsApi {
-  final Dio dio;
+  final Dio _dio;
 
-  RunApiImpl(this.dio);
+  RunApiImpl(this._dio);
 
   @override
   Future<Either<SpeedRunFailure, Run>> getRun(String id) async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/runs/${id}',
+      final response = await _dio.get<Map<String, dynamic>>('/runs/${id}',
           queryParameters: {"embed": "players,game,category,platform"});
       final run = Run.fromJson(response.getJsonObjectData());
       return right(run);
@@ -39,7 +39,7 @@ class RunApiImpl implements IRunsApi {
       {@required int offset}) async {
     try {
       final response =
-          await dio.get<Map<String, dynamic>>('/runs', queryParameters: {
+          await _dio.get<Map<String, dynamic>>('/runs', queryParameters: {
         "status": "verified",
         "orderby": "verify-date",
         "offset": offset,
@@ -62,7 +62,7 @@ class RunApiImpl implements IRunsApi {
       int offset, String idCategory) async {
     try {
       final response =
-          await dio.get<Map<String, dynamic>>('/runs', queryParameters: {
+          await _dio.get<Map<String, dynamic>>('/runs', queryParameters: {
         "status": "verified",
         "orderby": "verify-date",
         "offset": offset,
@@ -86,7 +86,7 @@ class RunApiImpl implements IRunsApi {
       int offset, String idUser) async {
     try {
       final response =
-          await dio.get<Map<String, dynamic>>('/runs', queryParameters: {
+          await _dio.get<Map<String, dynamic>>('/runs', queryParameters: {
         "status": "verified",
         "orderby": "verify-date",
         "offset": offset,

@@ -4,7 +4,9 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:speed_run/data/services/apis/games_api.dart';
 import 'package:speed_run/data/services/apis/runs_api.dart';
+import 'package:speed_run/data/services/apis/users_api.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
 import 'package:speed_run/injection.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
@@ -18,8 +20,8 @@ import 'package:speed_run/data/services/services_extensions.dart';
 void main() async {
   configureInjection(Environment.prod);
   //runApp(MyApp());
-  final ra = getIt<IRunsApi>();
-  final run = await ra.getRunsFromUser(1, "0jm0kne8");
+  final ra = getIt<IUsersApi>();
+  final run = await ra.getUser(idUser: "wzx7q875");
   run.fold((l) {}, (r) {
     print(r);
   });

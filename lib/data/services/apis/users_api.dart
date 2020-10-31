@@ -15,14 +15,14 @@ abstract class IUsersApi {
 
 @LazySingleton(as: IUsersApi)
 class UsersApiImpl implements IUsersApi {
-  final Dio dio;
+  final Dio _dio;
 
-  UsersApiImpl(this.dio);
+  UsersApiImpl(this._dio);
 
   @override
   Future<Either<SpeedRunFailure, User>> getUser({String idUser}) async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/users/$idUser');
+      final response = await _dio.get<Map<String, dynamic>>('/users/$idUser');
       return right(User.fromJson(response.getJsonObjectData()));
     } on DioError catch (e) {
       return left(e.toSpeedRunFailure());
@@ -33,7 +33,7 @@ class UsersApiImpl implements IUsersApi {
   Future<Either<SpeedRunFailure, List<User>>> getUsers(
       {int offset, String query}) async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/users',
+      final response = await _dio.get<Map<String, dynamic>>('/users',
           queryParameters: {
             "offset": offset,
             "max": AppConfig.itemsPerPage,
