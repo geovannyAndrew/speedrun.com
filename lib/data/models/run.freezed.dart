@@ -23,13 +23,13 @@ class _$RunTearOff {
       String comment,
       String submitted,
       Times times,
-      @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+      @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
           Category category,
-      @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+      @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
           Game game,
-      @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+      @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
           List<User> players,
-      @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+      @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
           List<Asset> videos}) {
     return _Run(
       id: id,
@@ -61,13 +61,13 @@ mixin _$Run {
   String get comment;
   String get submitted;
   Times get times;
-  @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+  @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
   Category get category;
-  @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+  @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
   Game get game;
-  @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+  @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
   List<User> get players;
-  @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+  @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
   List<Asset> get videos;
 
   Map<String, dynamic> toJson();
@@ -84,13 +84,13 @@ abstract class $RunCopyWith<$Res> {
       String comment,
       String submitted,
       Times times,
-      @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+      @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
           Category category,
-      @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+      @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
           Game game,
-      @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+      @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
           List<User> players,
-      @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+      @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
           List<Asset> videos});
 
   $TimesCopyWith<$Res> get times;
@@ -173,13 +173,13 @@ abstract class _$RunCopyWith<$Res> implements $RunCopyWith<$Res> {
       String comment,
       String submitted,
       Times times,
-      @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+      @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
           Category category,
-      @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+      @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
           Game game,
-      @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+      @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
           List<User> players,
-      @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+      @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
           List<Asset> videos});
 
   @override
@@ -235,13 +235,13 @@ class _$_Run extends _Run {
       this.comment,
       this.submitted,
       this.times,
-      @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+      @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
           this.category,
-      @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+      @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
           this.game,
-      @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+      @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
           this.players,
-      @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+      @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
           this.videos})
       : super._();
 
@@ -258,16 +258,16 @@ class _$_Run extends _Run {
   @override
   final Times times;
   @override
-  @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+  @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
   final Category category;
   @override
-  @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+  @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
   final Game game;
   @override
-  @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+  @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
   final List<User> players;
   @override
-  @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+  @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
   final List<Asset> videos;
 
   @override
@@ -334,13 +334,13 @@ abstract class _Run extends Run {
       String comment,
       String submitted,
       Times times,
-      @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+      @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
           Category category,
-      @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+      @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
           Game game,
-      @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+      @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
           List<User> players,
-      @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+      @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
           List<Asset> videos}) = _$_Run;
 
   factory _Run.fromJson(Map<String, dynamic> json) = _$_Run.fromJson;
@@ -356,16 +356,16 @@ abstract class _Run extends Run {
   @override
   Times get times;
   @override
-  @JsonKey(name: 'category', fromJson: Run._getCategoryFromJsonData)
+  @JsonKey(name: "category", fromJson: Run._getCategoryFromJsonData)
   Category get category;
   @override
-  @JsonKey(name: 'game', fromJson: Run._getGameFromJsonData)
+  @JsonKey(name: "game", fromJson: Run._getGameFromJsonData)
   Game get game;
   @override
-  @JsonKey(name: 'players', fromJson: Run._getPlayersFromJsonData)
+  @JsonKey(name: "players", fromJson: Run._getPlayersFromJsonData)
   List<User> get players;
   @override
-  @JsonKey(name: 'videos', fromJson: Run._getAssetsFromJsonData)
+  @JsonKey(name: "videos", fromJson: Run._getAssetsFromJsonData)
   List<Asset> get videos;
   @override
   _$RunCopyWith<_Run> get copyWith;

@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/data/models/run.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
-import 'services_extensions.dart';
+import '../services_extensions.dart';
 
 abstract class IRunsApi {
   Future<Either<SpeedRunFailure, List<Run>>> getRuns(int offset);
@@ -14,6 +15,7 @@ abstract class IRunsApi {
   Future<Either<SpeedRunFailure, Run>> getRun(String id);
 }
 
+@LazySingleton(as: IRunsApi)
 class RunApiImpl implements IRunsApi {
   final Dio dio;
 

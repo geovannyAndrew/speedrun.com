@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:speed_run/data/services/runs_api.dart';
+import 'package:injectable/injectable.dart';
+import 'package:speed_run/data/services/apis/runs_api.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
+import 'package:speed_run/injection.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/screens/home_screen.dart';
@@ -14,14 +16,9 @@ import 'data/models/run.dart';
 import 'package:speed_run/data/services/services_extensions.dart';
 
 void main() async {
+  configureInjection(Environment.prod);
   //runApp(MyApp());
-  final options = BaseOptions(
-      baseUrl: "https://www.speedrun.com/api/v1/",
-      connectTimeout: 15000,
-      receiveTimeout: 5000);
-  final dio = Dio(options);
-  dio.enableCharlesProxy();
-  final ra = RunApiImpl(dio);
+  final ra = getIt<IRunsApi>();
   final run = await ra.getRunsFromUser(1, "0jm0kne8");
   run.fold((l) {}, (r) {
     print(r);
