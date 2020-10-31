@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 import 'package:injectable/injectable.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/data/models/run.dart';
@@ -7,7 +8,7 @@ import 'package:speed_run/data/services/speed_run_failure.dart';
 import '../services_extensions.dart';
 
 abstract class IRunsApi {
-  Future<Either<SpeedRunFailure, List<Run>>> getRuns(int offset);
+  Future<Either<SpeedRunFailure, List<Run>>> getRuns({@required int offset});
   Future<Either<SpeedRunFailure, List<Run>>> getRunsFromCategory(
       int offset, String idCategory);
   Future<Either<SpeedRunFailure, List<Run>>> getRunsFromUser(
@@ -34,9 +35,9 @@ class RunApiImpl implements IRunsApi {
   }
 
   @override
-  Future<Either<SpeedRunFailure, List<Run>>> getRuns(int offset) async {
+  Future<Either<SpeedRunFailure, List<Run>>> getRuns(
+      {@required int offset}) async {
     try {
-      print("Starting ...");
       final response =
           await dio.get<Map<String, dynamic>>('/runs', queryParameters: {
         "status": "verified",
@@ -46,15 +47,12 @@ class RunApiImpl implements IRunsApi {
         "embed": "game,category,players",
         "max": AppConfig.itemsPerPage
       });
-      print("Response: ${response.request.uri}");
       final runs = response
           .getJsonListData()
           .map((e) => Run.fromJson(e as Map<String, dynamic>))
           .toList();
-      print(runs);
       return right(runs);
     } on DioError catch (e) {
-      print(e);
       return left(e.toSpeedRunFailure());
     }
   }

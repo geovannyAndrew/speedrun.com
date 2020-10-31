@@ -8,7 +8,9 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
+import 'data/services/apis/games_api.dart';
 import 'data/services/apis/runs_api.dart';
+import 'data/services/apis/users_api.dart';
 import 'data/services/services_module.dart';
 
 /// adds generated dependencies
@@ -22,7 +24,9 @@ GetIt $initGetIt(
   final gh = GetItHelper(get, environment, environmentFilter);
   final servicesModule = _$ServicesModule();
   gh.lazySingleton<Dio>(() => servicesModule.dio());
+  gh.lazySingleton<IGamesApi>(() => GamesApiImpl(get<Dio>()));
   gh.lazySingleton<IRunsApi>(() => RunApiImpl(get<Dio>()));
+  gh.lazySingleton<IUsersApi>(() => UsersApiImpl(get<Dio>()));
   return get;
 }
 
