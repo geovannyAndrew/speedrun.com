@@ -9,22 +9,22 @@ import 'package:speed_run/data/services/apis/runs_api.dart';
 import 'package:speed_run/data/services/apis/users_api.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
 import 'package:speed_run/injection.dart';
-import 'package:speed_run/screens/detail_game_screen.dart';
-import 'package:speed_run/screens/detail_run_screen.dart';
-import 'package:speed_run/screens/home_screen.dart';
-import 'package:speed_run/screens/splash_screen.dart';
+import 'package:speed_run/pages/detail_game_screen.dart';
+import 'package:speed_run/pages/detail_run_screen.dart';
+import 'package:speed_run/pages/home_screen.dart';
+import 'package:speed_run/pages/splash_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'data/models/run.dart';
 import 'package:speed_run/data/services/services_extensions.dart';
 
 void main() async {
   configureInjection(Environment.prod);
-  //runApp(MyApp());
-  final ra = getIt<IUsersApi>();
+  runApp(MyApp());
+  /*final ra = getIt<IUsersApi>();
   final run = await ra.getUser(idUser: "wzx7q875");
   run.fold((l) {}, (r) {
     print(r);
-  });
+  });*/
 }
 
 class MyApp extends StatelessWidget {

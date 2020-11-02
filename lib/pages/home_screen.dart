@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:speed_run/screens/games_navigation_screen.dart';
-import 'package:speed_run/screens/runs_navigation_screen.dart';
-import 'package:speed_run/screens/users_navigation_screen.dart';
+import 'package:speed_run/pages/games_navigation_screen.dart';
+import 'package:speed_run/pages/runs_navigation_screen.dart';
+import 'package:speed_run/pages/users_navigation_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
 class HomeScreen extends StatefulWidget {

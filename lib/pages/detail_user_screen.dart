@@ -4,14 +4,14 @@ import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
-import 'package:speed_run/screens/detail_run_screen.dart';
+import 'package:speed_run/pages/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/user_run_item_view.dart';
-import 'package:speed_run/views/app_bar_game_view.dart';
+import 'package:speed_run/widgets/app_bar_game_view.dart';
 import 'package:speed_run/utils/after_layout.dart';
-import 'package:speed_run/views/app_bar_user_view.dart';
+import 'package:speed_run/widgets/app_bar_user_view.dart';
 
 class UserDetailScreen extends StatefulWidget {
   final User user;
