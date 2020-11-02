@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
-import 'package:speed_run/pages/detail_user_screen.dart';
+import 'package:speed_run/presentation/pages/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/user_item_view.dart';
-import 'package:speed_run/widgets/screen_search_view.dart';
+import 'package:speed_run/presentation/widgets/screen_search_view.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 

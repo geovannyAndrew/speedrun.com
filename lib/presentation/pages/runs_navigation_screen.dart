@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
-import 'package:speed_run/pages/detail_run_screen.dart';
+import 'package:speed_run/presentation/pages/detail_run_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
-import 'package:speed_run/view_items/game_category_run_item_view.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
-import 'package:speed_run/widgets/screen_search_view.dart';
+import 'package:speed_run/presentation/widgets/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/utils/dialogs.dart';
 

@@ -6,11 +6,11 @@ import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
-import 'package:speed_run/pages/detail_game_screen.dart';
-import 'package:speed_run/pages/detail_user_screen.dart';
+import 'package:speed_run/presentation/pages/detail_game_screen.dart';
+import 'package:speed_run/presentation/pages/detail_user_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
-import 'package:speed_run/widgets/app_bar_game_view.dart';
+import 'package:speed_run/presentation/widgets/app_bar_game_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RunDetailScreen extends StatefulWidget {
