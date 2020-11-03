@@ -14,6 +14,7 @@ import 'data/services/apis/runs_api.dart';
 import 'data/repositories/runs_repository.dart';
 import 'data/services/apis/users_api.dart';
 import 'data/repositories/users_repository.dart';
+import 'presentation/runs/runs_list/bloc/runslist_bloc.dart';
 import 'data/services/services_module.dart';
 
 /// adds generated dependencies
@@ -33,6 +34,7 @@ GetIt $initGetIt(
   gh.factory<IRunsRepository>(() => RunsRepositoryImpl(get<IRunsApi>()));
   gh.lazySingleton<IUsersApi>(() => UsersApiImpl(get<Dio>()));
   gh.factory<IUsersRepository>(() => UsersRepositoryImpl(get<IUsersApi>()));
+  gh.factory<RunslistBloc>(() => RunslistBloc(get<IRunsRepository>()));
   return get;
 }
 

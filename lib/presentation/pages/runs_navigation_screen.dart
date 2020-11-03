@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loadmore/loadmore.dart';
+import 'package:speed_run/injection.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/pages/detail_run_screen.dart';
+import 'package:speed_run/presentation/runs/runs_list/bloc/runslist_bloc.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -84,33 +87,47 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ScreenSearchView(
-        title: "Runs",
-        body: Container(
-          child: Center(
-              child: RefreshIndicator(
-            key: _refreshIndicatorKey,
-            child: LoadMore(
-              textBuilder: DefaultLoadMoreTextBuilder.english,
-              whenEmptyLoad: false,
-              delegate: DefaultLoadMoreDelegate(),
-              child: ListView.builder(
-                itemCount: widget.runs.length,
-                padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  var run = widget.runs[index];
-                  return RunItemView(run, false, (run) {
-                    _goToRunDetail(run);
-                  });
-                },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) =>
+                getIt<RunslistBloc>()..add(const RunslistEvent.started()))
+      ],
+      child: ScreenSearchView(
+          title: "Runs",
+          body: Container(
+            child: Center(
+                child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              child: LoadMore(
+                textBuilder: DefaultLoadMoreTextBuilder.english,
+                whenEmptyLoad: false,
+                delegate: DefaultLoadMoreDelegate(),
+                child: BlocBuilder<RunslistBloc, RunslistState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                      itemCount: widget.runs.length,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        var run = widget.runs[index];
+                        return RunItemView(run, false, (run) {
+                          context
+                              .bloc<RunslistBloc>()
+                              .add(const RunslistEvent.started());
+                        });
+                      },
+                    );
+                  },
+                ),
+                onLoadMore: _loadNextItems,
+                isFinish: false,
               ),
-              onLoadMore: _loadNextItems,
-              isFinish: false,
-            ),
-            onRefresh: _onRefresh,
+              onRefresh: _onRefresh,
+            )),
+            decoration: BoxDecoration(color: colors.blackBackground),
           )),
-          decoration: BoxDecoration(color: colors.blackBackground),
-        ));
+    );
   }
 
   void _goToRunDetail(Run run) {

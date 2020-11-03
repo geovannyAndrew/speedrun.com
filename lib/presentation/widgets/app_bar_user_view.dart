@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/asset.dart';
-import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
