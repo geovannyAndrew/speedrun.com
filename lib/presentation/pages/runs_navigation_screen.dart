@@ -42,10 +42,6 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
     super.initState();
   }
 
-  Future _onRefresh() {
-    return _getRuns(clearList: true);
-  }
-
   void onQuerySearch(String query) {
     widget.querySearch = query;
     _refreshIndicatorKey.currentState.show();
@@ -93,19 +89,20 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
             create: (context) =>
                 getIt<RunslistBloc>()..add(const RunslistEvent.started()))
       ],
-      child: ScreenSearchView(
-          title: "Runs",
-          body: Container(
-            child: Center(
-                child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              child: LoadMore(
-                textBuilder: DefaultLoadMoreTextBuilder.english,
-                whenEmptyLoad: false,
-                delegate: DefaultLoadMoreDelegate(),
-                child: BlocBuilder<RunslistBloc, RunslistState>(
-                  builder: (context, state) {
-                    return ListView.builder(
+      child: BlocBuilder<RunslistBloc, RunslistState>(
+        builder: (context, state) {
+          return ScreenSearchView(
+              title:
+                  state == RunslistState.refreshing() ? "Refreshing" : "Runs",
+              body: Container(
+                child: Center(
+                    child: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  child: LoadMore(
+                    textBuilder: DefaultLoadMoreTextBuilder.english,
+                    whenEmptyLoad: false,
+                    delegate: DefaultLoadMoreDelegate(),
+                    child: ListView.builder(
                       itemCount: widget.runs.length,
                       padding:
                           EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
@@ -117,16 +114,16 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
                               .add(const RunslistEvent.started());
                         });
                       },
-                    );
-                  },
-                ),
-                onLoadMore: _loadNextItems,
-                isFinish: false,
-              ),
-              onRefresh: _onRefresh,
-            )),
-            decoration: BoxDecoration(color: colors.blackBackground),
-          )),
+                    ),
+                    onLoadMore: _loadNextItems,
+                    isFinish: false,
+                  ),
+                  onRefresh: context.bloc<RunslistBloc>().refreshRuns,
+                )),
+                decoration: BoxDecoration(color: colors.blackBackground),
+              ));
+        },
+      ),
     );
   }
 

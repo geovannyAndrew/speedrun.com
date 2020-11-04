@@ -26,7 +26,20 @@ class RunslistBloc extends Bloc<RunslistEvent, RunslistState> {
     yield* event.map(started: (e) async* {
       print("mapEventToState1");
       final runs = await _runsRepository.getRuns(offset: _offset);
-      yield _LoadedRuns(runs);
+      yield runs.fold((l) {
+        return RunslistState.refreshing();
+      }, (r) {
+        return RunslistState.loadedRuns(r);
+      });
+    });
+  }
+
+  Future refreshRuns() async {
+    final runs = await _runsRepository.getRuns(offset: 0);
+    runs.fold((l) {
+      emit(const RunslistState.refreshing());
+    }, (r) {
+      emit(RunslistState.loadedRuns(r));
     });
   }
 }

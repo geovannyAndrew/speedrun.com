@@ -164,7 +164,7 @@ class _$RunslistStateTearOff {
   }
 
 // ignore: unused_element
-  _LoadedRuns loadedRuns(Either<SpeedRunFailure, List<Run>> runs) {
+  _LoadedRuns loadedRuns(List<Run> runs) {
     return _LoadedRuns(
       runs,
     );
@@ -182,14 +182,14 @@ mixin _$RunslistState {
     @required Result initial(),
     @required Result refreshing(),
     @required Result loadingMore(),
-    @required Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    @required Result loadedRuns(List<Run> runs),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result refreshing(),
     Result loadingMore(),
-    Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    Result loadedRuns(List<Run> runs),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -265,7 +265,7 @@ class _$_Initial implements _Initial {
     @required Result initial(),
     @required Result refreshing(),
     @required Result loadingMore(),
-    @required Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    @required Result loadedRuns(List<Run> runs),
   }) {
     assert(initial != null);
     assert(refreshing != null);
@@ -280,7 +280,7 @@ class _$_Initial implements _Initial {
     Result initial(),
     Result refreshing(),
     Result loadingMore(),
-    Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    Result loadedRuns(List<Run> runs),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -367,7 +367,7 @@ class _$_Refreshing implements _Refreshing {
     @required Result initial(),
     @required Result refreshing(),
     @required Result loadingMore(),
-    @required Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    @required Result loadedRuns(List<Run> runs),
   }) {
     assert(initial != null);
     assert(refreshing != null);
@@ -382,7 +382,7 @@ class _$_Refreshing implements _Refreshing {
     Result initial(),
     Result refreshing(),
     Result loadingMore(),
-    Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    Result loadedRuns(List<Run> runs),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -469,7 +469,7 @@ class _$_LoadingMore implements _LoadingMore {
     @required Result initial(),
     @required Result refreshing(),
     @required Result loadingMore(),
-    @required Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    @required Result loadedRuns(List<Run> runs),
   }) {
     assert(initial != null);
     assert(refreshing != null);
@@ -484,7 +484,7 @@ class _$_LoadingMore implements _LoadingMore {
     Result initial(),
     Result refreshing(),
     Result loadingMore(),
-    Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    Result loadedRuns(List<Run> runs),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -535,7 +535,7 @@ abstract class _$LoadedRunsCopyWith<$Res> {
   factory _$LoadedRunsCopyWith(
           _LoadedRuns value, $Res Function(_LoadedRuns) then) =
       __$LoadedRunsCopyWithImpl<$Res>;
-  $Res call({Either<SpeedRunFailure, List<Run>> runs});
+  $Res call({List<Run> runs});
 }
 
 /// @nodoc
@@ -553,9 +553,7 @@ class __$LoadedRunsCopyWithImpl<$Res> extends _$RunslistStateCopyWithImpl<$Res>
     Object runs = freezed,
   }) {
     return _then(_LoadedRuns(
-      runs == freezed
-          ? _value.runs
-          : runs as Either<SpeedRunFailure, List<Run>>,
+      runs == freezed ? _value.runs : runs as List<Run>,
     ));
   }
 }
@@ -565,7 +563,7 @@ class _$_LoadedRuns implements _LoadedRuns {
   const _$_LoadedRuns(this.runs) : assert(runs != null);
 
   @override
-  final Either<SpeedRunFailure, List<Run>> runs;
+  final List<Run> runs;
 
   @override
   String toString() {
@@ -594,7 +592,7 @@ class _$_LoadedRuns implements _LoadedRuns {
     @required Result initial(),
     @required Result refreshing(),
     @required Result loadingMore(),
-    @required Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    @required Result loadedRuns(List<Run> runs),
   }) {
     assert(initial != null);
     assert(refreshing != null);
@@ -609,7 +607,7 @@ class _$_LoadedRuns implements _LoadedRuns {
     Result initial(),
     Result refreshing(),
     Result loadingMore(),
-    Result loadedRuns(Either<SpeedRunFailure, List<Run>> runs),
+    Result loadedRuns(List<Run> runs),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -652,9 +650,8 @@ class _$_LoadedRuns implements _LoadedRuns {
 }
 
 abstract class _LoadedRuns implements RunslistState {
-  const factory _LoadedRuns(Either<SpeedRunFailure, List<Run>> runs) =
-      _$_LoadedRuns;
+  const factory _LoadedRuns(List<Run> runs) = _$_LoadedRuns;
 
-  Either<SpeedRunFailure, List<Run>> get runs;
+  List<Run> get runs;
   _$LoadedRunsCopyWith<_LoadedRuns> get copyWith;
 }
