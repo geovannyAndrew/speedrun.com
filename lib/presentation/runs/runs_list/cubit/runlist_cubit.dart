@@ -29,7 +29,7 @@ class RunlistCubit extends Cubit<RunlistState> {
     runs.fold((l) {
       emit(state.copyWith());
     }, (r) {
-      emit(state.copyWith(runs: state.runs..addAll(r)));
+      emit(state.copyWith(runs: [...state.runs, ...r]));
     });
     return true;
   }

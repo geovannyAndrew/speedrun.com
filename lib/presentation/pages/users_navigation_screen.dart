@@ -85,7 +85,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
             onLoadMore: _loadNextItems,
             isFinish: widget._allLoaded,
           ),
-          onRefresh: null,
+          onRefresh: () async {},
         )),
         decoration: BoxDecoration(color: colors.blackBackground),
       ),
