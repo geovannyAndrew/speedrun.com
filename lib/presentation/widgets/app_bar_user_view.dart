@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/asset.dart';
-import 'package:speed_run/logic/user.dart';
+import 'package:speed_run/data/models/asset.dart';
+import 'package:speed_run/data/models/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppBarUserView extends StatelessWidget {
@@ -68,17 +68,17 @@ class AppBarUserView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      user?.assetTwitter != null
+                      user?.twitter != null
                           ? _buildSocialButton(
-                              user.assetTwitter, "assets/images/twitter.png")
+                              user.twitter, "assets/images/twitter.png")
                           : Container(),
-                      user?.assetYoutube != null
+                      user?.youtube != null
                           ? _buildSocialButton(
-                              user.assetYoutube, "assets/images/youtube.png")
+                              user.youtube, "assets/images/youtube.png")
                           : Container(),
-                      user?.assetTwitch != null
+                      user?.twitch != null
                           ? _buildSocialButton(
-                              user.assetTwitch, "assets/images/twitch.png")
+                              user.twitch, "assets/images/twitch.png")
                           : Container(),
                     ],
                   )

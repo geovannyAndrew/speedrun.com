@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/category.dart';
-import 'package:speed_run/logic/game.dart';
-import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/data/models/category.dart';
+import 'package:speed_run/data/models/game.dart';
+import 'package:speed_run/data/models/run.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/pages/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -47,9 +47,7 @@ class _GameDetailScreenState extends State<GameDetailScreen>
         id: widget.game.id,
         onSuccess: (game) {
           if (mounted) {
-            setState(() {
-              this._game = game;
-            });
+            setState(() {});
           }
         },
         onError: (error) {
@@ -68,7 +66,6 @@ class _GameDetailScreenState extends State<GameDetailScreen>
         idGame: widget.game.id,
         onSuccess: (categories) {
           setState(() {
-            this._categories = categories;
             this._game = widget.game;
           });
           _getGame();
@@ -240,7 +237,6 @@ class _UserRunsListViewState extends State<UserRunsListView>
                 this.runs.clear();
                 this._allLoaded = false;
               }
-              this.runs.addAll(runs);
               if (runs.length < AppConfig.itemsPerPage) {
                 this._allLoaded = true;
               }

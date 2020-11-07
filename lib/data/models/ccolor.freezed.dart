@@ -102,8 +102,8 @@ class __$CColorCopyWithImpl<$Res> extends _$CColorCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_CColor implements _CColor {
-  const _$_CColor({this.light, this.dark});
+class _$_CColor extends _CColor {
+  const _$_CColor({this.light, this.dark}) : super._();
 
   factory _$_CColor.fromJson(Map<String, dynamic> json) =>
       _$_$_CColorFromJson(json);
@@ -144,7 +144,8 @@ class _$_CColor implements _CColor {
   }
 }
 
-abstract class _CColor implements CColor {
+abstract class _CColor extends CColor {
+  const _CColor._() : super._();
   const factory _CColor({String light, String dark}) = _$_CColor;
 
   factory _CColor.fromJson(Map<String, dynamic> json) = _$_CColor.fromJson;

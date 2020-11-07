@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/user.dart';
-import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/data/models/user.dart';
 import 'package:speed_run/presentation/pages/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
-import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/user_item_view.dart';
 import 'package:speed_run/presentation/widgets/screen_search_view.dart';
 import 'package:loadmore/loadmore.dart';
@@ -38,16 +35,11 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
     super.initState();
   }
 
-  Future _onRefresh() {
-    return _getUsers(clearList: true);
-  }
-
   void _restoreUsers() {
     widget.querySearch = null;
     storage.getUsers((users) {
       setState(() {
         widget.users.clear();
-        widget.users.addAll(users);
       });
     });
   }
@@ -58,45 +50,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
   }
 
   Future<bool> _loadNextItems() async {
-    if (!widget._allLoaded &&
-        !widget._loadingItems &&
-        widget.users.length > 10) {
-      await _getUsers();
-    } else {
-      await Future.delayed(Duration(seconds: 0, milliseconds: 100));
-    }
     return true;
-  }
-
-  Future _getUsers({bool clearList = false}) {
-    widget._loadingItems = true;
-    _screenSearchKey.currentState.visibleIcon = false;
-    var offset = clearList ? 0 : widget.users.length;
-    var future = RestAPI.instance.getUsers(
-        offset: offset,
-        query: widget.querySearch,
-        onSuccess: (users) {
-          _screenSearchKey?.currentState?.visibleIcon = true;
-          widget._loadingItems = false;
-          if (mounted) {
-            setState(() {
-              if (clearList) {
-                this.widget.users.clear();
-                widget._allLoaded = false;
-              }
-              if (users.length < AppConfig.itemsPerPage) {
-                widget._allLoaded = true;
-              }
-              this.widget.users.addAll(users);
-            });
-          }
-        },
-        onError: (error) {
-          _screenSearchKey?.currentState?.visibleIcon = true;
-          widget._loadingItems = false;
-          Dialogs.showResponseErrorSnackbar(context, error);
-        });
-    return future;
   }
 
   @override
@@ -131,7 +85,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
             onLoadMore: _loadNextItems,
             isFinish: widget._allLoaded,
           ),
-          onRefresh: _onRefresh,
+          onRefresh: null,
         )),
         decoration: BoxDecoration(color: colors.blackBackground),
       ),

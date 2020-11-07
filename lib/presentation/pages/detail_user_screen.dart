@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/run.dart';
-import 'package:speed_run/logic/user.dart';
+import 'package:speed_run/data/models/run.dart';
+import 'package:speed_run/data/models/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/pages/detail_run_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -54,9 +54,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>
         id: _user.id,
         onSuccess: (user) {
           if (mounted) {
-            setState(() {
-              this._user = user;
-            });
+            setState(() {});
           }
         },
         onError: (error) {
@@ -82,7 +80,6 @@ class _UserDetailScreenState extends State<UserDetailScreen>
                 this._runs.clear();
                 this._allLoaded = false;
               }
-              this._runs.addAll(runs);
               if (runs.length < AppConfig.itemsPerPage) {
                 this._allLoaded = true;
               }

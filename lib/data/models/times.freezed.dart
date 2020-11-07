@@ -138,12 +138,13 @@ class __$TimesCopyWithImpl<$Res> extends _$TimesCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_Times implements _Times {
+class _$_Times extends _Times {
   const _$_Times(
       {@JsonKey(name: "primary") this.primary,
       @JsonKey(name: "primary_t") this.primarySeconds,
       @JsonKey(name: "realtime") this.realtime,
-      @JsonKey(name: "realtime_t") this.realtimeSeconds});
+      @JsonKey(name: "realtime_t") this.realtimeSeconds})
+      : super._();
 
   factory _$_Times.fromJson(Map<String, dynamic> json) =>
       _$_$_TimesFromJson(json);
@@ -202,7 +203,8 @@ class _$_Times implements _Times {
   }
 }
 
-abstract class _Times implements Times {
+abstract class _Times extends Times {
+  const _Times._() : super._();
   const factory _Times(
       {@JsonKey(name: "primary") String primary,
       @JsonKey(name: "primary_t") double primarySeconds,

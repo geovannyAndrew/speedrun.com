@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/game.dart';
+import 'package:speed_run/data/models/game.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/pages/detail_game_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
@@ -45,7 +45,6 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
     storage.getGames((games) {
       setState(() {
         widget.games.clear();
-        widget.games.addAll(games);
       });
     });
   }
@@ -85,7 +84,6 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
                 this.widget.games.clear();
                 widget._allLoaded = false;
               }
-              this.widget.games.addAll(games);
               if (games.length < AppConfig.itemsPerPage) {
                 widget._allLoaded = true;
               }

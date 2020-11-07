@@ -5,6 +5,8 @@ part 'times.g.dart';
 
 @freezed
 abstract class Times implements _$Times {
+  const Times._();
+
   @JsonSerializable()
   const factory Times(
       {@JsonKey(name: "primary") String primary,
@@ -13,4 +15,10 @@ abstract class Times implements _$Times {
       @JsonKey(name: "realtime_t") double realtimeSeconds}) = _Times;
 
   factory Times.fromJson(Map<String, dynamic> json) => _$TimesFromJson(json);
+
+  String get primaryString {
+    var milliseconds = (primarySeconds * 1000).toInt();
+    var duration = Duration(milliseconds: milliseconds);
+    return "${duration.inHours}h ${duration.inMinutes % 60}m ${duration.inSeconds % 60}s";
+  }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/data/models/asset.dart';
 import 'package:speed_run/data/models/color_style.dart';
 import 'package:speed_run/data/models/location.dart';
@@ -57,5 +59,34 @@ abstract class User implements _$User {
   @override
   Map<String, dynamic> toJson() {
     return null;
+  }
+
+  LinearGradient get gradientStyle {
+    return LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          colorStyle?.colorFrom?.darkColor,
+          colorStyle?.colorTo?.darkColor
+        ]);
+  }
+
+  String get urlIcon {
+    return "${AppConfig.urlServices}/themes/user/$name/image.png";
+  }
+
+  String get name {
+    return names?.international;
+  }
+
+  String get countryRegionName {
+    var countryRegion = "";
+    if (country != null) {
+      countryRegion += "${country?.name}";
+    }
+    if (region != null) {
+      countryRegion += " - ${region?.name}";
+    }
+    return countryRegion;
   }
 }

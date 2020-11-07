@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/run.dart';
+import 'package:speed_run/data/models/run.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
 class RunItemView extends StatelessWidget {

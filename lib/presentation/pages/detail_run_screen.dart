@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:speed_run/config/app_config.dart';
+import 'package:speed_run/data/models/game.dart';
+import 'package:speed_run/data/models/run.dart';
+import 'package:speed_run/data/models/user.dart';
 import 'package:speed_run/internal/keys.dart';
-import 'package:speed_run/logic/game.dart';
-import 'package:speed_run/logic/run.dart';
-import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/pages/detail_game_screen.dart';
 import 'package:speed_run/presentation/pages/detail_user_screen.dart';
@@ -40,7 +40,6 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   void initState() {
     super.initState();
     _run = widget.run;
-    _getRun();
   }
 
   void _playVideo() {
@@ -48,28 +47,6 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       apiKey: API_KEY_YOUTUBE,
       videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
     );
-  }
-
-  Future _getRun() {
-    var future = RestAPI.instance.getRun(
-        id: widget.run.id,
-        onSuccess: (run) {
-          if (mounted) {
-            setState(() {
-              this._run = run;
-            });
-          }
-        },
-        onError: (error) {
-          print(error);
-          Dialogs.showResponseErrroAlertDialog(
-              buildContext: context,
-              error: error,
-              onActionAlert: () {
-                Navigator.of(context).pop();
-              });
-        });
-    return future;
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/run.dart';
-import 'package:speed_run/logic/user.dart';
+import 'package:speed_run/data/models/user.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
 class UserItemView extends StatelessWidget {

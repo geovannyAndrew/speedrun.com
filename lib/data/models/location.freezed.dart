@@ -117,8 +117,8 @@ class __$LocationCopyWithImpl<$Res> extends _$LocationCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_Location implements _Location {
-  const _$_Location({this.code, this.names});
+class _$_Location extends _Location {
+  const _$_Location({this.code, this.names}) : super._();
 
   factory _$_Location.fromJson(Map<String, dynamic> json) =>
       _$_$_LocationFromJson(json);
@@ -159,7 +159,8 @@ class _$_Location implements _Location {
   }
 }
 
-abstract class _Location implements Location {
+abstract class _Location extends Location {
+  const _Location._() : super._();
   const factory _Location({String code, Names names}) = _$_Location;
 
   factory _Location.fromJson(Map<String, dynamic> json) = _$_Location.fromJson;
