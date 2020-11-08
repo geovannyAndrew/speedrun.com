@@ -50,10 +50,10 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> {
                         });
                       },
                     ),
-                    onLoadMore: context.bloc<RunlistCubit>().loadMoreRuns,
+                    onLoadMore: context.watch<RunlistCubit>().loadMoreRuns,
                     isFinish: false,
                   ),
-                  onRefresh: context.bloc<RunlistCubit>().refreshRuns,
+                  onRefresh: context.watch<RunlistCubit>().refreshRuns,
                 )),
                 decoration: BoxDecoration(color: colors.blackBackground),
               ));

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/data/models/game.dart';
+import 'package:speed_run/injection.dart';
 import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/presentation/games/games_list/cubit/gamelist_cubit.dart';
 import 'package:speed_run/presentation/pages/detail_game_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -25,8 +28,7 @@ class GamesNavigationScreen extends StatefulWidget {
   }
 }
 
-class GamesNavigationScreenState extends State<GamesNavigationScreen>
-    with AfterLayoutMixin<GamesNavigationScreen> {
+class GamesNavigationScreenState extends State<GamesNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScreenSearchViewState> _screenSearchKey =
@@ -53,6 +55,9 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
   void initState() {
     _scrollController = ScrollController()..addListener(_loadNextItems);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _refreshIndicatorKey.currentState.show();
+    });
   }
 
   Future _onRefresh() {
@@ -102,51 +107,58 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return ScreenSearchView(
-      key: _screenSearchKey,
-      title: "Games",
-      onSearch: (query) {
-        onQuerySearch(query);
-      },
-      onClose: _restoreGames,
-      querySearch: widget.querySearch,
-      body: Container(
-        child: Center(
-            child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          child: OrientationBuilder(builder: (context, orientation) {
-            return GridView.builder(
-              controller: _scrollController,
-              itemCount: widget.games.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                    MediaQuery.of(context).orientation == Orientation.landscape
-                        ? 4
-                        : 2,
-                childAspectRatio: 0.6,
-              ),
-              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              itemBuilder: (BuildContext context, int index) {
-                var item = widget.games[index];
-                final isLastElement = index >= widget.games.length - 1;
-                return GameItemView(item, isLastElement, (game) {
-                  _goToGameDetal(game);
-                });
-              },
-            );
-          }),
-          onRefresh: _onRefresh,
-        )),
-        decoration: BoxDecoration(color: colors.blackBackground),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (BuildContext context) => getIt<GamelistCubit>())
+      ],
+      child: BlocConsumer<GamelistCubit, GamelistState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return ScreenSearchView(
+            key: _screenSearchKey,
+            title: "Games",
+            onSearch: (query) {
+              onQuerySearch(query);
+            },
+            onClose: _restoreGames,
+            querySearch: widget.querySearch,
+            body: Container(
+              child: Center(
+                  child: RefreshIndicator(
+                      key: _refreshIndicatorKey,
+                      child:
+                          OrientationBuilder(builder: (context, orientation) {
+                        return GridView.builder(
+                          controller: _scrollController,
+                          itemCount: state.games.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                MediaQuery.of(context).orientation ==
+                                        Orientation.landscape
+                                    ? 4
+                                    : 2,
+                            childAspectRatio: 0.6,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 4.0),
+                          itemBuilder: (BuildContext context, int index) {
+                            var item = state.games[index];
+                            final isLastElement =
+                                index >= widget.games.length - 1;
+                            return GameItemView(item, isLastElement, (game) {
+                              _goToGameDetal(game);
+                            });
+                          },
+                        );
+                      }),
+                      onRefresh: context.watch<GamelistCubit>().refreshGames)),
+              decoration: BoxDecoration(color: colors.blackBackground),
+            ),
+          );
+        },
       ),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    if (widget.games.length == 0) {
-      _refreshIndicatorKey.currentState.show();
-    }
   }
 
   void _goToGameDetal(Game game) {

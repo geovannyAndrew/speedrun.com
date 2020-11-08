@@ -11,9 +11,7 @@ part 'runlist_cubit.freezed.dart';
 class RunlistCubit extends Cubit<RunlistState> {
   final IRunsRepository _runsRepository;
   var _offset = 0;
-  RunlistCubit(this._runsRepository) : super(RunlistState.initial()) {
-    emit(RunlistState.initial());
-  }
+  RunlistCubit(this._runsRepository) : super(RunlistState.initial());
 
   Future refreshRuns() async {
     _offset = 0;
@@ -31,7 +29,7 @@ class RunlistCubit extends Cubit<RunlistState> {
   }
 
   Future<bool> loadMoreRuns() async {
-    _offset++;
+    _offset = state.runs.length;
     final runs = await _runsRepository.getRuns(offset: _offset);
     runs.fold((l) {
       emit(state.copyWith());

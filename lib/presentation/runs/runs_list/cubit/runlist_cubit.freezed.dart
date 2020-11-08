@@ -89,8 +89,8 @@ class __$RunlistStateCopyWithImpl<$Res> extends _$RunlistStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-class _$_RunlistState extends _RunlistState {
-  const _$_RunlistState({this.runs}) : super._();
+class _$_RunlistState implements _RunlistState {
+  const _$_RunlistState({this.runs});
 
   @override
   final List<Run> runs;
@@ -117,8 +117,7 @@ class _$_RunlistState extends _RunlistState {
       __$RunlistStateCopyWithImpl<_RunlistState>(this, _$identity);
 }
 
-abstract class _RunlistState extends RunlistState {
-  const _RunlistState._() : super._();
+abstract class _RunlistState implements RunlistState {
   const factory _RunlistState({List<Run> runs}) = _$_RunlistState;
 
   @override

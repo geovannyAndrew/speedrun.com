@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
+import 'presentation/games/games_list/cubit/gamelist_cubit.dart';
 import 'data/services/apis/games_api.dart';
 import 'data/repositories/games_repository.dart';
 import 'data/storage/games_storage.dart';
@@ -32,16 +33,18 @@ GetIt $initGetIt(
   final servicesModule = _$ServicesModule();
   gh.lazySingleton<Dio>(() => servicesModule.dio());
   gh.lazySingleton<IGamesApi>(() => GamesApiImpl(get<Dio>()));
-  gh.factory<IGamesRepository>(() => GamesRepositoryImpl(get<IGamesApi>()));
   gh.factory<IGamesStorage>(() => GamesStorageImpl());
   gh.lazySingleton<IRunsApi>(() => RunApiImpl(get<Dio>()));
   gh.factory<IRunsStorage>(() => RunsStorageImpl());
   gh.lazySingleton<IUsersApi>(() => UsersApiImpl(get<Dio>()));
   gh.factory<IUsersRepository>(() => UsersRepositoryImpl(get<IUsersApi>()));
   gh.factory<IUsersStorage>(() => UsersStorageImpl());
+  gh.factory<IGamesRepository>(
+      () => GamesRepositoryImpl(get<IGamesApi>(), get<IGamesStorage>()));
   gh.factory<IRunsRepository>(
       () => RunsRepositoryImpl(get<IRunsApi>(), get<IRunsStorage>()));
   gh.lazySingleton<RunlistCubit>(() => RunlistCubit(get<IRunsRepository>()));
+  gh.lazySingleton<GamelistCubit>(() => GamelistCubit(get<IGamesRepository>()));
   return get;
 }
 

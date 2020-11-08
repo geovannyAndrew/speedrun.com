@@ -10,7 +10,7 @@ import '../services_extensions.dart';
 
 abstract class IGamesApi {
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
-      {@required int offset, @required String query});
+      {@required int offset, @required String query = ""});
   Future<Either<SpeedRunFailure, Game>> getGame({@required String idGame});
   Future<Either<SpeedRunFailure, List<Category>>> getCategoriesFromGame(
       {@required String idGame});
@@ -50,7 +50,7 @@ class GamesApiImpl implements IGamesApi {
 
   @override
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
-      {int offset, String query}) async {
+      {int offset, String query = ""}) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>('/games',
           queryParameters: {

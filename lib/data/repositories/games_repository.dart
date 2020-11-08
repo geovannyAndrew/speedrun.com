@@ -5,10 +5,11 @@ import 'package:speed_run/data/models/category.dart';
 import 'package:speed_run/data/models/game.dart';
 import 'package:speed_run/data/services/apis/games_api.dart';
 import 'package:speed_run/data/services/speed_run_failure.dart';
+import 'package:speed_run/data/storage/games_storage.dart';
 
 abstract class IGamesRepository {
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
-      {@required int offset, @required String query});
+      {@required int offset, String query, bool fromStorage});
   Future<Either<SpeedRunFailure, Game>> getGame({@required String idGame});
   Future<Either<SpeedRunFailure, List<Category>>> getCategoriesFromGame(
       {@required String idGame});
@@ -17,8 +18,9 @@ abstract class IGamesRepository {
 @Injectable(as: IGamesRepository)
 class GamesRepositoryImpl implements IGamesRepository {
   final IGamesApi _gamesApi;
+  final IGamesStorage _gamesStorage;
 
-  GamesRepositoryImpl(this._gamesApi);
+  GamesRepositoryImpl(this._gamesApi, this._gamesStorage);
 
   @override
   Future<Either<SpeedRunFailure, List<Category>>> getCategoriesFromGame(
@@ -31,6 +33,14 @@ class GamesRepositoryImpl implements IGamesRepository {
 
   @override
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
-          {int offset, String query}) =>
-      _gamesApi.getGames(offset: offset, query: query);
+      {int offset, String query, bool fromStorage = false}) async {
+    Either<SpeedRunFailure, List<Game>> eitherGames;
+    if (fromStorage) {
+      eitherGames = right(await _gamesStorage.getGames());
+    } else {
+      eitherGames = await _gamesApi.getGames(offset: offset, query: query);
+      await _gamesStorage.saveGames(eitherGames.getOrElse(() => List.empty()));
+    }
+    return eitherGames;
+  }
 }
