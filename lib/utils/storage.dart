@@ -1,32 +1,34 @@
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:speed_run/logic/game.dart';
-import 'package:speed_run/logic/run.dart';
-import 'package:speed_run/logic/user.dart';
 
-void saveInFile(String nameFile, String content) {
+Future saveInFile(String nameFile, String content) {
+  final completer = Completer<String>();
   getApplicationDocumentsDirectory().then((Directory directory) {
     var file = File("${directory.path}/$nameFile");
     if (!file.existsSync()) {
       file.createSync();
     }
     file.writeAsStringSync(content);
+    completer.complete();
   });
+  return completer.future;
 }
 
-void getContentFromFile(
-    String nameFile, Function(String content) onReadContent) {
+Future<String> getContentFromFile(String nameFile) {
+  final completer = Completer<String>();
   getApplicationDocumentsDirectory().then((Directory directory) {
     var file = File("${directory.path}/$nameFile");
     if (file.existsSync()) {
-      return onReadContent(file.readAsStringSync());
+      completer.complete(file.readAsStringSync());
     } else {
-      return onReadContent("");
+      completer.complete(null);
     }
   });
+  return completer.future;
 }
 
+/*
 void getRuns(Function(List<Run>) onRunsGot) {
   getContentFromFile("runs", (String content) {
     if (content == null) {
@@ -70,4 +72,4 @@ void getUsers(Function(List<User>) onUsersGot) {
       onUsersGot(users);
     }
   });
-}
+}*/

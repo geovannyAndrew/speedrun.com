@@ -79,8 +79,10 @@ class RunItemView extends StatelessWidget {
                                     color: Colors.white,
                                     image: DecorationImage(
                                         image: NetworkImage(
-                                          _run?.player?.urlIcon ??
-                                              AppConfig.placeholderImageUrl,
+                                          _run?.player?.urlIcon != null &&
+                                                  _run?.player?.urlIcon.isEmpty
+                                              ? _run?.player?.urlIcon
+                                              : AppConfig.placeholderImageUrl,
                                         ),
                                         fit: BoxFit.cover),
                                     borderRadius: new BorderRadius.all(
@@ -103,17 +105,15 @@ class RunItemView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          /*Row(
-                                children: <Widget>[
-                                  Text(
-                                    _run?.submittedAgo,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13.0
-                                    ),
-                                  ),
-                                ],
-                              ),*/
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                _run?.submittedAgo,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13.0),
+                              ),
+                            ],
+                          ),
                           Padding(
                             padding: EdgeInsets.only(top: 2.0),
                             child: Row(children: <Widget>[

@@ -37,11 +37,11 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
 
   void _restoreUsers() {
     widget.querySearch = null;
-    storage.getUsers((users) {
+    /*storage.getUsers((users) {
       setState(() {
         widget.users.clear();
       });
-    });
+    });*/
   }
 
   void onQuerySearch(String query) {

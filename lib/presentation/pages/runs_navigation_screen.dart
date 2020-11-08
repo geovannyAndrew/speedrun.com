@@ -5,7 +5,7 @@ import 'package:speed_run/data/models/run.dart';
 import 'package:speed_run/injection.dart';
 import 'package:speed_run/presentation/pages/detail_run_screen.dart';
 import 'package:speed_run/presentation/runs/runs_list/cubit/runlist_cubit.dart';
-import 'package:speed_run/utils/after_layout.dart';
+
 import 'package:speed_run/view_items/run_item_view.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/presentation/widgets/screen_search_view.dart';
@@ -26,7 +26,8 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> {
     // TODO: implement build
     return MultiBlocProvider(
       providers: [BlocProvider(create: (context) => getIt<RunlistCubit>())],
-      child: BlocBuilder<RunlistCubit, RunlistState>(
+      child: BlocConsumer<RunlistCubit, RunlistState>(
+        listener: (context, state) {},
         builder: (context, state) {
           return ScreenSearchView(
               title: "Runs",
@@ -69,9 +70,10 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> {
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {
-    if (context.bloc<RunlistCubit>().runListIsEmpty) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _refreshIndicatorKey.currentState.show();
-    }
+    });
   }
 }

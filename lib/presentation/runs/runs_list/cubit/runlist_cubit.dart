@@ -11,14 +11,21 @@ part 'runlist_cubit.freezed.dart';
 class RunlistCubit extends Cubit<RunlistState> {
   final IRunsRepository _runsRepository;
   var _offset = 0;
-  RunlistCubit(this._runsRepository) : super(RunlistState.initial());
+  RunlistCubit(this._runsRepository) : super(RunlistState.initial()) {
+    emit(RunlistState.initial());
+  }
 
   Future refreshRuns() async {
     _offset = 0;
-    final runs = await _runsRepository.getRuns(offset: _offset);
-    runs.fold((l) {
+    final runsStorage =
+        await _runsRepository.getRuns(offset: _offset, fromStorage: true);
+    runsStorage.fold((l) {
       emit(RunlistState.initial());
     }, (r) {
+      emit(state.copyWith(runs: r));
+    });
+    final runsRemote = await _runsRepository.getRuns(offset: _offset);
+    runsRemote.fold((l) {}, (r) {
       emit(state.copyWith(runs: r));
     });
   }
@@ -33,6 +40,4 @@ class RunlistCubit extends Cubit<RunlistState> {
     });
     return true;
   }
-
-  bool get runListIsEmpty => state.runs.isEmpty;
 }

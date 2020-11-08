@@ -42,11 +42,11 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
 
   void _restoreGames() {
     widget.querySearch = null;
-    storage.getGames((games) {
+    /*storage.getGames((games) {
       setState(() {
         widget.games.clear();
       });
-    });
+    });*/
   }
 
   @override
