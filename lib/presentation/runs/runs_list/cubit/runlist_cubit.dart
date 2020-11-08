@@ -7,7 +7,7 @@ import 'package:speed_run/data/repositories/runs_repository.dart';
 part 'runlist_state.dart';
 part 'runlist_cubit.freezed.dart';
 
-@injectable
+@LazySingleton()
 class RunlistCubit extends Cubit<RunlistState> {
   final IRunsRepository _runsRepository;
   var _offset = 0;

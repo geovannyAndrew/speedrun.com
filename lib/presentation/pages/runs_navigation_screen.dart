@@ -11,27 +11,15 @@ import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/presentation/widgets/screen_search_view.dart';
 
 class RunsNavigationScreen extends StatefulWidget {
-  var _loadingItems = false;
-  var querySearch = "";
-
   RunsNavigationScreen({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return RunsNavigationScreenState();
-  }
+  RunsNavigationScreenState createState() => RunsNavigationScreenState();
 }
 
-class RunsNavigationScreenState extends State<RunsNavigationScreen>
-    with AfterLayoutMixin<RunsNavigationScreen> {
+class RunsNavigationScreenState extends State<RunsNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
-
-  void onQuerySearch(String query) {
-    widget.querySearch = query;
-    _refreshIndicatorKey.currentState.show();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +45,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
                       itemBuilder: (BuildContext context, int index) {
                         var run = state.runs[index];
                         return RunItemView(run, false, (run) {
-                          _goToRunDetail(run);
+                          _goToRunDetail(context, run);
                         });
                       },
                     ),
@@ -73,7 +61,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
     );
   }
 
-  void _goToRunDetail(Run run) {
+  void _goToRunDetail(BuildContext context, Run run) {
     Navigator.push(
         context,
         MaterialPageRoute(
