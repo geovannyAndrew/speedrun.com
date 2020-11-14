@@ -14,9 +14,10 @@ class _$GamelistStateTearOff {
   const _$GamelistStateTearOff();
 
 // ignore: unused_element
-  _GamelistState call({List<Game> games}) {
+  _GamelistState call({List<Game> games, String query}) {
     return _GamelistState(
       games: games,
+      query: query,
     );
   }
 }
@@ -28,6 +29,7 @@ const $GamelistState = _$GamelistStateTearOff();
 /// @nodoc
 mixin _$GamelistState {
   List<Game> get games;
+  String get query;
 
   $GamelistStateCopyWith<GamelistState> get copyWith;
 }
@@ -37,7 +39,7 @@ abstract class $GamelistStateCopyWith<$Res> {
   factory $GamelistStateCopyWith(
           GamelistState value, $Res Function(GamelistState) then) =
       _$GamelistStateCopyWithImpl<$Res>;
-  $Res call({List<Game> games});
+  $Res call({List<Game> games, String query});
 }
 
 /// @nodoc
@@ -52,9 +54,11 @@ class _$GamelistStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object games = freezed,
+    Object query = freezed,
   }) {
     return _then(_value.copyWith(
       games: games == freezed ? _value.games : games as List<Game>,
+      query: query == freezed ? _value.query : query as String,
     ));
   }
 }
@@ -66,7 +70,7 @@ abstract class _$GamelistStateCopyWith<$Res>
           _GamelistState value, $Res Function(_GamelistState) then) =
       __$GamelistStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<Game> games});
+  $Res call({List<Game> games, String query});
 }
 
 /// @nodoc
@@ -83,23 +87,27 @@ class __$GamelistStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object games = freezed,
+    Object query = freezed,
   }) {
     return _then(_GamelistState(
       games: games == freezed ? _value.games : games as List<Game>,
+      query: query == freezed ? _value.query : query as String,
     ));
   }
 }
 
 /// @nodoc
 class _$_GamelistState implements _GamelistState {
-  const _$_GamelistState({this.games});
+  const _$_GamelistState({this.games, this.query});
 
   @override
   final List<Game> games;
+  @override
+  final String query;
 
   @override
   String toString() {
-    return 'GamelistState(games: $games)';
+    return 'GamelistState(games: $games, query: $query)';
   }
 
   @override
@@ -107,12 +115,16 @@ class _$_GamelistState implements _GamelistState {
     return identical(this, other) ||
         (other is _GamelistState &&
             (identical(other.games, games) ||
-                const DeepCollectionEquality().equals(other.games, games)));
+                const DeepCollectionEquality().equals(other.games, games)) &&
+            (identical(other.query, query) ||
+                const DeepCollectionEquality().equals(other.query, query)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(games);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(games) ^
+      const DeepCollectionEquality().hash(query);
 
   @override
   _$GamelistStateCopyWith<_GamelistState> get copyWith =>
@@ -120,10 +132,13 @@ class _$_GamelistState implements _GamelistState {
 }
 
 abstract class _GamelistState implements GamelistState {
-  const factory _GamelistState({List<Game> games}) = _$_GamelistState;
+  const factory _GamelistState({List<Game> games, String query}) =
+      _$_GamelistState;
 
   @override
   List<Game> get games;
+  @override
+  String get query;
   @override
   _$GamelistStateCopyWith<_GamelistState> get copyWith;
 }

@@ -13,6 +13,8 @@ class RunlistCubit extends Cubit<RunlistState> {
   var _offset = 0;
   RunlistCubit(this._runsRepository) : super(RunlistState.initial());
 
+  bool get runListIsEmpty => state.runs.isEmpty;
+
   Future refreshRuns() async {
     _offset = 0;
     final runsStorage =

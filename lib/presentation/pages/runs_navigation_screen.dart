@@ -73,7 +73,9 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //if (context.watch<RunlistCubit>().runListIsEmpty) {
       _refreshIndicatorKey.currentState.show();
+      //}
     });
   }
 }

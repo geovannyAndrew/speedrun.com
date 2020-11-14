@@ -14,11 +14,6 @@ import 'package:speed_run/presentation/widgets/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 
 class GamesNavigationScreen extends StatefulWidget {
-  var games = List<Game>();
-  var loadingItems = false;
-  var _allLoaded = false;
-  String querySearch;
-
   GamesNavigationScreen({Key key}) : super(key: key);
 
   @override
@@ -38,12 +33,12 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
   bool get loadingItems => null;
 
   void onQuerySearch(String query) {
-    widget.querySearch = query;
+    //widget.querySearch = query;
     _refreshIndicatorKey.currentState.show();
   }
 
   void _restoreGames() {
-    widget.querySearch = null;
+    //widget.querySearch = null;
     /*storage.getGames((games) {
       setState(() {
         widget.games.clear();
@@ -51,30 +46,14 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
     });*/
   }
 
-  @override
-  void initState() {
-    _scrollController = ScrollController()..addListener(_loadNextItems);
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _refreshIndicatorKey.currentState.show();
-    });
-  }
-
-  Future _onRefresh() {
-    return _getGames(clearList: true);
-  }
-
   void _loadNextItems() {
     //print(_scrollController.position.extentAfter);
-    if (_scrollController.position.extentAfter < 500 &&
-        !widget._allLoaded &&
-        !widget.loadingItems &&
-        widget.games.length > 10) {
-      _getGames();
+    if (_scrollController.position.extentAfter < 500) {
+      context.watch<GamelistCubit>().loadMoreGames();
     }
   }
 
-  Future _getGames({bool clearList = false}) {
+  /*Future _getGames({bool clearList = false}) {
     widget.loadingItems = true;
     _screenSearchKey.currentState.visibleIcon = false;
     int offset = clearList ? 0 : widget.games.length;
@@ -102,7 +81,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
           Dialogs.showResponseErrorSnackbar(context, error);
         });
     return future;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +100,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
               onQuerySearch(query);
             },
             onClose: _restoreGames,
-            querySearch: widget.querySearch,
+            querySearch: state.query,
             body: Container(
               child: Center(
                   child: RefreshIndicator(
@@ -145,7 +124,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             var item = state.games[index];
                             final isLastElement =
-                                index >= widget.games.length - 1;
+                                index >= state.games.length - 1;
                             return GameItemView(item, isLastElement, (game) {
                               _goToGameDetal(game);
                             });
@@ -168,8 +147,19 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //if (context.watch<GamelistCubit>().gameListIsEmpty) {
+      _refreshIndicatorKey.currentState.show();
+      //}
+    });
+  }
+
+  @override
   void dispose() {
-    _scrollController.removeListener(_loadNextItems);
+    _scrollController?.removeListener(_loadNextItems);
     super.dispose();
   }
 }
