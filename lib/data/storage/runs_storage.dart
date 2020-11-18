@@ -14,7 +14,7 @@ class RunsStorageImpl implements IRunsStorage {
   @override
   Future<List<Run>> getRuns() async {
     final runsString = await storage.getContentFromFile(_fileName);
-    if (runsString != null || runsString.isEmpty) {
+    if (runsString != null && !runsString.isEmpty) {
       final json = jsonDecode(runsString);
       try {
         final jsonData = json as List;

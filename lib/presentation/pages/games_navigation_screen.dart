@@ -47,7 +47,9 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
         })
       ],
       child: BlocConsumer<GamelistCubit, GamelistState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          print("Listener state: ${state.games.length}");
+        },
         builder: (context, state) {
           return ScreenSearchView(
             key: _screenSearchKey,

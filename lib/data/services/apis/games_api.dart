@@ -52,12 +52,13 @@ class GamesApiImpl implements IGamesApi {
   Future<Either<SpeedRunFailure, List<Game>>> getGames(
       {int offset, String query = ""}) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/games',
-          queryParameters: {
-            "offset": offset,
-            "max": AppConfig.itemsPerPage,
-            "orderby": "created"
-          });
+      final response =
+          await _dio.get<Map<String, dynamic>>('/games', queryParameters: {
+        "offset": offset,
+        "max": AppConfig.itemsPerPage,
+        "orderby": "created",
+        "name": query
+      });
       final games = response
           .getJsonListData()
           .map((e) => Game.fromJson(e as Map<String, dynamic>))

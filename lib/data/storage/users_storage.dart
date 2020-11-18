@@ -28,8 +28,8 @@ class UsersStorageImpl implements IUsersStorage {
   }
 
   @override
-  Future saveUsers(List<User> users) {
+  Future saveUsers(List<User> users) async {
     final usersString = jsonEncode(users);
-    return storage.saveInFile(_fileName, usersString);
+    return await storage.saveInFile(_fileName, usersString);
   }
 }

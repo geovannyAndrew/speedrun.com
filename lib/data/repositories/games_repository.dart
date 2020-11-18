@@ -39,7 +39,10 @@ class GamesRepositoryImpl implements IGamesRepository {
       eitherGames = right(await _gamesStorage.getGames());
     } else {
       eitherGames = await _gamesApi.getGames(offset: offset, query: query);
-      await _gamesStorage.saveGames(eitherGames.getOrElse(() => List.empty()));
+      if (offset <= 1 && (query == null || query.isEmpty)) {
+        await _gamesStorage
+            .saveGames(eitherGames.getOrElse(() => List.empty()));
+      }
     }
     return eitherGames;
   }

@@ -45,7 +45,18 @@ abstract class Game with _$Game {
         platforms: platforms);
   }
 
-  Map<String, dynamic> toJson() => null;
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'names': names,
+        'abbreviation': abbreviation,
+        'released': released,
+        'assets': {
+          'cover-medium': coverMedium,
+          'cover-large': coverLarge,
+          'background': background
+        },
+        'platforms': platforms
+      };
 
   String get platformsAvaible {
     return platforms?.map((e) => e.name).toList().join(", ");

@@ -35,8 +35,10 @@ class GamelistCubit extends Cubit<GamelistState> {
     final gamesStorage = await _gamesRepository.getGames(
         offset: _offset, query: state.query, fromStorage: true);
     gamesStorage.fold((l) {
+      print("gamesStorage l");
       emit(GamelistState.initial());
     }, (r) {
+      print("gamesStorage r: ${r.length}");
       emit(state.copyWith(games: r));
     });
   }

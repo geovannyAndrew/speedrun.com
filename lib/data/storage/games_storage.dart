@@ -18,7 +18,7 @@ class GamesStorageImpl implements IGamesStorage {
   @override
   Future<List<Game>> getGames() async {
     final gamesString = await storage.getContentFromFile(_fileName);
-    if (gamesString != null || gamesString.isEmpty) {
+    if (gamesString != null && !gamesString.isEmpty) {
       final json = jsonDecode(gamesString);
       try {
         final jsonData = json as List;
@@ -33,8 +33,8 @@ class GamesStorageImpl implements IGamesStorage {
   }
 
   @override
-  Future saveGames(List<Game> games) {
+  Future saveGames(List<Game> games) async {
     final gamesString = jsonEncode(games);
-    return storage.saveInFile(_fileName, gamesString);
+    return await storage.saveInFile(_fileName, gamesString);
   }
 }
