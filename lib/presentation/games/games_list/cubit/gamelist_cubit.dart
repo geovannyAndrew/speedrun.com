@@ -17,17 +17,11 @@ class GamelistCubit extends Cubit<GamelistState> {
 
   bool get gameListIsEmpty => state.games.isEmpty;
 
-  Future refreshGames({String querySearch = null}) async {
-    state.copyWith(query: querySearch);
+  Future refreshGames() async {
     _offset = 0;
-    final gamesStorage = await _gamesRepository.getGames(
-        offset: _offset, query: state.query, fromStorage: true);
-    gamesStorage.fold((l) {
-      emit(GamelistState.initial());
-    }, (r) {
-      emit(state.copyWith(games: r));
-    });
-    final gamesRemote = await _gamesRepository.getGames(offset: _offset);
+    print("Query: ${state.query}");
+    final gamesRemote =
+        await _gamesRepository.getGames(offset: _offset, query: state.query);
     gamesRemote.fold((l) {
       print("gamesRemote l");
     }, (r) {
@@ -36,22 +30,34 @@ class GamelistCubit extends Cubit<GamelistState> {
     });
   }
 
+  Future refreshGamesFromStorage() async {
+    setQuery(null);
+    final gamesStorage = await _gamesRepository.getGames(
+        offset: _offset, query: state.query, fromStorage: true);
+    gamesStorage.fold((l) {
+      emit(GamelistState.initial());
+    }, (r) {
+      emit(state.copyWith(games: r));
+    });
+  }
+
   Future<bool> loadMoreGames() async {
-    print("loadMoreGames ....");
-    if (!_loading && !_allLoaded && state.games.length > 10) return false;
+    if (_loading || _allLoaded || state.games.isEmpty) return false;
     _loading = true;
     _offset = state.games.length;
     final games =
         await _gamesRepository.getGames(offset: _offset, query: state.query);
     games.fold((l) {
-      print("loadMoreGames l");
       emit(state.copyWith());
       _loading = false;
     }, (r) {
-      print("loadMoreGames r");
       emit(state.copyWith(games: [...state.games, ...r]));
       _loading = false;
     });
     return true;
+  }
+
+  void setQuery(String query) {
+    emit(state.copyWith(query: query));
   }
 }

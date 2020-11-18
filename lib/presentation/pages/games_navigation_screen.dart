@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/data/models/game.dart';
 import 'package:speed_run/injection.dart';
-import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/presentation/games/games_list/cubit/gamelist_cubit.dart';
 import 'package:speed_run/presentation/pages/detail_game_screen.dart';
-import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
-import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/game_item_view.dart';
 import 'package:speed_run/presentation/widgets/screen_search_view.dart';
-import 'package:speed_run/utils/storage.dart' as storage;
 
 class GamesNavigationScreen extends StatefulWidget {
   GamesNavigationScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return GamesNavigationScreenState();
   }
 }
@@ -29,66 +23,28 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
   final GlobalKey<ScreenSearchViewState> _screenSearchKey =
       new GlobalKey<ScreenSearchViewState>();
   ScrollController _scrollController;
-
-  bool get loadingItems => null;
+  GamelistCubit gamelistCubit;
 
   void onQuerySearch(String query) {
-    //widget.querySearch = query;
+    gamelistCubit.setQuery(query);
     _refreshIndicatorKey.currentState.show();
   }
 
-  void _restoreGames() {
-    //widget.querySearch = null;
-    /*storage.getGames((games) {
-      setState(() {
-        widget.games.clear();
-      });
-    });*/
-  }
-
   void _loadNextItems() {
-    //print(_scrollController.position.extentAfter);
     if (_scrollController.position.extentAfter < 500) {
-      context.watch<GamelistCubit>().loadMoreGames();
+      gamelistCubit.loadMoreGames();
     }
   }
-
-  /*Future _getGames({bool clearList = false}) {
-    widget.loadingItems = true;
-    _screenSearchKey.currentState.visibleIcon = false;
-    int offset = clearList ? 0 : widget.games.length;
-    var future = RestAPI.instance.getGames(
-        offset: offset,
-        query: widget.querySearch ?? "",
-        onSuccess: (games) {
-          _screenSearchKey.currentState.visibleIcon = true;
-          if (mounted) {
-            setState(() {
-              if (clearList) {
-                this.widget.games.clear();
-                widget._allLoaded = false;
-              }
-              if (games.length < AppConfig.itemsPerPage) {
-                widget._allLoaded = true;
-              }
-            });
-          }
-          widget.loadingItems = false;
-        },
-        onError: (error) {
-          _screenSearchKey.currentState.visibleIcon = true;
-          widget.loadingItems = false;
-          Dialogs.showResponseErrorSnackbar(context, error);
-        });
-    return future;
-  }*/
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (BuildContext context) => getIt<GamelistCubit>())
+        BlocProvider(create: (BuildContext context) {
+          gamelistCubit = getIt<GamelistCubit>();
+          return gamelistCubit;
+        })
       ],
       child: BlocConsumer<GamelistCubit, GamelistState>(
         listener: (context, state) {},
@@ -99,7 +55,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
             onSearch: (query) {
               onQuerySearch(query);
             },
-            onClose: _restoreGames,
+            onClose: gamelistCubit.refreshGamesFromStorage,
             querySearch: state.query,
             body: Container(
               child: Center(
@@ -148,12 +104,10 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _scrollController = ScrollController()..addListener(_loadNextItems);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //if (context.watch<GamelistCubit>().gameListIsEmpty) {
       _refreshIndicatorKey.currentState.show();
-      //}
     });
   }
 
