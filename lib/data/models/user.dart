@@ -57,9 +57,15 @@ abstract class User implements _$User {
   }
 
   @override
-  Map<String, dynamic> toJson() {
-    return null;
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'names': names,
+        'location': {'country': country, 'region': region},
+        'name-style': colorStyle,
+        'twitch': twitch,
+        'youtube': youtube,
+        'twitter': twitter
+      };
 
   LinearGradient get gradientStyle {
     return LinearGradient(
@@ -72,7 +78,7 @@ abstract class User implements _$User {
   }
 
   String get urlIcon {
-    return "${AppConfig.urlServices}/themes/user/$name/image.png";
+    return "${AppConfig.urlHost}themes/user/$name/image.png";
   }
 
   String get name {

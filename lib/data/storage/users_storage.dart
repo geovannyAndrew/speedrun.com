@@ -17,7 +17,7 @@ class UsersStorageImpl implements IUsersStorage {
   @override
   Future<List<User>> getUsers() async {
     final usersString = await storage.getContentFromFile(_fileName);
-    if (usersString != null || usersString.isEmpty) {
+    if (usersString != null && !usersString.isEmpty) {
       final json = jsonDecode(usersString);
       final jsonData = json as List;
       return jsonData

@@ -33,12 +33,13 @@ class UsersApiImpl implements IUsersApi {
   Future<Either<SpeedRunFailure, List<User>>> getUsers(
       {int offset, String query}) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/users',
-          queryParameters: {
-            "offset": offset,
-            "max": AppConfig.itemsPerPage,
-            "orderby": "signup"
-          });
+      final response =
+          await _dio.get<Map<String, dynamic>>('/users', queryParameters: {
+        "offset": offset,
+        "max": AppConfig.itemsPerPage,
+        "orderby": "signup",
+        "name": query
+      });
       final users = response
           .getJsonListData()
           .map((e) => User.fromJson(e as Map<String, dynamic>))
