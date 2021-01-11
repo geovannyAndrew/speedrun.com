@@ -45,7 +45,8 @@ class RunApiImpl implements IRunsApi {
         "offset": offset,
         "direction": "desc",
         "embed": "game,category,players",
-        "max": AppConfig.itemsPerPage
+        "max": AppConfig.itemsPerPage,
+        "examiner": "wzx7q875"
       });
       final runs = response
           .getJsonListData()
