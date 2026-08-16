@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
 
   void playYoutubeVideo() {
     FlutterYoutube.playYoutubeVideoByUrl(
-      apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
+      apiKey: "YOUR_API_KEY",
       videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
     );
   }
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoByUrl(
-      apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
+      apiKey: "YOUR_API_KEY",
       videoUrl: textEditingControllerUrl.text,
     );
   }
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoById(
-      apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
+      apiKey: "YOUR_API_KEY",
       videoId: textEditingControllerId.text,
     );
   }
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoById(
-        apiKey: "AIzaSyBy78We65b3eEjhbtIj9FyW3rZfyJbuAAQ",
+        apiKey: "YOUR_API_KEY",
         videoId: textEditingControllerId.text,
         autoPlay: true);
   }
