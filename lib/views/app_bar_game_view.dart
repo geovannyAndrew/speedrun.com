@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:speed_run/logic/game.dart';
 
 class AppBarGameView extends StatelessWidget {
-  final Game game;
-  final idTag;
-  final Function onPressGame;
+  final Game? game;
+  final String? idTag;
+  final Function? onPressGame;
 
-  AppBarGameView({Key key, this.game, this.idTag, this.onPressGame = null})
+  AppBarGameView({Key? key, this.game, this.idTag, this.onPressGame})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SliverAppBar(
       expandedHeight: 260.0,
       floating: false,
@@ -47,14 +46,14 @@ class AppBarGameView extends StatelessWidget {
                   ? CircularProgressIndicator()
                   : Column(
                       children: <Widget>[
-                        FlatButton(
+                        TextButton(
                           onPressed: () {
                             if (onPressGame != null) {
-                              onPressGame();
+                              onPressGame!();
                             }
                           },
                           child: Hero(
-                            tag: idTag,
+                            tag: idTag ?? "",
                             child: Image.network(
                               game?.coverMedium?.uri ?? "",
                               height: 120,

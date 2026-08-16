@@ -1,5 +1,5 @@
 class Times {
-  final String primary;
+  final String? primary;
   final double primarySeconds;
   final String realtime;
   final double realtimeSeconds;

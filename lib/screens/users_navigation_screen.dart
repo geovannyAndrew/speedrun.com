@@ -12,16 +12,15 @@ import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 
 class UsersNavigationScreen extends StatefulWidget {
-  final users = List<User>();
+  final users = <User>[];
   var _loadingItems = false;
   var querySearch = "";
   var _allLoaded = false;
 
-  UsersNavigationScreen({Key key}) : super(key: key);
+  UsersNavigationScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return UsersNavigationScreenState();
   }
 }
@@ -29,7 +28,7 @@ class UsersNavigationScreen extends StatefulWidget {
 class UsersNavigationScreenState extends State<UsersNavigationScreen>
     with AfterLayoutMixin<UsersNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   final GlobalObjectKey<ScreenSearchViewState> _screenSearchKey =
       GlobalObjectKey<ScreenSearchViewState>("User");
 
@@ -43,7 +42,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
   }
 
   void _restoreUsers() {
-    widget.querySearch = null;
+    widget.querySearch = "";
     storage.getUsers((users) {
       setState(() {
         widget.users.clear();
@@ -54,7 +53,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
 
   void onQuerySearch(String query) {
     widget.querySearch = query;
-    _refreshIndicatorKey.currentState.show();
+    _refreshIndicatorKey.currentState?.show();
   }
 
   Future<bool> _loadNextItems() async {
@@ -70,29 +69,29 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
 
   Future _getUsers({bool clearList = false}) {
     widget._loadingItems = true;
-    _screenSearchKey.currentState.visibleIcon = false;
+    _screenSearchKey.currentState?.visibleIcon = false;
     var offset = clearList ? 0 : widget.users.length;
     var future = RestAPI.instance.getUsers(
         offset: offset,
         query: widget.querySearch,
         onSuccess: (users) {
-          _screenSearchKey?.currentState?.visibleIcon = true;
+          _screenSearchKey.currentState?.visibleIcon = true;
           widget._loadingItems = false;
           if (mounted) {
             setState(() {
               if (clearList) {
-                this.widget.users.clear();
+                widget.users.clear();
                 widget._allLoaded = false;
               }
               if (users.length < AppConfig.itemsPerPage) {
                 widget._allLoaded = true;
               }
-              this.widget.users.addAll(users);
+              widget.users.addAll(users);
             });
           }
         },
         onError: (error) {
-          _screenSearchKey?.currentState?.visibleIcon = true;
+          _screenSearchKey.currentState?.visibleIcon = true;
           widget._loadingItems = false;
           Dialogs.showResponseErrorSnackbar(context, error);
         });
@@ -101,7 +100,6 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ScreenSearchView(
       key: _screenSearchKey,
       title: "Users",
@@ -146,7 +144,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
   @override
   void afterFirstLayout(BuildContext context) {
     if (widget.users.length == 0) {
-      _refreshIndicatorKey.currentState.show();
+      _refreshIndicatorKey.currentState?.show();
     }
   }
 

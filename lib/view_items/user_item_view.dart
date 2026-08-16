@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 class UserItemView extends StatelessWidget{
@@ -14,11 +13,12 @@ class UserItemView extends StatelessWidget{
 
    @override
    Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.all(0.0),
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0.0),
+          ),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -30,7 +30,7 @@ class UserItemView extends StatelessWidget{
                       tag: _user.id,
                       child: FadeInImage.assetNetwork(
                         placeholder: AppConfig.placeholderImageAsset,
-                        image:_user.urlIcon ?? "",
+                        image:_user.urlIcon,
                         width: 50.0,
                         height: 50.0,
                         fit:BoxFit.cover
@@ -46,7 +46,7 @@ class UserItemView extends StatelessWidget{
                             Row(
                               children: <Widget>[
                                 Expanded(
-                                  child: Text(_user?.name,
+                                  child: Text(_user.name,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class UserItemView extends StatelessWidget{
                             Container(
                               alignment: Alignment(-1.0, 0),
                               child: Text(
-                                _user?.countryRegionName,
+                                _user.countryRegionName,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 13.0

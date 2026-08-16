@@ -24,12 +24,12 @@ class RestAPI {
   RestAPI._internal();
 
   Future getRuns(
-      {int offset,
-      Function(List<Run>) onSuccess,
-      Function(ResponseError) onError}) async {
+      {required int offset,
+      required Function(List<Run>) onSuccess,
+      required Function(ResponseError) onError}) async {
     var url =
         "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&max=${AppConfig.itemsPerPage}";
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == HttpStatus.ok) {
       if (offset == 0) {
         storage.saveInFile("runs", response.body);
@@ -46,12 +46,12 @@ class RestAPI {
   }
 
   Future getCategoryRuns(
-      {int offset,
-      String idCategory,
-      Function(List<Run>) onSuccess,
-      Function(ResponseError) onError}) async {
-    final response = await http.get(
-        "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&category=$idCategory&max=${AppConfig.itemsPerPage}");
+      {required int offset,
+      required String idCategory,
+      required Function(List<Run>) onSuccess,
+      required Function(ResponseError) onError}) async {
+    final response = await http.get(Uri.parse(
+        "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category,players&category=$idCategory&max=${AppConfig.itemsPerPage}"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -65,12 +65,12 @@ class RestAPI {
   }
 
   Future getUserRuns(
-      {int offset,
-      String idUser,
-      Function(List<Run>) onSuccess,
-      Function(ResponseError) onError}) async {
-    final response = await http.get(
-        "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category&user=$idUser&max=${AppConfig.itemsPerPage}");
+      {required int offset,
+      required String idUser,
+      required Function(List<Run>) onSuccess,
+      required Function(ResponseError) onError}) async {
+    final response = await http.get(Uri.parse(
+        "${urlApi}runs?status=verified&orderby=verify-date&offset=$offset&direction=desc&embed=game,category&user=$idUser&max=${AppConfig.itemsPerPage}"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -84,11 +84,11 @@ class RestAPI {
   }
 
   Future getRun(
-      {String id,
-      Function(Run) onSuccess,
-      Function(ResponseError) onError}) async {
+      {required String id,
+      required Function(Run) onSuccess,
+      required Function(ResponseError) onError}) async {
     final response = await http
-        .get("${urlApi}runs/$id?embed=players,game,category,platform");
+        .get(Uri.parse("${urlApi}runs/$id?embed=players,game,category,platform"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var run = Run.fromJson(json["data"] as Map<String, dynamic>);
@@ -99,16 +99,16 @@ class RestAPI {
   }
 
   Future getGames(
-      {int offset,
-      String query,
-      Function(List<Game>) onSuccess,
-      Function(ResponseError) onError}) async {
+      {required int offset,
+      String? query,
+      required Function(List<Game>) onSuccess,
+      required Function(ResponseError) onError}) async {
     var url =
         "${urlApi}games?offset=$offset&orderby=created&max=${AppConfig.itemsPerPage}";
     if (query != null) {
       url += "&name=$query";
     }
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == HttpStatus.ok) {
       if (offset == 0 && (query == null || query.isEmpty)) {
         storage.saveInFile("games", response.body);
@@ -125,10 +125,10 @@ class RestAPI {
   }
 
   Future getGame(
-      {String id,
-      Function(Game) onSuccess,
-      Function(ResponseError) onError}) async {
-    final response = await http.get("${urlApi}games/$id?embed=platforms");
+      {required String id,
+      required Function(Game) onSuccess,
+      required Function(ResponseError) onError}) async {
+    final response = await http.get(Uri.parse("${urlApi}games/$id?embed=platforms"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var game = Game.fromJson(json["data"] as Map<String, dynamic>);
@@ -139,10 +139,10 @@ class RestAPI {
   }
 
   Future getGameCategories(
-      {String idGame,
-      Function(List<Category>) onSuccess,
-      Function(ResponseError) onError}) async {
-    final response = await http.get("${urlApi}games/$idGame/categories");
+      {required String idGame,
+      required Function(List<Category>) onSuccess,
+      required Function(ResponseError) onError}) async {
+    final response = await http.get(Uri.parse("${urlApi}games/$idGame/categories"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -156,16 +156,16 @@ class RestAPI {
   }
 
   Future getUsers(
-      {int offset,
-      String query,
-      Function(List<User>) onSuccess,
-      Function(ResponseError) onError}) async {
+      {required int offset,
+      String? query,
+      required Function(List<User>) onSuccess,
+      required Function(ResponseError) onError}) async {
     String url =
         "${urlApi}users?offset=$offset&max=${AppConfig.itemsPerPage}&orderby=signup";
     if (query != null) {
       url += "&name=$query";
     }
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == HttpStatus.ok) {
       if (offset == 0 && (query == null || query.isEmpty)) {
         storage.saveInFile("users", response.body);
@@ -182,10 +182,10 @@ class RestAPI {
   }
 
   Future getUser(
-      {String id,
-      Function(User) onSuccess,
-      Function(ResponseError) onError}) async {
-    final response = await http.get("${urlApi}users/$id");
+      {required String id,
+      required Function(User) onSuccess,
+      required Function(ResponseError) onError}) async {
+    final response = await http.get(Uri.parse("${urlApi}users/$id"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var jsonData = json["data"];

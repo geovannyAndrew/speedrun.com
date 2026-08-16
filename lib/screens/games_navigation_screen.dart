@@ -11,16 +11,15 @@ import 'package:speed_run/views/screen_search_view.dart';
 import 'package:speed_run/utils/storage.dart' as storage;
 
 class GamesNavigationScreen extends StatefulWidget {
-  var games = List<Game>();
+  var games = <Game>[];
   var loadingItems = false;
   var _allLoaded = false;
-  String querySearch;
+  String? querySearch;
 
-  GamesNavigationScreen({Key key}) : super(key: key);
+  GamesNavigationScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return GamesNavigationScreenState();
   }
 }
@@ -28,16 +27,16 @@ class GamesNavigationScreen extends StatefulWidget {
 class GamesNavigationScreenState extends State<GamesNavigationScreen>
     with AfterLayoutMixin<GamesNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScreenSearchViewState> _screenSearchKey =
-      new GlobalKey<ScreenSearchViewState>();
-  ScrollController _scrollController;
+      GlobalKey<ScreenSearchViewState>();
+  late ScrollController _scrollController;
 
-  bool get loadingItems => null;
+  bool get loadingItems => false;
 
   void onQuerySearch(String query) {
     widget.querySearch = query;
-    _refreshIndicatorKey.currentState.show();
+    _refreshIndicatorKey.currentState?.show();
   }
 
   void _restoreGames() {
@@ -61,7 +60,6 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
   }
 
   void _loadNextItems() {
-    //print(_scrollController.position.extentAfter);
     if (_scrollController.position.extentAfter < 500 &&
         !widget._allLoaded &&
         !widget.loadingItems &&
@@ -72,20 +70,20 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
 
   Future _getGames({bool clearList = false}) {
     widget.loadingItems = true;
-    _screenSearchKey.currentState.visibleIcon = false;
+    _screenSearchKey.currentState?.visibleIcon = false;
     int offset = clearList ? 0 : widget.games.length;
     var future = RestAPI.instance.getGames(
         offset: offset,
         query: widget.querySearch ?? "",
         onSuccess: (games) {
-          _screenSearchKey.currentState.visibleIcon = true;
+          _screenSearchKey.currentState?.visibleIcon = true;
           if (mounted) {
             setState(() {
               if (clearList) {
-                this.widget.games.clear();
+                widget.games.clear();
                 widget._allLoaded = false;
               }
-              this.widget.games.addAll(games);
+              widget.games.addAll(games);
               if (games.length < AppConfig.itemsPerPage) {
                 widget._allLoaded = true;
               }
@@ -94,7 +92,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
           widget.loadingItems = false;
         },
         onError: (error) {
-          _screenSearchKey.currentState.visibleIcon = true;
+          _screenSearchKey.currentState?.visibleIcon = true;
           widget.loadingItems = false;
           Dialogs.showResponseErrorSnackbar(context, error);
         });
@@ -103,7 +101,6 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ScreenSearchView(
       key: _screenSearchKey,
       title: "Games",
@@ -147,12 +144,11 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
   @override
   void afterFirstLayout(BuildContext context) {
     if (widget.games.length == 0) {
-      _refreshIndicatorKey.currentState.show();
+      _refreshIndicatorKey.currentState?.show();
     }
   }
 
   void _goToGameDetal(Game game) {
-    //Navigator.pushNamed(context, "/run_detail");
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => GameDetailScreen(game: game)));
   }

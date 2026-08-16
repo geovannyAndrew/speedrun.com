@@ -8,12 +8,12 @@ import 'package:speed_run/network/rest_api.dart';
 class User {
   final String id;
   final Names names;
-  final Location country;
-  final Location region;
-  final ColorStyle colorStyle;
-  final Asset assetTwitch;
-  final Asset assetYoutube;
-  final Asset assetTwitter;
+  final Location? country;
+  final Location? region;
+  final ColorStyle? colorStyle;
+  final Asset? assetTwitch;
+  final Asset? assetYoutube;
+  final Asset? assetTwitter;
 
   User(this.id, this.names, this.country, this.region, this.colorStyle,
       this.assetTwitch, this.assetYoutube, this.assetTwitter);
@@ -23,7 +23,7 @@ class User {
   }
 
   String get name {
-    return names?.international;
+    return names.international;
   }
 
   String get countryRegionName {
@@ -38,8 +38,8 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    Location country;
-    Location region;
+    Location? country;
+    Location? region;
     if (json["location"] != null) {
       if (json["location"]["country"] != null) {
         country = Location.fromJson(
@@ -53,7 +53,9 @@ class User {
 
     return User(
         json["id"].toString(),
-        Names.fromJson(json["names"] as Map<String, dynamic>),
+        json["names"] != null
+            ? Names.fromJson(json["names"] as Map<String, dynamic>)
+            : Names("", "", ""),
         country,
         region,
         json["name-style"] != null
@@ -75,8 +77,8 @@ class User {
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: [
-          colorStyle?.colorFrom?.darkColor,
-          colorStyle?.colorTo?.darkColor
+          colorStyle?.colorFrom?.darkColor ?? const Color(0xFF000000),
+          colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000)
         ]);
   }
 }

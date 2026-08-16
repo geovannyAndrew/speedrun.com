@@ -12,19 +12,9 @@ import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:speed_run/utils/after_layout.dart';
 
 class GameDetailScreen extends StatefulWidget {
-  final Game game;
-  //var tabs = List<Tab>();
+  final Game? game;
 
-  GameDetailScreen({Key key, this.game}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  GameDetailScreen({Key? key, this.game}) : super(key: key);
 
   @override
   _GameDetailScreenState createState() => _GameDetailScreenState();
@@ -32,23 +22,22 @@ class GameDetailScreen extends StatefulWidget {
 
 class _GameDetailScreenState extends State<GameDetailScreen>
     with SingleTickerProviderStateMixin {
-  Game _game;
-  var _categories = List<Category>();
+  Game? _game;
+  var _categories = <Category>[];
 
   @override
   void initState() {
     super.initState();
-    // _game = widget.game;
     _getCategories();
   }
 
   Future _getGame() {
     var future = RestAPI.instance.getGame(
-        id: widget.game.id,
+        id: widget.game!.id,
         onSuccess: (game) {
           if (mounted) {
             setState(() {
-              this._game = game;
+              _game = game;
             });
           }
         },
@@ -65,11 +54,11 @@ class _GameDetailScreenState extends State<GameDetailScreen>
 
   Future _getCategories() {
     var future = RestAPI.instance.getGameCategories(
-        idGame: widget.game.id,
+        idGame: widget.game!.id,
         onSuccess: (categories) {
           setState(() {
-            this._categories = categories;
-            this._game = widget.game;
+            _categories = categories;
+            _game = widget.game;
           });
           _getGame();
         },
@@ -91,18 +80,12 @@ class _GameDetailScreenState extends State<GameDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: this._game == null
           ? AppBar(
               centerTitle: true,
               title: Text(
-                widget.game.name,
+                widget.game?.name ?? "",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
               ),
             )
@@ -122,7 +105,7 @@ class _GameDetailScreenState extends State<GameDetailScreen>
                   return <Widget>[
                     AppBarGameView(
                       game: this._game,
-                      idTag: this._game.id,
+                      idTag: this._game!.id,
                     ),
                     SliverPersistentHeader(
                       delegate: _SliverAppBarDelegate(
@@ -149,17 +132,17 @@ class _GameDetailScreenState extends State<GameDetailScreen>
   }
 
   List<Tab> _buildTabs() {
-    var tabs = List<Tab>();
-    this._categories?.forEach((category) => tabs.add(Tab(
+    var tabs = <Tab>[];
+    this._categories.forEach((category) => tabs.add(Tab(
           text: category.name,
         )));
     return tabs;
   }
 
   List<Widget> _buildViewTabs() {
-    var views = List<Widget>();
-    this._categories?.forEach((category) => views.add(UserRunsListView(
-          idGame: widget.game.id,
+    var views = <Widget>[];
+    this._categories.forEach((category) => views.add(UserRunsListView(
+          idGame: widget.game!.id,
           idCategory: category.id,
         )));
     return views;
@@ -179,7 +162,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
+    return Container(
       color: colors.blackDark,
       child: _tabBar,
     );
@@ -192,10 +175,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class UserRunsListView extends StatefulWidget {
-  final idGame;
-  final idCategory;
+  final String idGame;
+  final String idCategory;
 
-  UserRunsListView({Key key, this.idGame, this.idCategory}) : super(key: key);
+  UserRunsListView({Key? key, required this.idGame, required this.idCategory}) : super(key: key);
 
   @override
   _UserRunsListViewState createState() => _UserRunsListViewState();
@@ -204,9 +187,9 @@ class UserRunsListView extends StatefulWidget {
 class _UserRunsListViewState extends State<UserRunsListView>
     with AfterLayoutMixin<UserRunsListView> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-  ScrollController _scrollController;
-  final runs = List<Run>();
+      GlobalKey<RefreshIndicatorState>();
+  late ScrollController _scrollController;
+  final runs = <Run>[];
   var _loadingItems = false;
   var _allLoaded = false;
 
@@ -221,7 +204,6 @@ class _UserRunsListViewState extends State<UserRunsListView>
   }
 
   void _loadNextItems() {
-    //print(_scrollController.position.extentAfter);
     if (!this._loadingItems && !this._allLoaded && this.runs.length > 10) {
       _getRuns();
     }
@@ -257,7 +239,6 @@ class _UserRunsListViewState extends State<UserRunsListView>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       child: Center(
           child: RefreshIndicator(
@@ -283,39 +264,9 @@ class _UserRunsListViewState extends State<UserRunsListView>
       )),
       decoration: BoxDecoration(color: colors.blackBackground),
     );
-    /*return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      displacement: 90.0,
-      onRefresh: _onRefresh,
-      child: CustomScrollView(
-        key: PageStorageKey<String>(widget.idCategory),
-        slivers: <Widget>[
-          SliverOverlapInjector(
-          // This is the flip side of the SliverOverlapAbsorber above.
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context,index){
-                var run = this.runs[index];
-                final isLastElement = index >= this.runs.length-1;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 0.0),
-                  child: GameCategoryRunItemView(run,isLastElement,(run){
-                    _goToRunDetal();
-                  }),
-                );
-              },
-            childCount:this.runs.length,
-          )
-          )
-        ],
-      ),
-    );*/
   }
 
   void _goToRunDetal(Run run) {
-    //Navigator.pushNamed(context, "/run_detail");
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)));
   }
@@ -323,7 +274,7 @@ class _UserRunsListViewState extends State<UserRunsListView>
   @override
   void afterFirstLayout(BuildContext context) {
     if (this.runs.length == 0) {
-      _refreshIndicatorKey.currentState.show();
+      _refreshIndicatorKey.currentState?.show();
     }
   }
 

@@ -3,13 +3,13 @@ import 'package:speed_run/network/response_error.dart';
 
 class Dialogs{
 
-  static void showConfirmDialog({BuildContext buildContext,
-      String title,
-      String body,
-      String buttonPositive,
-      Function onActionPositive,
-      String buttonNegative,
-      Function onActionNegative}){
+  static void showConfirmDialog({required BuildContext buildContext,
+      required String title,
+      required String body,
+      required String buttonPositive,
+      required Function onActionPositive,
+      String? buttonNegative,
+      Function? onActionNegative}){
     showDialog(
       context: buildContext,
       barrierDismissible: false,
@@ -18,7 +18,7 @@ class Dialogs{
           title: Text(title),
           content: Text(body),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: (){
                 Navigator.of(context).pop();
                 onActionPositive();
@@ -26,10 +26,10 @@ class Dialogs{
               child: Text(buttonPositive)
             ),
             buttonNegative != null ?
-            FlatButton(
+            TextButton(
                 onPressed: (){
                   Navigator.of(context).pop();
-                  onActionNegative();
+                  onActionNegative!();
                 },
                 child: Text(buttonNegative)
             ) : Container()
@@ -39,15 +39,15 @@ class Dialogs{
     );
   }
 
-  static void showAlertDialog({BuildContext buildContext,
-    String title,
-    String body,
-    String buttonAlert,
-    Function onActionAlert
+  static void showAlertDialog({required BuildContext buildContext,
+    required String title,
+    required String body,
+    required String buttonAlert,
+    required Function onActionAlert
   }) => Dialogs.showConfirmDialog(buildContext: buildContext,title: title,
       body: body,buttonPositive: buttonAlert, onActionPositive: onActionAlert);
 
-  static void showResponseErrroAlertDialog({BuildContext buildContext,ResponseError error, Function onActionAlert}){
+  static void showResponseErrroAlertDialog({required BuildContext buildContext,required ResponseError error, required Function onActionAlert}){
     showAlertDialog(buildContext: buildContext,
       title: "Conection Error",
       body: error.messageError,
@@ -57,7 +57,7 @@ class Dialogs{
   }
 
   static showSnackbar(BuildContext context,String message){
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Colors.white,
         content: Text(

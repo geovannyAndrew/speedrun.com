@@ -7,14 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AppBarUserView extends StatelessWidget{
 
-  final User user;
+  final User? user;
   final String idUser;
 
-  AppBarUserView({Key key,this.user,this.idUser}) : super(key: key);
+  AppBarUserView({Key? key, this.user, required this.idUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SliverAppBar(
       expandedHeight: 250.0,
       floating: false,
@@ -68,7 +67,7 @@ class AppBarUserView extends StatelessWidget{
                   user?.country?.urlIcon == null ?
                       Container():
                       Image.network(
-                        user?.country?.urlIcon,
+                        user?.country?.urlIcon ?? "",
                         width: 20.0,
                         height: 15.0,
                         fit: BoxFit.fill,
@@ -76,9 +75,9 @@ class AppBarUserView extends StatelessWidget{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      user?.assetTwitter != null ? _buildSocialButton(user.assetTwitter,"assets/images/twitter.png") : Container(),
-                      user?.assetYoutube != null ? _buildSocialButton(user.assetYoutube,"assets/images/youtube.png") : Container(),
-                      user?.assetTwitch != null ? _buildSocialButton(user.assetTwitch,"assets/images/twitch.png") : Container(),
+                      user?.assetTwitter != null ? _buildSocialButton(user!.assetTwitter!,"assets/images/twitter.png") : Container(),
+                      user?.assetYoutube != null ? _buildSocialButton(user!.assetYoutube!,"assets/images/youtube.png") : Container(),
+                      user?.assetTwitch != null ? _buildSocialButton(user!.assetTwitch!,"assets/images/twitch.png") : Container(),
                     ],
                   )
                 ],
@@ -108,8 +107,8 @@ class AppBarUserView extends StatelessWidget{
   }
 
   _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }

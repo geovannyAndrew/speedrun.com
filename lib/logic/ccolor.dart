@@ -16,7 +16,7 @@ class CColor{
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   Color get lightColor{
@@ -24,7 +24,7 @@ class CColor{
   }
 
   Color get darkColor{
-    return hexToColor(light);
+    return hexToColor(dark);
   }
 
 

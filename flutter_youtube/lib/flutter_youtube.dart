@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
 class FlutterYoutube {
@@ -10,13 +9,13 @@ class FlutterYoutube {
   static const EventChannel _stream =
       const EventChannel('PonnamKarthik/flutter_youtube_stream');
 
-  static String getIdFromUrl(String url, [bool trimWhitespaces = true]) {
-    if (url == null || url.length == 0) return null;
+  static String? getIdFromUrl(String url, [bool trimWhitespaces = true]) {
+    if (url.isEmpty) return null;
     // ignore: parameter_assignments
     if (trimWhitespaces) url = url.trim();
 
     for (var exp in _regexps) {
-      Match match = exp.firstMatch(url);
+      RegExpMatch? match = exp.firstMatch(url);
       if (match != null && match.groupCount >= 1) return match.group(1);
     }
 
@@ -24,27 +23,27 @@ class FlutterYoutube {
   }
 
   static List<RegExp> _regexps = [
-    new RegExp(
+    RegExp(
         r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    new RegExp(
+    RegExp(
         r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
-    new RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
+    RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
   ];
 
   static playYoutubeVideoByUrl(
-      {@required String apiKey,
-      @required String videoUrl,
+      {required String apiKey,
+      required String videoUrl,
       bool autoPlay = false,
       bool fullScreen = false}) {
-    if (apiKey.isEmpty || apiKey == null) {
+    if (apiKey.isEmpty) {
       throw "Invalid API Key";
     }
 
-    if (videoUrl == null || videoUrl.isEmpty) {
+    if (videoUrl.isEmpty) {
       throw "Invalid Youtube URL";
     }
 
-    String id = getIdFromUrl(videoUrl);
+    String? id = getIdFromUrl(videoUrl);
 
     if (id == null) {
       throw "Error extracting Youtube id from URL";
@@ -60,15 +59,15 @@ class FlutterYoutube {
   }
 
   static playYoutubeVideoById(
-      {@required String apiKey,
-      @required String videoId,
+      {required String apiKey,
+      required String videoId,
       bool autoPlay = false,
       bool fullScreen = false}) {
-    if (apiKey.isEmpty || apiKey == null) {
+    if (apiKey.isEmpty) {
       throw "Invalid API Key";
     }
 
-    if (videoId == null || videoId.isEmpty) {
+    if (videoId.isEmpty) {
       throw "Invalid Youtube URL";
     }
 
@@ -81,7 +80,7 @@ class FlutterYoutube {
     _channel.invokeMethod('playYoutubeVideo', params);
   }
 
-  Stream<String> done;
+  Stream<String>? done;
 
   Stream<String> get onVideoEnded {
     var d = _stream.receiveBroadcastStream().map<String>((element) => element);

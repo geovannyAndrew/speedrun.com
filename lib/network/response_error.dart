@@ -7,9 +7,7 @@ class ResponseError{
 
   Response response;
 
-  ResponseError(Response response){
-    this.response= response;
-  }
+  ResponseError(this.response);
 
   int get statusCode{
     return response.statusCode;

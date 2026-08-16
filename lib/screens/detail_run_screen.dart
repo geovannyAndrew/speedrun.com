@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:speed_run/config/app_config.dart';
-import 'package:speed_run/internal/keys.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
@@ -15,19 +13,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class RunDetailScreen extends StatefulWidget {
 
-  final Run run;
+  final Run? run;
   final bool linkToUser;
 
-  RunDetailScreen({Key key,this.run,this.linkToUser = false}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  RunDetailScreen({Key? key, this.run, this.linkToUser = false}) : super(key: key);
 
   @override
   _RunDetailScreenState createState() => _RunDetailScreenState();
@@ -35,7 +24,7 @@ class RunDetailScreen extends StatefulWidget {
 
 class _RunDetailScreenState extends State<RunDetailScreen> {
 
-  Run _run;
+  Run? _run;
 
   @override
   void initState() {
@@ -44,20 +33,13 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     _getRun();
   }
 
-  void _playVideo(){
-    FlutterYoutube.playYoutubeVideoByUrl(
-        apiKey: API_KEY_YOUTUBE,
-        videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
-    );
-  }
-
   Future _getRun(){
     var future= RestAPI.instance.getRun(
-        id: widget.run.id,
+        id: widget.run!.id,
         onSuccess:(run){
           if(mounted){
             setState(() {
-              this._run = run;
+              _run = run;
             });
           }
         },
@@ -78,12 +60,6 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -101,14 +77,14 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
           color: colors.blackBackground,
           child: SingleChildScrollView(
             child: Container(
-                // Center is a layout widget. It takes a single child and positions it
-                // in the middle of the parent.
               child: Column(
                 children: <Widget>[
                   _buildCardInformation(
                     title: "User",
-                    content: FlatButton(
-                      padding: EdgeInsets.all(0.0),
+                    content: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(0.0),
+                      ),
                       onPressed: (){
                         if(widget.linkToUser){
                           _goToUserDetal(_run?.player);
@@ -226,11 +202,10 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
           ),
         )
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.)
     );
   }
 
-  Card _buildCardInformation({String title,Widget content}){
+  Card _buildCardInformation({required String title,required Widget content}){
     return Card(
       color: colors.blackCard,
       child: Padding(
@@ -256,7 +231,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     );
   }
 
-  Card _buildVideoCard({String title,String url,String asset}){
+  Card _buildVideoCard({required String title,String? url,required String asset}){
     return _buildCardInformation(
       title: title,
       content: GestureDetector(
@@ -279,28 +254,34 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
           ],
         ),
         onTap: (){
-          _launchURL(url);
+          if (url != null) {
+            _launchURL(url);
+          }
         },
       )
     );
   }
 
   _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }
   }
 
-  void _goToUserDetal(User user){
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => UserDetailScreen(user: user)));
+  void _goToUserDetal(User? user){
+    if (user != null) {
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) => UserDetailScreen(user: user)));
+    }
   }
 
-  void _goToGameDetail(Game game){
-    Navigator.push(context, MaterialPageRoute(
-        builder: (context) => GameDetailScreen(game: game)));
+  void _goToGameDetail(Game? game){
+    if (game != null) {
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) => GameDetailScreen(game: game)));
+    }
   }
 
 }

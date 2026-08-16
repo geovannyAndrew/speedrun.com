@@ -13,11 +13,12 @@ class RunItemView extends StatelessWidget{
 
    @override
    Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.all(0.0),
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0.0),
+          ),
           child: Card(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -47,7 +48,7 @@ class RunItemView extends StatelessWidget{
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(_run?.game?.names?.international,
+                                    child: Text(_run.game?.names?.international ?? "",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class RunItemView extends StatelessWidget{
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      _run?.category?.name,
+                                      _run.category?.name ?? "",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 13.0
@@ -82,48 +83,39 @@ class RunItemView extends StatelessWidget{
                                         color: Colors.white,
                                         image: DecorationImage(
                                             image: NetworkImage(
-                                              _run?.player?.urlIcon ?? AppConfig.placeholderImageUrl,
+                                              _run.player?.urlIcon ?? AppConfig.placeholderImageUrl,
                                             ),
                                             fit:BoxFit.cover
                                         ),
-                                        borderRadius: new BorderRadius.all(new Radius.circular(12.5)),
+                                        borderRadius: BorderRadius.all(Radius.circular(12.5)),
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        _run?.player?.names?.international ?? "",
+                                        _run.player?.names?.international ?? "",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12.0
                                         ),
                                       ),
                                     ),
-                                    Image.network(
-                                      _run?.player?.country?.urlIcon ?? "",
+                                    SizedBox(
                                       width: 15.0,
                                       height: 13.0,
-                                      fit: BoxFit.fill,
+                                      child: Image.network(
+                                        _run.player?.country?.urlIcon ?? "",
+                                        fit: BoxFit.fill,
+                                      ),
                                     )
                                   ],
                                 ),
                               ),
-                              /*Row(
-                                children: <Widget>[
-                                  Text(
-                                    _run?.submittedAgo,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13.0
-                                    ),
-                                  ),
-                                ],
-                              ),*/
                               Padding(
                                 padding: EdgeInsets.only(top: 2.0),
                                 child: Row(
                                     children: <Widget>[
                                       Text(
-                                        _run?.times?.primaryString,
+                                        _run.times?.primaryString ?? "",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.0,

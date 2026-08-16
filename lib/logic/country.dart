@@ -16,6 +16,6 @@ class Location {
   }
 
   String get name {
-    return names?.international ?? "";
+    return names.international;
   }
 }

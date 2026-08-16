@@ -12,15 +12,14 @@ import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/utils/dialogs.dart';
 
 class RunsNavigationScreen extends StatefulWidget {
-  final runs = List<Run>();
+  final runs = <Run>[];
   var _loadingItems = false;
   var querySearch = "";
 
-  RunsNavigationScreen({Key key}) : super(key: key);
+  RunsNavigationScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return RunsNavigationScreenState();
   }
 }
@@ -28,7 +27,7 @@ class RunsNavigationScreen extends StatefulWidget {
 class RunsNavigationScreenState extends State<RunsNavigationScreen>
     with AfterLayoutMixin<RunsNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -46,11 +45,10 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
 
   void onQuerySearch(String query) {
     widget.querySearch = query;
-    _refreshIndicatorKey.currentState.show();
+    _refreshIndicatorKey.currentState?.show();
   }
 
   Future<bool> _loadNextItems() async {
-    //print(_scrollController.position.extentAfter);
     if (!widget._loadingItems && widget.runs.length > 10) {
       await _getRuns();
     } else {
@@ -68,9 +66,9 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
           if (mounted) {
             setState(() {
               if (clearList) {
-                this.widget.runs.clear();
+                widget.runs.clear();
               }
-              this.widget.runs.addAll(runs);
+              widget.runs.addAll(runs);
             });
           }
           widget._loadingItems = false;
@@ -84,7 +82,6 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ScreenSearchView(
         title: "Runs",
         body: Container(
@@ -124,7 +121,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
   @override
   void afterFirstLayout(BuildContext context) {
     if (widget.runs.length == 0) {
-      _refreshIndicatorKey.currentState.show();
+      _refreshIndicatorKey.currentState?.show();
     }
   }
 }

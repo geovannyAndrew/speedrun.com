@@ -29,8 +29,8 @@ void getContentFromFile(
 
 void getRuns(Function(List<Run>) onRunsGot) {
   getContentFromFile("runs", (String content) {
-    if (content == null) {
-      onRunsGot(List<Run>());
+    if (content.isEmpty) {
+      onRunsGot([]);
     } else {
       var json = jsonDecode(content);
       var jsonData = json["data"] as List;
@@ -44,8 +44,8 @@ void getRuns(Function(List<Run>) onRunsGot) {
 
 void getGames(Function(List<Game>) onGamesGot) {
   getContentFromFile("games", (String content) {
-    if (content == null) {
-      onGamesGot(List<Game>());
+    if (content.isEmpty) {
+      onGamesGot([]);
     } else {
       var json = jsonDecode(content);
       var jsonData = json["data"] as List;
@@ -59,8 +59,8 @@ void getGames(Function(List<Game>) onGamesGot) {
 
 void getUsers(Function(List<User>) onUsersGot) {
   getContentFromFile("users", (String content) {
-    if (content == null) {
-      onUsersGot(List<User>());
+    if (content.isEmpty) {
+      onUsersGot([]);
     } else {
       var json = jsonDecode(content);
       var jsonData = json["data"] as List;

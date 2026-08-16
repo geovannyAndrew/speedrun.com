@@ -31,12 +31,12 @@ class LoadMore extends StatefulWidget {
   final bool whenEmptyLoad;
 
   const LoadMore({
-    Key key,
-    @required this.child,
-    @required this.onLoadMore,
-    this.textBuilder,
+    Key? key,
+    required this.child,
+    required this.onLoadMore,
+    this.textBuilder = DefaultLoadMoreTextBuilder.chinese,
     this.isFinish = false,
-    this.delegate,
+    this.delegate = const DefaultLoadMoreDelegate(),
     this.whenEmptyLoad = true,
   }) : super(key: key);
 
@@ -47,7 +47,7 @@ class LoadMore extends StatefulWidget {
 class _LoadMoreState extends State<LoadMore> {
   Widget get child => widget.child;
 
-  LoadMoreDelegate get loadMoreDelegate => widget.delegate ?? LoadMore.buildDelegate();
+  LoadMoreDelegate get loadMoreDelegate => widget.delegate;
 
   @override
   void initState() {
@@ -61,11 +61,8 @@ class _LoadMoreState extends State<LoadMore> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.onLoadMore == null) {
-      return child;
-    }
     if (child is ListView) {
-      return _buildListView(child);
+      return _buildListView(child as ListView);
     }
     return child;
   }
@@ -76,16 +73,16 @@ class _LoadMoreState extends State<LoadMore> {
     var delegate = listView.childrenDelegate;
     outer:
     if (delegate is SliverChildBuilderDelegate) {
-      SliverChildBuilderDelegate delegate = listView.childrenDelegate;
+      SliverChildBuilderDelegate delegate = listView.childrenDelegate as SliverChildBuilderDelegate;
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
       }
-      var viewCount = delegate.estimatedChildCount + 1;
+      var viewCount = (delegate.estimatedChildCount ?? 0) + 1;
       IndexedWidgetBuilder builder = (context, index) {
         if (index == viewCount - 1) {
           return _buildLoadMoreView();
         }
-        return delegate.builder(context, index);
+        return delegate.builder(context, index) ?? const SizedBox.shrink();
       };
 
       return ListView.builder(
@@ -105,7 +102,7 @@ class _LoadMoreState extends State<LoadMore> {
         shrinkWrap: listView.shrinkWrap,
       );
     } else if (delegate is SliverChildListDelegate) {
-      SliverChildListDelegate delegate = listView.childrenDelegate;
+      SliverChildListDelegate delegate = listView.childrenDelegate as SliverChildListDelegate;
 
       if (!widget.whenEmptyLoad && delegate.estimatedChildCount == 0) {
         break outer;
@@ -146,7 +143,7 @@ class _LoadMoreState extends State<LoadMore> {
         child: DefaultLoadMoreView(
           status: status,
           delegate: loadMoreDelegate,
-          textBuilder: widget.textBuilder ?? LoadMore.buildTextBuilder(),
+          textBuilder: widget.textBuilder,
         ),
         onNotification: _onLoadMoreBuild,
       ),
@@ -155,7 +152,6 @@ class _LoadMoreState extends State<LoadMore> {
   }
 
   bool _onLoadMoreBuild(_BuildNotify notification) {
-    //判断状态，触发对应的操作
     if (status == LoadMoreStatus.loading) {
       return false;
     }
@@ -166,7 +162,6 @@ class _LoadMoreState extends State<LoadMore> {
       return false;
     }
     if (status == LoadMoreStatus.idle) {
-      // 切换状态为加载中，并且触发回调
       loadMore();
     }
     return false;
@@ -185,10 +180,8 @@ class _LoadMoreState extends State<LoadMore> {
     _updateStatus(LoadMoreStatus.loading);
     widget.onLoadMore().then((v) {
       if (v == true) {
-        // 成功，切换状态为空闲
         _updateStatus(LoadMoreStatus.idle);
       } else {
-        // 失败，切换状态为失败
         _updateStatus(LoadMoreStatus.fail);
       }
     });
@@ -196,24 +189,9 @@ class _LoadMoreState extends State<LoadMore> {
 }
 
 enum LoadMoreStatus {
-  /// 空闲中，表示当前等待加载
-  ///
-  /// wait for loading
   idle,
-
-  /// 刷新中，不应该继续加载，等待future返回
-  ///
-  /// the view is loading
   loading,
-
-  /// 刷新失败，刷新失败，这时需要点击才能刷新
-  ///
-  /// loading fail, need tap view to loading
   fail,
-
-  /// 没有更多，没有更多数据了，这个状态不触发任何条件
-  ///
-  /// not have more data
   nomore,
 }
 
@@ -222,10 +200,10 @@ class DefaultLoadMoreView extends StatefulWidget {
   final LoadMoreDelegate delegate;
   final LoadMoreTextBuilder textBuilder;
   const DefaultLoadMoreView({
-    Key key,
+    Key? key,
     this.status = LoadMoreStatus.idle,
-    @required this.delegate,
-    @required this.textBuilder,
+    required this.delegate,
+    required this.textBuilder,
   }) : super(key: key);
 
   @override

@@ -13,7 +13,6 @@ class GameCategoryRunItemView extends StatelessWidget{
 
    @override
    Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
         GestureDetector(
@@ -25,7 +24,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40.0),
                       child: FadeInImage.assetNetwork(
-                          image:_run?.player?.urlIcon ?? AppConfig.placeholderImageUrl,
+                          image:_run.player?.urlIcon ?? AppConfig.placeholderImageUrl,
                           placeholder: AppConfig.placeholderImageAsset,
                           width: 50.0,
                           height: 50.0,
@@ -40,7 +39,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(_run?.player?.name ?? "",
+                                    child: Text(_run.player?.name ?? "",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -49,7 +48,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                                     ),
                                   ),
                                   Image.network(
-                                    _run?.player?.country?.urlIcon ?? "",
+                                    _run.player?.country?.urlIcon ?? "",
                                     width: 15.0,
                                     height: 13.0,
                                     fit: BoxFit.fill,
@@ -59,7 +58,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                               Container(
                                 alignment: Alignment(-1.0, 0),
                                 child: Text(
-                                  _run?.player?.countryRegionName ?? "",
+                                  _run.player?.countryRegionName ?? "",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.0
@@ -69,7 +68,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                               Container(
                                 alignment: Alignment(-1.0, 0),
                                 child: Text(
-                                  _run?.submittedAgo,
+                                  _run.submittedAgo,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.0
@@ -79,7 +78,7 @@ class GameCategoryRunItemView extends StatelessWidget{
                               Container(
                                 alignment: Alignment(-1.0, 0),
                                 child: Text(
-                                  _run?.times?.primaryString ?? "",
+                                  _run.times?.primaryString ?? "",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

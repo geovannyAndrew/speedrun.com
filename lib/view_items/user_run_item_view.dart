@@ -13,11 +13,12 @@ class UserRunItemView extends StatelessWidget{
 
    @override
    Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.all(0.0),
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0.0),
+          ),
           child: Card(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -44,7 +45,7 @@ class UserRunItemView extends StatelessWidget{
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(_run?.game?.names?.international,
+                                    child: Text(_run.game?.names?.international ?? "",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -57,7 +58,7 @@ class UserRunItemView extends StatelessWidget{
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    _run?.category?.name,
+                                    _run.category?.name ?? "",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14.0
@@ -68,7 +69,7 @@ class UserRunItemView extends StatelessWidget{
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    _run?.submittedAgo,
+                                    _run.submittedAgo,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 13.0
@@ -81,7 +82,7 @@ class UserRunItemView extends StatelessWidget{
                                 child: Row(
                                     children: <Widget>[
                                       Text(
-                                        _run?.times?.primaryString,
+                                        _run.times?.primaryString ?? "",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.0,

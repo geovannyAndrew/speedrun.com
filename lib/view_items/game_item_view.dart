@@ -14,7 +14,6 @@ class GameItemView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GridTile(
         child: InkResponse(
           child: Card(
@@ -74,8 +73,6 @@ class GameItemView extends StatelessWidget{
             _onTap(_game);
           },
         ),
-
-        //_showLoading ? CircularProgressIndicator() : Container()
 
     );
   }
