@@ -27,8 +27,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_youtube:
-    path: flutter_youtube
   build_runner: ^2.0.0
   flutter_launcher_icons: ^0.10.0
   freezed: ^2.0.0
