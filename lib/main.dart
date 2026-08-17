@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/screens/home_screen.dart';
@@ -18,7 +19,7 @@ class _DevHttpOverrides extends HttpOverrides {
 
 void main() {
   HttpOverrides.global = _DevHttpOverrides();
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -27,7 +27,7 @@ An unofficial Flutter application for [speedrun.com](https://www.speedrun.com) �
 - Flutter (Dart SDK >=2.0.0-dev.68.0 <3.0.0)
 - [speedrun.com API v1](https://github.com/speedruncomorg/api)
 - [freezed](https://pub.dev/packages/freezed) + `json_serializable` for model codegen
-- [loadmore](loadmore/) — local package for ListView pagination
+- [loadmore](https://pub.dev/packages/loadmore) — ListView pagination
 
 ## Getting Started
 
@@ -72,4 +72,6 @@ flutter test
 
 ## License
 
-See individual packages (`loadmore/LICENSE`) for the license.
+## License
+
+MIT

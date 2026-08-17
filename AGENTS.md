@@ -4,10 +4,6 @@
 
 Flutter app for speedrun.com (unofficial). Browse verified speedruns, games, and players from the speedrun.com REST API v1.
 
-## Local Packages
-
-- `loadmore/` — ListView pagination widget (path dependency)
-
 ## Development Commands
 
 ```bash
