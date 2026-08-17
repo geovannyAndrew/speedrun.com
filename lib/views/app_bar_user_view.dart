@@ -32,7 +32,7 @@ class AppBarUserView extends StatelessWidget {
                     const LinearGradient(colors: [Colors.black, Colors.black]),
               ),
               padding: const EdgeInsets.only(top: 50.0),
-              alignment: const Alignment(0, 0),
+              alignment: Alignment.center,
               child: Column(
                 children: <Widget>[
                   ClipOval(
@@ -61,32 +61,37 @@ class AppBarUserView extends StatelessWidget {
                       user?.countryRegionName ?? "",
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 15.0),
                     ),
                   ),
-                  user?.country?.urlIcon == null
-                      ? Container()
-                      : Image.network(
-                          user?.country?.urlIcon ?? "",
-                          width: 20.0,
-                          height: 15.0,
-                          fit: BoxFit.fill,
-                        ),
+                  if (user?.country?.urlIcon == null)
+                    Container()
+                  else
+                    Image.network(
+                      user?.country?.urlIcon ?? "",
+                      width: 20.0,
+                      height: 15.0,
+                      fit: BoxFit.fill,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      user?.assetTwitter != null
-                          ? _buildSocialButton(
-                              user!.assetTwitter!, "assets/images/twitter.png")
-                          : Container(),
-                      user?.assetYoutube != null
-                          ? _buildSocialButton(
-                              user!.assetYoutube!, "assets/images/youtube.png")
-                          : Container(),
-                      user?.assetTwitch != null
-                          ? _buildSocialButton(
-                              user!.assetTwitch!, "assets/images/twitch.png")
-                          : Container(),
+                      if (user?.assetTwitter != null)
+                        _buildSocialButton(
+                            user!.assetTwitter!, "assets/images/twitter.png")
+                      else
+                        Container(),
+                      if (user?.assetYoutube != null)
+                        _buildSocialButton(
+                            user!.assetYoutube!, "assets/images/youtube.png")
+                      else
+                        Container(),
+                      if (user?.assetTwitch != null)
+                        _buildSocialButton(
+                            user!.assetTwitch!, "assets/images/twitch.png")
+                      else
+                        Container(),
                     ],
                   )
                 ],
