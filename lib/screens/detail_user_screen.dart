@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:speed_run/config/app_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:speed_run/data/feed_state.dart';
+import 'package:speed_run/di/providers.dart';
 import 'package:speed_run/logic/run.dart';
-import 'package:speed_run/logic/user.dart';
-import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_run_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -10,128 +10,130 @@ import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/view_items/user_run_item_view.dart';
 import 'package:speed_run/views/app_bar_user_view.dart';
 
-class UserDetailScreen extends StatefulWidget {
-  final User? user;
+class UserDetailScreen extends ConsumerStatefulWidget {
+  final String userId;
 
-  const UserDetailScreen({Key? key, this.user}) : super(key: key);
+  const UserDetailScreen({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
 
   @override
-  _UserDetailScreenState createState() => _UserDetailScreenState();
+  ConsumerState<UserDetailScreen> createState() => _UserDetailScreenState();
 }
 
-class _UserDetailScreenState extends State<UserDetailScreen>
+class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     with AfterLayoutMixin<UserDetailScreen> {
-  User? _user;
-  final _runs = <Run>[];
-  var _loadingItems = false;
-  var _allLoaded = false;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _user = widget.user;
+    _scrollController = ScrollController()..addListener(_loadNextItems);
+    Future.microtask(() {
+      ref.read(userDetailProvider(widget.userId));
+      ref.read(userRunsFeedProvider(widget.userId).notifier).loadInitial();
+    });
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_loadNextItems);
+    _scrollController.dispose();
     super.dispose();
   }
 
-  Future _getUser() async {
-    try {
-      final user = await RestAPI.instance.getUser(id: _user!.id);
-      if (mounted) {
-        setState(() {
-          _user = user;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        Dialogs.showSnackbar(context, e.toString());
-      }
-    }
-  }
-
-  Future _getRunsUser({bool clearList = false}) async {
-    final offset = clearList ? 0 : _runs.length;
-    try {
-      final response = await RestAPI.instance.getUserRuns(
-          offset: offset, idUser: _user!.id);
-      if (mounted) {
-        setState(() {
-          if (clearList) {
-            _runs.clear();
-            _allLoaded = false;
-          }
-          _runs.addAll(response.items);
-          if (response.items.length < AppConfig.itemsPerPage) {
-            _allLoaded = true;
-          }
-        });
-      }
-      _loadingItems = false;
-    } catch (e) {
-      _loadingItems = false;
-      if (mounted) {
-        Dialogs.showSnackbar(context, e.toString());
-      }
-    }
-  }
-
-  Future _onRefresh() {
-    return _getRunsUser(clearList: true);
+  Future<void> _onRefresh() {
+    return ref.read(userRunsFeedProvider(widget.userId).notifier).refresh();
   }
 
   void _loadNextItems() {
-    if (!_loadingItems && !_allLoaded && _runs.length > 10) {
-      _getRunsUser();
+    final state = ref.read(userRunsFeedProvider(widget.userId));
+    if (state.status != FeedStatus.loading && state.hasMore && state.items.length > 10) {
+      ref.read(userRunsFeedProvider(widget.userId).notifier).loadMore();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final userAsync = ref.watch(userDetailProvider(widget.userId));
+    final feedState = ref.watch(userRunsFeedProvider(widget.userId));
+
+    ref.listen<AsyncValue<dynamic>>(userDetailProvider(widget.userId), (prev, next) {
+      if (next.hasError) {
+        Dialogs.showSnackbar(context, next.error.toString());
+      }
+    });
+
+    ref.listen<FeedState<Run>>(userRunsFeedProvider(widget.userId), (prev, next) {
+      if (next.error != null && prev?.error != next.error) {
+        Dialogs.showSnackbar(context, next.error!);
+      }
+    });
+
+    return userAsync.when(
+      loading: () => _buildScaffold(null, feedState),
+      error: (error, _) => _buildScaffold(null, feedState),
+      data: (user) => _buildScaffold(user, feedState),
+    );
+  }
+
+  Widget _buildScaffold(dynamic user, FeedState<Run> feedState) {
+    if (user == null) {
+      return Scaffold(
         backgroundColor: colors.blackBackground,
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              AppBarUserView(
-                user: _user,
-                idUser: _user!.id,
-              ),
-            ];
-          },
-          body: Center(
-              child: RefreshIndicator(
+        body: Container(
+          color: colors.blackBackground,
+          alignment: const Alignment(0.0, 0.0),
+          child: const CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: colors.blackBackground,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            AppBarUserView(
+              user: user,
+              idUser: widget.userId,
+            ),
+          ];
+        },
+        body: Center(
+          child: RefreshIndicator(
             key: _refreshIndicatorKey,
             displacement: 60.0,
             onRefresh: _onRefresh,
             child: ListView.builder(
-              key: PageStorageKey<String>(_user!.id),
-              itemCount: _runs.length,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              key: PageStorageKey<String>(widget.userId),
+              itemCount: feedState.items.length,
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
-                final run = _runs[index];
-                final isLastElement =
-                    index >= _runs.length - 1 && !_allLoaded;
+                final run = feedState.items[index];
+                final isLastElement = feedState.items.length > 10 &&
+                    index >= feedState.items.length - 1 && feedState.hasMore;
                 if (isLastElement) {
-                  _loadNextItems();
+                  Future.microtask(() {
+                    ref.read(userRunsFeedProvider(widget.userId).notifier).loadMore();
+                  });
                 }
                 return UserRunItemView(run, isLastElement, (run) {
-                  _goToRunDetal(run);
+                  _goToRunDetail(run);
                 });
               },
             ),
-          ),),
-        ),);
+          ),
+        ),
+      ),
+    );
   }
 
-  void _goToRunDetal(Run run) {
+  void _goToRunDetail(Run run) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(run: run)),);
+        MaterialPageRoute(builder: (context) => RunDetailScreen(runId: run.id)),);
   }
 
   @override

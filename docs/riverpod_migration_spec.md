@@ -1,6 +1,6 @@
 # Riverpod Migration Software Specification
 
-Status: In Progress — Stage 3 complete
+Status: In Progress — Stage 4 complete
 
 ## 1. Purpose
 
@@ -246,9 +246,20 @@ This cleanup must:
 
 ### Stage 4: Detail state and routing
 
-- Add detail and nested-feed providers.
-- Migrate run, game, and user detail screens.
-- Make route arguments ID-based and validated.
+**Status: Complete**
+
+- ✅ Add detail and nested-feed providers.
+  - Created `runDetailProvider`, `gameDetailProvider`, `gameCategoriesProvider`, `userDetailProvider` as FutureProvider.family.
+  - Created `categoryRunsFeedProvider` and `userRunsFeedProvider` as StateNotifierProvider.family.
+- ✅ Migrate run, game, and user detail screens.
+  - Migrated `detail_run_screen.dart` to `ConsumerStatefulWidget` with `runDetailProvider`.
+  - Migrated `detail_game_screen.dart` to `ConsumerStatefulWidget` with `gameDetailProvider`, `gameCategoriesProvider`, and `categoryRunsFeedProvider`.
+  - Migrated `detail_user_screen.dart` to `ConsumerStatefulWidget` with `userDetailProvider` and `userRunsFeedProvider`.
+- ✅ Make route arguments ID-based and validated.
+  - Updated `main.dart` to use `onGenerateRoute` for route argument validation.
+  - Updated navigation calls in `runs_navigation_screen.dart`, `games_navigation_screen.dart`, `users_navigation_screen.dart` to pass IDs.
+  - Detail screens now require non-nullable ID parameters.
+- Result: 99 analyze issues (no errors), 1 failing test (Flutter counter template).
 
 ### Stage 5: UI cleanup and hardening
 

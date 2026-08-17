@@ -125,7 +125,7 @@ class _GamesNavigationScreenState extends ConsumerState<GamesNavigationScreen>
   void _goToGameDetail(Game game) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GameDetailScreen(game: game)),
+      MaterialPageRoute(builder: (context) => GameDetailScreen(gameId: game.id)),
     );
   }
 

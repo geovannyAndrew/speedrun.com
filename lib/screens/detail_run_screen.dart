@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speed_run/config/app_config.dart';
+import 'package:speed_run/di/providers.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
-import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
@@ -11,53 +12,71 @@ import 'package:speed_run/utils/dialogs.dart';
 import 'package:speed_run/views/app_bar_game_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RunDetailScreen extends StatefulWidget {
-  final Run? run;
+class RunDetailScreen extends ConsumerStatefulWidget {
+  final String runId;
   final bool linkToUser;
 
-  const RunDetailScreen({Key? key, this.run, this.linkToUser = false})
-      : super(key: key);
+  const RunDetailScreen({
+    Key? key,
+    required this.runId,
+    this.linkToUser = false,
+  }) : super(key: key);
 
   @override
-  _RunDetailScreenState createState() => _RunDetailScreenState();
+  ConsumerState<RunDetailScreen> createState() => _RunDetailScreenState();
 }
 
-class _RunDetailScreenState extends State<RunDetailScreen> {
-  Run? _run;
-
+class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _run = widget.run;
-    _getRun();
-  }
-
-  Future _getRun() async {
-    try {
-      final run = await RestAPI.instance.getRun(id: widget.run!.id);
-      if (mounted) {
-        setState(() {
-          _run = run;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        Dialogs.showSnackbar(context, e.toString());
-      }
-    }
+    Future.microtask(() {
+      ref.read(runDetailProvider(widget.runId));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final runAsync = ref.watch(runDetailProvider(widget.runId));
+
+    ref.listen<AsyncValue<Run>>(runDetailProvider(widget.runId), (prev, next) {
+      if (next.hasError) {
+        Dialogs.showSnackbar(context, next.error.toString());
+      }
+    });
+
+    return runAsync.when(
+      loading: () => Scaffold(
+        body: Container(
+          color: colors.blackBackground,
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+      ),
+      error: (error, _) => Scaffold(
+        body: Container(
+          color: colors.blackBackground,
+          child: Center(
+            child: Text(
+              'Error: $error',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+      data: (run) => _buildContent(run),
+    );
+  }
+
+  Widget _buildContent(Run run) {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             AppBarGameView(
-              game: _run?.game,
-              idTag: _run?.idTag,
+              game: run.game,
+              idTag: run.idTag,
               onPressGame: () {
-                _goToGameDetail(_run?.game);
+                _goToGameDetail(run.game);
               },
             ),
           ];
@@ -76,18 +95,18 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                       ),
                       onPressed: () {
                         if (widget.linkToUser) {
-                          _goToUserDetal(_run?.player);
+                          _goToUserDetail(run.player);
                         }
                       },
                       child: Row(
                         children: <Widget>[
-                          if (_run?.player == null)
+                          if (run.player == null)
                             const CircularProgressIndicator()
                           else
                             ClipRRect(
                               borderRadius: BorderRadius.circular(40.0),
                               child: FadeInImage.assetNetwork(
-                                image: _run?.player?.urlIcon ??
+                                image: run.player?.urlIcon ??
                                     AppConfig.placeholderImageUrl,
                                 placeholder: AppConfig.placeholderImageAsset,
                                 width: 50.0,
@@ -113,7 +132,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                     children: <Widget>[
                                       Expanded(
                                         child: Text(
-                                          _run?.player?.name ?? "",
+                                          run.player?.name ?? "",
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -125,7 +144,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                         width: 15.0,
                                         height: 13.0,
                                         child: Image.network(
-                                          _run?.player?.country?.urlIcon ?? "",
+                                          run.player?.country?.urlIcon ?? "",
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -134,7 +153,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                   Container(
                                     alignment: const Alignment(-1.0, 0),
                                     child: Text(
-                                      _run?.player?.countryRegionName ?? "",
+                                      run.player?.countryRegionName ?? "",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
@@ -156,7 +175,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _run?.category.name ?? "",
+                          run.category.name ?? "",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -164,7 +183,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                           ),
                         ),
                         Text(
-                          _run?.category.rules ?? "",
+                          run.category.rules ?? "",
                           style: const TextStyle(
                             color: Colors.white,
                           ),
@@ -175,7 +194,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                   _buildCardInformation(
                     title: "Time",
                     content: Text(
-                      _run?.times?.primaryString ?? "",
+                      run.times?.primaryString ?? "",
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -183,18 +202,18 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                       ),
                     ),
                   ),
-                  if (_run?.youtubeUrl != null)
+                  if (run.youtubeUrl != null)
                     _buildVideoCard(
                       title: "Youtube",
-                      url: _run?.youtubeUrl,
+                      url: run.youtubeUrl,
                       asset: "assets/images/youtube_logo_dark.jpg",
                     )
                   else
                     Container(),
-                  if (_run?.twitchUrl != null)
+                  if (run.twitchUrl != null)
                     _buildVideoCard(
                       title: "Twitch",
-                      url: _run?.twitchUrl,
+                      url: run.twitchUrl,
                       asset: "assets/images/twitch_logo.jpg",
                     )
                   else
@@ -275,12 +294,12 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     }
   }
 
-  void _goToUserDetal(User? user) {
+  void _goToUserDetail(User? user) {
     if (user != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => UserDetailScreen(user: user),
+          builder: (context) => UserDetailScreen(userId: user.id),
         ),
       );
     }
@@ -291,7 +310,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => GameDetailScreen(game: game),
+          builder: (context) => GameDetailScreen(gameId: game.id),
         ),
       );
     }

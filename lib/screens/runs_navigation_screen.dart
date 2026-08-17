@@ -100,7 +100,7 @@ class _RunsNavigationScreenState extends ConsumerState<RunsNavigationScreen>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RunDetailScreen(run: run, linkToUser: true),
+        builder: (context) => RunDetailScreen(runId: run.id, linkToUser: true),
       ),
     );
   }

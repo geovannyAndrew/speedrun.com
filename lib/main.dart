@@ -47,12 +47,44 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: "/",
-      routes: {
-        "/": (context) => SplashScreen(),
-        "/home": (context) => const HomeScreen(),
-        "/run_detail": (context) => const RunDetailScreen(),
-        "/game_detail": (context) => const GameDetailScreen(),
-      },
+      onGenerateRoute: _onGenerateRoute,
     );
   }
+}
+
+Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+  switch (settings.name) {
+    case "/":
+      return MaterialPageRoute(builder: (_) => SplashScreen());
+    case "/home":
+      return MaterialPageRoute(builder: (_) => const HomeScreen());
+    case "/run_detail":
+      final runId = settings.arguments as String?;
+      if (runId == null || runId.isEmpty) {
+        return _errorRoute('Missing runId');
+      }
+      return MaterialPageRoute(
+        builder: (_) => RunDetailScreen(runId: runId),
+      );
+    case "/game_detail":
+      final gameId = settings.arguments as String?;
+      if (gameId == null || gameId.isEmpty) {
+        return _errorRoute('Missing gameId');
+      }
+      return MaterialPageRoute(
+        builder: (_) => GameDetailScreen(gameId: gameId),
+      );
+    default:
+      return _errorRoute('Unknown route: ${settings.name}');
+  }
+}
+
+Route<dynamic> _errorRoute(String message) {
+  return MaterialPageRoute(
+    builder: (_) => Scaffold(
+      body: Center(
+        child: Text(message),
+      ),
+    ),
+  );
 }

@@ -130,7 +130,7 @@ class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
   void _goToUserDetail(User user) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => UserDetailScreen(user: user)),
+      MaterialPageRoute(builder: (context) => UserDetailScreen(userId: user.id)),
     );
   }
 

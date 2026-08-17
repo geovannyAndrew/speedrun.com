@@ -4,6 +4,7 @@ import 'package:speed_run/data/cache_store.dart';
 import 'package:speed_run/data/feed_providers.dart';
 import 'package:speed_run/data/feed_state.dart';
 import 'package:speed_run/data/speedrun_repository.dart';
+import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
 import 'package:speed_run/logic/user.dart';
@@ -56,4 +57,35 @@ final usersFeedProvider =
     StateNotifierProvider<UsersFeedNotifier, FeedState<User>>((ref) {
   final repository = ref.watch(speedrunRepositoryProvider);
   return UsersFeedNotifier(repository);
+});
+
+final runDetailProvider = FutureProvider.family<Run, String>((ref, runId) async {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  return repository.getRun(id: runId);
+});
+
+final gameDetailProvider = FutureProvider.family<Game, String>((ref, gameId) async {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  return repository.getGame(id: gameId);
+});
+
+final gameCategoriesProvider = FutureProvider.family<List<Category>, String>((ref, gameId) async {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  final result = await repository.getGameCategories(idGame: gameId);
+  return result.cast<Category>();
+});
+
+final userDetailProvider = FutureProvider.family<User, String>((ref, userId) async {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  return repository.getUser(id: userId);
+});
+
+final categoryRunsFeedProvider = StateNotifierProvider.family<CategoryRunsFeedNotifier, FeedState<Run>, String>((ref, categoryId) {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  return CategoryRunsFeedNotifier(repository, categoryId);
+});
+
+final userRunsFeedProvider = StateNotifierProvider.family<UserRunsFeedNotifier, FeedState<Run>, String>((ref, userId) {
+  final repository = ref.watch(speedrunRepositoryProvider);
+  return UserRunsFeedNotifier(repository, userId);
 });

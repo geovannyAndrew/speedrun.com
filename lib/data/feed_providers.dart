@@ -241,3 +241,143 @@ class UsersFeedNotifier extends StateNotifier<FeedState<User>> {
     }
   }
 }
+
+class CategoryRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
+  final SpeedrunRepository _repository;
+  final String _categoryId;
+
+  CategoryRunsFeedNotifier(this._repository, this._categoryId) : super(const FeedState<Run>());
+
+  Future<void> loadInitial() async {
+    if (state.status == FeedStatus.loading) return;
+
+    state = state.copyWith(status: FeedStatus.loading, error: null);
+
+    try {
+      final response = await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
+      state = state.copyWith(
+        items: response.items,
+        offset: response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+
+  Future<void> refresh() async {
+    if (state.status == FeedStatus.loading) return;
+
+    state = state.copyWith(status: FeedStatus.loading, error: null);
+
+    try {
+      final response = await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
+      state = state.copyWith(
+        items: response.items,
+        offset: response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+
+  Future<void> loadMore() async {
+    if (state.status == FeedStatus.loading || !state.hasMore) return;
+
+    state = state.copyWith(status: FeedStatus.loading);
+
+    try {
+      final response = await _repository.getCategoryRuns(offset: state.offset, idCategory: _categoryId);
+      state = state.copyWith(
+        items: [...state.items, ...response.items],
+        offset: state.offset + response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+}
+
+class UserRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
+  final SpeedrunRepository _repository;
+  final String _userId;
+
+  UserRunsFeedNotifier(this._repository, this._userId) : super(const FeedState<Run>());
+
+  Future<void> loadInitial() async {
+    if (state.status == FeedStatus.loading) return;
+
+    state = state.copyWith(status: FeedStatus.loading, error: null);
+
+    try {
+      final response = await _repository.getUserRuns(offset: 0, idUser: _userId);
+      state = state.copyWith(
+        items: response.items,
+        offset: response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+
+  Future<void> refresh() async {
+    if (state.status == FeedStatus.loading) return;
+
+    state = state.copyWith(status: FeedStatus.loading, error: null);
+
+    try {
+      final response = await _repository.getUserRuns(offset: 0, idUser: _userId);
+      state = state.copyWith(
+        items: response.items,
+        offset: response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+
+  Future<void> loadMore() async {
+    if (state.status == FeedStatus.loading || !state.hasMore) return;
+
+    state = state.copyWith(status: FeedStatus.loading);
+
+    try {
+      final response = await _repository.getUserRuns(offset: state.offset, idUser: _userId);
+      state = state.copyWith(
+        items: [...state.items, ...response.items],
+        offset: state.offset + response.items.length,
+        hasMore: response.items.length >= 50,
+        status: FeedStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: FeedStatus.failure,
+        error: e.toString(),
+      );
+    }
+  }
+}
