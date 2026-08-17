@@ -14,9 +14,13 @@ An unofficial Flutter application for [speedrun.com](https://www.speedrun.com) â
 
 ## Screenshots
 
-| Runs | Game Detail | Run Detail |
-|------|-------------|------------|
-| `assets/images/` | `assets/images/` | `assets/images/` |
+| | | | |
+|---|---|---|---|
+| ![Screenshot_1786936055](https://github.com/user-attachments/assets/7f09301d-6416-415d-b45d-374a13b1b183) | ![Screenshot_1786936049](https://github.com/user-attachments/assets/44f82185-e3e2-445d-9ac4-521e5fc44c6b) | ![Screenshot_1786936042](https://github.com/user-attachments/assets/2ae8c872-8da6-4d1d-be70-a3ce720b1e18) | ![Screenshot_1786936009](https://github.com/user-attachments/assets/e856ab49-dc76-4577-b207-d10a075fccab) |
+
+## Video
+
+<img width="400" height="894" alt="output" src="https://github.com/user-attachments/assets/27f41e90-f433-4a5e-99af-c644d7d23bb0" />
 
 ## Tech Stack
 

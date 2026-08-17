@@ -34,23 +34,25 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
 
   Future _getRun() {
     final future = RestAPI.instance.getRun(
-        id: widget.run!.id,
-        onSuccess: (run) {
-          if (mounted) {
-            setState(() {
-              _run = run;
-            });
-          }
-        },
-        onError: (error) {
-          print(error);
-          Dialogs.showResponseErrroAlertDialog(
-              buildContext: context,
-              error: error,
-              onActionAlert: () {
-                Navigator.of(context).pop();
-              },);
-        },);
+      id: widget.run!.id,
+      onSuccess: (run) {
+        if (mounted) {
+          setState(() {
+            _run = run;
+          });
+        }
+      },
+      onError: (error) {
+        print(error);
+        Dialogs.showResponseErrroAlertDialog(
+          buildContext: context,
+          error: error,
+          onActionAlert: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
     return future;
   }
 
@@ -58,23 +60,24 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              AppBarGameView(
-                game: _run?.game,
-                idTag: _run?.idTag,
-                onPressGame: () {
-                  _goToGameDetail(_run?.game);
-                },
-              ),
-            ];
-          },
-          body: Container(
-            color: colors.blackBackground,
-            child: SingleChildScrollView(
-              child: Container(
-                  child: Column(children: <Widget>[
-                _buildCardInformation(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            AppBarGameView(
+              game: _run?.game,
+              idTag: _run?.idTag,
+              onPressGame: () {
+                _goToGameDetail(_run?.game);
+              },
+            ),
+          ];
+        },
+        body: Container(
+          color: colors.blackBackground,
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  _buildCardInformation(
                     title: "User",
                     content: TextButton(
                       style: TextButton.styleFrom(
@@ -111,49 +114,52 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                               ),
                             ),
                           Expanded(
-                              child: Container(
-                            margin: const EdgeInsets.only(left: 8.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        _run?.player?.name ?? "",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Text(
+                                          _run?.player?.name ?? "",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15.0,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 15.0,
-                                      height: 13.0,
-                                      child: Image.network(
-                                        _run?.player?.country?.urlIcon ?? "",
-                                        fit: BoxFit.fill,
+                                      SizedBox(
+                                        width: 15.0,
+                                        height: 13.0,
+                                        child: Image.network(
+                                          _run?.player?.country?.urlIcon ?? "",
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: const Alignment(-1.0, 0),
-                                  child: Text(
-                                    _run?.player?.countryRegionName ?? "",
-                                    style: const TextStyle(
+                                    ],
+                                  ),
+                                  Container(
+                                    alignment: const Alignment(-1.0, 0),
+                                    child: Text(
+                                      _run?.player?.countryRegionName ?? "",
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 13.0,),
+                                        fontSize: 13.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),),
+                          ),
                         ],
                       ),
-                    ),),
-                _buildCardInformation(
+                    ),
+                  ),
+                  _buildCardInformation(
                     title: "Category",
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,9 +167,10 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                         Text(
                           _run?.category.name ?? "",
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
                         ),
                         Text(
                           _run?.category.rules ?? "",
@@ -172,27 +179,41 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                           ),
                         ),
                       ],
-                    ),),
-                _buildCardInformation(
+                    ),
+                  ),
+                  _buildCardInformation(
                     title: "Time",
                     content: Text(
                       _run?.times?.primaryString ?? "",
                       style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,),
-                    ),),
-                if (_run?.youtubeUrl != null) _buildVideoCard(
-                        title: "Youtube",
-                        url: _run?.youtubeUrl,
-                        asset: "assets/images/youtube_logo_dark.jpg",) else Container(),
-                if (_run?.twitchUrl != null) _buildVideoCard(
-                        title: "Twitch",
-                        url: _run?.twitchUrl,
-                        asset: "assets/images/twitch_logo.jpg",) else Container(),
-              ],),),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                  if (_run?.youtubeUrl != null)
+                    _buildVideoCard(
+                      title: "Youtube",
+                      url: _run?.youtubeUrl,
+                      asset: "assets/images/youtube_logo_dark.jpg",
+                    )
+                  else
+                    Container(),
+                  if (_run?.twitchUrl != null)
+                    _buildVideoCard(
+                      title: "Twitch",
+                      url: _run?.twitchUrl,
+                      asset: "assets/images/twitch_logo.jpg",
+                    )
+                  else
+                    Container(),
+                ],
+              ),
             ),
-          ),),
+          ),
+        ),
+      ),
     );
   }
 
@@ -221,37 +242,41 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     );
   }
 
-  Card _buildVideoCard(
-      {required String title, String? url, required String asset,}) {
+  Card _buildVideoCard({
+    required String title,
+    String? url,
+    required String asset,
+  }) {
     return _buildCardInformation(
-        title: title,
-        content: GestureDetector(
-          child: Stack(
-            alignment: const Alignment(0.0, 0.0),
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 1.77,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Image.asset(asset, fit: BoxFit.cover),
-                ),
+      title: title,
+      content: GestureDetector(
+        child: Stack(
+          alignment: const Alignment(0.0, 0.0),
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.77,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4.0),
+                child: Image.asset(asset, fit: BoxFit.cover),
               ),
-              const Icon(
-                Icons.play_arrow,
-                color: Colors.white,
-                size: 80.0,
-              ),
-            ],
-          ),
-          onTap: () {
-            if (url != null) {
-              _launchURL(url);
-            }
-          },
-        ),);
+            ),
+            const Icon(
+              Icons.play_arrow,
+              color: Colors.white,
+              size: 80.0,
+            ),
+          ],
+        ),
+        onTap: () {
+          if (url != null) {
+            _launchURL(url);
+          }
+        },
+      ),
+    );
   }
 
-  _launchURL(String url) async {
+  Future<void> _launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
@@ -262,18 +287,22 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   void _goToUserDetal(User? user) {
     if (user != null) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserDetailScreen(user: user),),);
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserDetailScreen(user: user),
+        ),
+      );
     }
   }
 
   void _goToGameDetail(Game? game) {
     if (game != null) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => GameDetailScreen(game: game),),);
+        context,
+        MaterialPageRoute(
+          builder: (context) => GameDetailScreen(game: game),
+        ),
+      );
     }
   }
 }
