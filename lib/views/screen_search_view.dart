@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ScreenSearchView extends StatefulWidget {
-
   final Widget body;
   final String title;
   final String? querySearch;
   final Function(String query)? onSearch;
   final Function()? onClose;
+  final bool isLoading;
 
   const ScreenSearchView({
     Key? key,
@@ -15,16 +15,16 @@ class ScreenSearchView extends StatefulWidget {
     this.querySearch,
     this.onSearch,
     this.onClose,
-  }):super(key:key);
+    this.isLoading = false,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return ScreenSearchViewState();
   }
-
 }
 
-class ScreenSearchViewState extends State<ScreenSearchView>{
+class ScreenSearchViewState extends State<ScreenSearchView> {
   late TextEditingController _filter;
   late Icon _searchIcon;
   late Widget _appBarTitle;
@@ -35,6 +35,8 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
       _visibleIcon = value;
     });
   }
+
+  bool get _showLoadingIcon => widget.isLoading && _visibleIcon;
 
   @override
   void initState() {
@@ -95,30 +97,41 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
     return Column(
       children: <Widget>[
         AppBar(
-            title: _appBarTitle,
-            centerTitle: true,
-            actions: widget.onSearch != null ?
-            <Widget>[
-              Visibility(
-                visible: _visibleIcon,
-                child: IconButton(
-                  icon: _searchIcon,
-                  onPressed: (){
-                    setState(() {
-                      if (_searchIcon.icon == Icons.search) {
-                        _configureAppBarSearch();
-                      } else {
-                        _filter.clear();
-                        _configureAppBarTitle();
-                        if(widget.onClose != null){
-                          widget.onClose!();
-                        }
-                      }
-                    });
-                  },
-                ),
-              ),
-            ] : null,
+          title: _appBarTitle,
+          centerTitle: true,
+          actions: widget.onSearch != null
+              ? <Widget>[
+                  if (_showLoadingIcon)
+                    const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    )
+                  else if (_visibleIcon)
+                    IconButton(
+                      icon: _searchIcon,
+                      onPressed: () {
+                        setState(() {
+                          if (_searchIcon.icon == Icons.search) {
+                            _configureAppBarSearch();
+                          } else {
+                            _filter.clear();
+                            _configureAppBarTitle();
+                            if (widget.onClose != null) {
+                              widget.onClose!();
+                            }
+                          }
+                        });
+                      },
+                    ),
+                ]
+              : null,
         ),
         Expanded(child: widget.body),
       ],

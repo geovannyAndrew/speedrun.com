@@ -46,6 +46,14 @@ class RestAPI {
   final String _baseUrl;
   final int _maxPerPage;
 
+  static final RestAPI _instance = RestAPI(
+    http.Client(),
+    "https://www.speedrun.com/api/v1/",
+    AppConfig.itemsPerPage,
+  );
+
+  static RestAPI get instance => _instance;
+
   RestAPI(this._client, this._baseUrl, this._maxPerPage);
 
   factory RestAPI.create(http.Client client) {

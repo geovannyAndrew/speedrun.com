@@ -1,6 +1,6 @@
 # Riverpod Migration Software Specification
 
-Status: In Progress — Stage 2 complete
+Status: In Progress — Stage 3 complete
 
 ## 1. Purpose
 
@@ -221,9 +221,28 @@ This cleanup must:
 
 ### Stage 3: Feed state
 
-- Add `FeedState<T>` and feed controllers.
-- Migrate Runs, Games, and Users feeds.
-- Preserve cache hydration, refresh, search reset, and pagination behavior.
+**Status: Complete**
+
+- ✅ Add `FeedState<T>` and feed controllers.
+  - Created `lib/data/feed_state.dart` with `FeedState<T>` immutable state class containing items, query/id, offset, hasMore, loading states, and error.
+  - Created `lib/data/feed_providers.dart` with `RunsFeedNotifier`, `GamesFeedNotifier`, and `UsersFeedNotifier` controllers.
+  - Feed controllers expose `loadInitial`, `refresh`, and `loadMore` operations.
+  - Concurrent requests are guarded by loading state checks.
+- ✅ Migrate Runs, Games, and Users feeds.
+  - Migrated `runs_navigation_screen.dart` to `ConsumerStatefulWidget` with `runsFeedProvider`.
+  - Migrated `games_navigation_screen.dart` to `ConsumerStatefulWidget` with `gamesFeedProvider`.
+  - Migrated `users_navigation_screen.dart` to `ConsumerStatefulWidget` with `usersFeedProvider`.
+  - Added feed providers to `lib/di/providers.dart` (`runsFeedProvider`, `gamesFeedProvider`, `usersFeedProvider`).
+- ✅ Preserve cache hydration, refresh, search reset, and pagination behavior.
+  - Screen state moved to providers; cache hydration via `SpeedrunRepository`.
+  - Refresh and load-more work through provider notifiers.
+  - Search reset handled via provider `refresh` with null query.
+- ✅ Update `ScreenSearchView` to receive loading state declaratively.
+  - Added `isLoading` parameter to `ScreenSearchView`.
+  - Loading icon shown during network requests instead of imperative `GlobalKey` mutations.
+- ✅ Update detail screens to use async/await instead of callbacks.
+  - `detail_run_screen.dart`, `detail_game_screen.dart`, `detail_user_screen.dart` now use async/await with `RestAPI.instance`.
+- Result: 98 analyze issues (no errors), 1 failing test (Flutter counter template).
 
 ### Stage 4: Detail state and routing
 

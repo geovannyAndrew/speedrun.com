@@ -39,51 +39,45 @@ class _UserDetailScreenState extends State<UserDetailScreen>
     super.dispose();
   }
 
-  Future _getUser() {
-    final future = RestAPI.instance.getUser(
-        id: _user!.id,
-        onSuccess: (user) {
-          if (mounted) {
-            setState(() {
-              _user = user;
-            });
-          }
-        },
-        onError: (error) {
-          Dialogs.showResponseErrroAlertDialog(
-              buildContext: context,
-              error: error,
-              onActionAlert: () {
-                Navigator.of(context).pop();
-              },);
-        },);
-    return future;
+  Future _getUser() async {
+    try {
+      final user = await RestAPI.instance.getUser(id: _user!.id);
+      if (mounted) {
+        setState(() {
+          _user = user;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
-  Future _getRunsUser({bool clearList = false}) {
+  Future _getRunsUser({bool clearList = false}) async {
     final offset = clearList ? 0 : _runs.length;
-    final future = RestAPI.instance.getUserRuns(
-        offset: offset,
-        idUser: _user!.id,
-        onSuccess: (runs) {
-          if (mounted) {
-            setState(() {
-              if (clearList) {
-                _runs.clear();
-                _allLoaded = false;
-              }
-              _runs.addAll(runs);
-              if (runs.length < AppConfig.itemsPerPage) {
-                _allLoaded = true;
-              }
-            });
+    try {
+      final response = await RestAPI.instance.getUserRuns(
+          offset: offset, idUser: _user!.id);
+      if (mounted) {
+        setState(() {
+          if (clearList) {
+            _runs.clear();
+            _allLoaded = false;
           }
-          _loadingItems = false;
-        },
-        onError: (error) {
-          Dialogs.showResponseErrorSnackbar(context, error);
-        },);
-    return future;
+          _runs.addAll(response.items);
+          if (response.items.length < AppConfig.itemsPerPage) {
+            _allLoaded = true;
+          }
+        });
+      }
+      _loadingItems = false;
+    } catch (e) {
+      _loadingItems = false;
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
   Future _onRefresh() {

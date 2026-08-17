@@ -31,46 +31,36 @@ class _GameDetailScreenState extends State<GameDetailScreen>
     _getCategories();
   }
 
-  Future _getGame() {
-    final future = RestAPI.instance.getGame(
-        id: widget.game!.id,
-        onSuccess: (game) {
-          if (mounted) {
-            setState(() {
-              _game = game;
-            });
-          }
-        },
-        onError: (error) {
-          Dialogs.showResponseErrroAlertDialog(
-              buildContext: context,
-              error: error,
-              onActionAlert: () {
-                Navigator.of(context).pop();
-              },);
-        },);
-    return future;
+  Future _getGame() async {
+    try {
+      final game = await RestAPI.instance.getGame(id: widget.game!.id);
+      if (mounted) {
+        setState(() {
+          _game = game;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
-  Future _getCategories() {
-    final future = RestAPI.instance.getGameCategories(
-        idGame: widget.game!.id,
-        onSuccess: (categories) {
-          setState(() {
-            _categories = categories;
-            _game = widget.game;
-          });
-          _getGame();
-        },
-        onError: (error) {
-          Dialogs.showResponseErrroAlertDialog(
-              buildContext: context,
-              error: error,
-              onActionAlert: () {
-                Navigator.of(context).pop();
-              },);
-        },);
-    return future;
+  Future _getCategories() async {
+    try {
+      final categories = await RestAPI.instance.getGameCategories(idGame: widget.game!.id);
+      if (mounted) {
+        setState(() {
+          _categories = categories;
+          _game = widget.game;
+        });
+        _getGame();
+      }
+    } catch (e) {
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
 
@@ -209,32 +199,31 @@ class _UserRunsListViewState extends State<UserRunsListView>
     }
   }
 
-  Future _getRuns({bool clearList = false}) {
+  Future _getRuns({bool clearList = false}) async {
     _loadingItems = true;
     final offset = clearList ? 0 : runs.length;
-    final future = RestAPI.instance.getCategoryRuns(
-        idCategory: widget.idCategory,
-        offset: offset,
-        onSuccess: (runs) {
-          if (mounted) {
-            setState(() {
-              if (clearList) {
-                this.runs.clear();
-                _allLoaded = false;
-              }
-              this.runs.addAll(runs);
-              if (runs.length < AppConfig.itemsPerPage) {
-                _allLoaded = true;
-              }
-            });
+    try {
+      final response = await RestAPI.instance.getCategoryRuns(
+          idCategory: widget.idCategory, offset: offset);
+      if (mounted) {
+        setState(() {
+          if (clearList) {
+            this.runs.clear();
+            _allLoaded = false;
           }
-          _loadingItems = false;
-        },
-        onError: (error) {
-          _loadingItems = false;
-          Dialogs.showResponseErrorSnackbar(context, error);
-        },);
-    return future;
+          this.runs.addAll(response.items);
+          if (response.items.length < AppConfig.itemsPerPage) {
+            _allLoaded = true;
+          }
+        });
+      }
+      _loadingItems = false;
+    } catch (e) {
+      _loadingItems = false;
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
   @override

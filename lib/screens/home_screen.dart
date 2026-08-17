@@ -12,14 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalObjectKey<RunsNavigationScreenState> _runScreenKey =
-      GlobalObjectKey<RunsNavigationScreenState>(titles[0]);
-  final GlobalObjectKey<GamesNavigationScreenState> _gameScreenKey =
-      GlobalObjectKey<GamesNavigationScreenState>(titles[1]);
-  final GlobalObjectKey<UsersNavigationScreenState> _userScreenKey =
-      GlobalObjectKey<UsersNavigationScreenState>(titles[2]);
-
-  static final titles = ["Runs", "Games", "Users"];
   int _selectedIndex = 0;
   late List<Widget> _widgetOptions;
 
@@ -31,10 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _widgetOptions = [
-      RunsNavigationScreen(key: _runScreenKey),
-      GamesNavigationScreen(key: _gameScreenKey),
-      UsersNavigationScreen(key: _userScreenKey),
+    _widgetOptions = const [
+      RunsNavigationScreen(),
+      GamesNavigationScreen(),
+      UsersNavigationScreen(),
     ];
     super.initState();
   }

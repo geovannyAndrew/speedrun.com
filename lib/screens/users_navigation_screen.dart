@@ -1,164 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loadmore/loadmore.dart';
-import 'package:speed_run/config/app_config.dart';
+import 'package:speed_run/data/feed_state.dart';
+import 'package:speed_run/di/providers.dart';
 import 'package:speed_run/logic/user.dart';
-import 'package:speed_run/network/response_error.dart';
-import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
-import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/view_items/user_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
 
-class UsersNavigationScreen extends StatefulWidget {
-  final users = <User>[];
-  var _loadingItems = false;
-  String querySearch = "";
-  var _allLoaded = false;
-
-  UsersNavigationScreen({Key? key}) : super(key: key);
+class UsersNavigationScreen extends ConsumerStatefulWidget {
+  const UsersNavigationScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return UsersNavigationScreenState();
-  }
+  ConsumerState<UsersNavigationScreen> createState() =>
+      _UsersNavigationScreenState();
 }
 
-class UsersNavigationScreenState extends State<UsersNavigationScreen>
+class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
     with AfterLayoutMixin<UsersNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  final GlobalObjectKey<ScreenSearchViewState> _screenSearchKey =
-      const GlobalObjectKey<ScreenSearchViewState>("User");
+  String? _currentQuery;
 
-
-  Future _onRefresh() {
-    return _getUsers(clearList: true);
-  }
-
-  void _restoreUsers() {
-    widget.querySearch = "";
-    storage.getUsers((users) {
-      setState(() {
-        widget.users.clear();
-        widget.users.addAll(users);
-      });
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeFeed();
     });
   }
 
-  void onQuerySearch(String query) {
-    widget.querySearch = query;
-    _refreshIndicatorKey.currentState?.show();
+  void _initializeFeed() {
+    final feedState = ref.read(usersFeedProvider);
+    if (feedState.items.isEmpty && feedState.status != FeedStatus.loading) {
+      ref.read(usersFeedProvider.notifier).loadInitial(query: _currentQuery);
+    }
+  }
+
+  void _onSearch(String query) {
+    setState(() {
+      _currentQuery = query.isEmpty ? null : query;
+    });
+    ref.read(usersFeedProvider.notifier).refresh(query: _currentQuery);
+  }
+
+  void _onClose() {
+    setState(() {
+      _currentQuery = null;
+    });
+    ref.read(usersFeedProvider.notifier).loadInitial(query: null);
   }
 
   Future<bool> _loadNextItems() async {
-    if (!widget._allLoaded &&
-        !widget._loadingItems &&
-        widget.users.length > 10) {
-      await _getUsers();
+    final feedState = ref.read(usersFeedProvider);
+    if (!feedState.isLoadingMore &&
+        feedState.hasMore &&
+        feedState.items.length > 10) {
+      await ref.read(usersFeedProvider.notifier).loadMore();
     } else {
       await Future.delayed(const Duration(milliseconds: 100));
     }
     return true;
   }
 
-  Future _getUsers({bool clearList = false}) {
-    widget._loadingItems = true;
-    _screenSearchKey.currentState?.visibleIcon = false;
-    final offset = clearList ? 0 : widget.users.length;
-    final future = RestAPI.instance.getUsers(
-        offset: offset,
-        query: widget.querySearch,
-        onSuccess: (users) {
-          _screenSearchKey.currentState?.visibleIcon = true;
-          widget._loadingItems = false;
-          if (mounted) {
-            setState(() {
-              if (clearList) {
-                widget.users.clear();
-                widget._allLoaded = false;
-              }
-              if (users.length < AppConfig.itemsPerPage) {
-                widget._allLoaded = true;
-              }
-              widget.users.addAll(users);
-            });
-          }
-        },
-        onError: (error) {
-          _screenSearchKey.currentState?.visibleIcon = true;
-          widget._loadingItems = false;
-          _handleStatusError(error);
-        },);
-    return future;
+  Future<void> _onRefresh() {
+    return ref.read(usersFeedProvider.notifier).refresh(query: _currentQuery);
   }
 
-  void _handleStatusError(ResponseError error) {
-    switch (error.statusCode) {
-      case 400:
-        Dialogs.showSnackbar(context,
-            "Please make sure to use 3 or more characters in the search",);
-        break;
-      default:
-        Dialogs.showResponseErrorSnackbar(context, error);
+  void _handleError(String? error) {
+    if (error == null) return;
+    if (error.contains('400')) {
+      Dialogs.showSnackbar(
+        context,
+        "Please make sure to use 3 or more characters in the search",
+      );
+    } else {
+      Dialogs.showSnackbar(context, error);
     }
-    Dialogs.showResponseErrorSnackbar(context, error);
   }
 
   @override
   Widget build(BuildContext context) {
+    final feedState = ref.watch(usersFeedProvider);
+
+    ref.listen<FeedState<User>>(usersFeedProvider, (previous, next) {
+      if (next.status == FeedStatus.failure && next.error != null) {
+        _handleError(next.error);
+      }
+    });
+
     return ScreenSearchView(
-      key: _screenSearchKey,
       title: "Users",
-      onSearch: (query) {
-        onQuerySearch(query);
-      },
-      onClose: _restoreUsers,
-      querySearch: widget.querySearch,
+      onSearch: _onSearch,
+      onClose: _onClose,
+      querySearch: _currentQuery,
+      isLoading: feedState.isLoading,
       body: DecoratedBox(
         decoration: BoxDecoration(color: colors.blackBackground),
         child: Center(
-            child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: _onRefresh,
-          child: LoadMore(
-            textBuilder: DefaultLoadMoreTextBuilder.english,
-            whenEmptyLoad: false,
-            onLoadMore: _loadNextItems,
-            isFinish: widget._allLoaded,
-            child: ListView.builder(
-              itemCount: widget.users.length,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-              itemBuilder: (BuildContext context, int index) {
-                final item = widget.users[index];
-                return UserItemView(item, false, (user) {
-                  _goToUserDetal(user);
-                });
-              },
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: _onRefresh,
+            child: LoadMore(
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              whenEmptyLoad: false,
+              onLoadMore: _loadNextItems,
+              isFinish: !feedState.hasMore,
+              child: ListView.builder(
+                itemCount: feedState.items.length,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                itemBuilder: (BuildContext context, int index) {
+                  final item = feedState.items[index];
+                  return UserItemView(item, false, (user) {
+                    _goToUserDetail(user);
+                  });
+                },
+              ),
             ),
           ),
-        ),),
+        ),
       ),
     );
   }
 
-  void _goToUserDetal(User user) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => UserDetailScreen(user: user)),);
+  void _goToUserDetail(User user) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserDetailScreen(user: user)),
+    );
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if (widget.users.isEmpty) {
+    final feedState = ref.read(usersFeedProvider);
+    if (feedState.items.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

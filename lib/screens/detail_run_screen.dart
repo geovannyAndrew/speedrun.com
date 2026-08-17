@@ -32,28 +32,19 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     _getRun();
   }
 
-  Future _getRun() {
-    final future = RestAPI.instance.getRun(
-      id: widget.run!.id,
-      onSuccess: (run) {
-        if (mounted) {
-          setState(() {
-            _run = run;
-          });
-        }
-      },
-      onError: (error) {
-        print(error);
-        Dialogs.showResponseErrroAlertDialog(
-          buildContext: context,
-          error: error,
-          onActionAlert: () {
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
-    return future;
+  Future _getRun() async {
+    try {
+      final run = await RestAPI.instance.getRun(id: widget.run!.id);
+      if (mounted) {
+        setState(() {
+          _run = run;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        Dialogs.showSnackbar(context, e.toString());
+      }
+    }
   }
 
   @override
