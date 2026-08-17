@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:speed_run/utils/dialogs.dart' as dialogs;
 
 class SplashScreen extends StatefulWidget{
 
@@ -19,9 +18,9 @@ class SplashScreen extends StatefulWidget{
 
 class _SplashScreenState extends State<SplashScreen>{
 
-  _delayTimer() async{
-    var _duration = Duration(seconds: 2);
-    return Timer(_duration,_goToHomeScreen);
+  Future<Timer> _delayTimer() async{
+    const duration = Duration(seconds: 2);
+    return Timer(duration,_goToHomeScreen);
   }
 
   _goToHomeScreen(){
@@ -55,15 +54,15 @@ class _SplashScreenState extends State<SplashScreen>{
                 width: 80.0,
                 fit: BoxFit.fitWidth,
               ),
-              Text(
+              const Text(
                 "Speedrun API",
                 style: TextStyle(
                     fontSize: 30.0,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ),
       ),
     );

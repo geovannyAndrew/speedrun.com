@@ -8,7 +8,7 @@ class ScreenSearchView extends StatefulWidget {
   final Function(String query)? onSearch;
   final Function()? onClose;
 
-  ScreenSearchView({
+  const ScreenSearchView({
     Key? key,
     required this.title,
     required this.body,
@@ -40,7 +40,7 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
   void initState() {
     super.initState();
     _filter = TextEditingController(text: widget.querySearch);
-    if(this.widget.querySearch == null || this.widget.querySearch?.isEmpty == true){
+    if(widget.querySearch == null || widget.querySearch?.isEmpty == true){
       _configureAppBarTitle();
     }
     else{
@@ -49,33 +49,33 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
   }
 
   void _configureAppBarTitle(){
-    this._searchIcon = Icon(Icons.search);
-    this._appBarTitle = Text(
+    _searchIcon = const Icon(Icons.search);
+    _appBarTitle = Text(
       widget.title,
-      style: TextStyle(
+      style: const TextStyle(
           fontSize: 18.0,
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
       ),
     );
     _filter.clear();
   }
 
   void _configureAppBarSearch(){
-    this._searchIcon = Icon(Icons.close);
-    this._appBarTitle = TextField(
+    _searchIcon = const Icon(Icons.close);
+    _appBarTitle = TextField(
       autofocus: true,
       controller: _filter,
       cursorColor: Colors.white,
-      style: TextStyle(
+      style: const TextStyle(
           color: Colors.white,
-          fontSize: 16.0
+          fontSize: 16.0,
       ),
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           prefixIcon: Icon(Icons.search,color: Colors.white,),
           hintText: 'Search...',
           hintStyle: TextStyle(
-              color: Colors.white70
-          )
+              color: Colors.white70,
+          ),
       ),
       textInputAction: TextInputAction.search,
       onSubmitted: (query){
@@ -105,7 +105,7 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
                   icon: _searchIcon,
                   onPressed: (){
                     setState(() {
-                      if (this._searchIcon.icon == Icons.search) {
+                      if (_searchIcon.icon == Icons.search) {
                         _configureAppBarSearch();
                       } else {
                         _filter.clear();
@@ -117,10 +117,10 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
                     });
                   },
                 ),
-              )
-            ] : null
+              ),
+            ] : null,
         ),
-        Expanded(child: widget.body)
+        Expanded(child: widget.body),
       ],
     );
   }

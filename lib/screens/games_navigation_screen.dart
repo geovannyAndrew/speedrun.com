@@ -6,13 +6,13 @@ import 'package:speed_run/screens/detail_game_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
+import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/view_items/game_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
-import 'package:speed_run/utils/storage.dart' as storage;
 
 class GamesNavigationScreen extends StatefulWidget {
-  var games = <Game>[];
-  var loadingItems = false;
+  List<Game> games = <Game>[];
+  bool loadingItems = false;
   var _allLoaded = false;
   String? querySearch;
 
@@ -71,8 +71,8 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
   Future _getGames({bool clearList = false}) {
     widget.loadingItems = true;
     _screenSearchKey.currentState?.visibleIcon = false;
-    int offset = clearList ? 0 : widget.games.length;
-    var future = RestAPI.instance.getGames(
+    final int offset = clearList ? 0 : widget.games.length;
+    final future = RestAPI.instance.getGames(
         offset: offset,
         query: widget.querySearch ?? "",
         onSuccess: (games) {
@@ -95,7 +95,7 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
           _screenSearchKey.currentState?.visibleIcon = true;
           widget.loadingItems = false;
           Dialogs.showResponseErrorSnackbar(context, error);
-        });
+        },);
     return future;
   }
 
@@ -109,10 +109,12 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
       },
       onClose: _restoreGames,
       querySearch: widget.querySearch,
-      body: Container(
+      body: DecoratedBox(
+        decoration: BoxDecoration(color: colors.blackBackground),
         child: Center(
             child: RefreshIndicator(
           key: _refreshIndicatorKey,
+          onRefresh: _onRefresh,
           child: OrientationBuilder(builder: (context, orientation) {
             return GridView.builder(
               controller: _scrollController,
@@ -124,33 +126,31 @@ class GamesNavigationScreenState extends State<GamesNavigationScreen>
                         : 2,
                 childAspectRatio: 0.6,
               ),
-              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
-                var item = widget.games[index];
+                final item = widget.games[index];
                 final isLastElement = index >= widget.games.length - 1;
                 return GameItemView(item, isLastElement, (game) {
                   _goToGameDetal(game);
                 });
               },
             );
-          }),
-          onRefresh: _onRefresh,
-        )),
-        decoration: BoxDecoration(color: colors.blackBackground),
+          },),
+        ),),
       ),
     );
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if (widget.games.length == 0) {
+    if (widget.games.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
   }
 
   void _goToGameDetal(Game game) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => GameDetailScreen(game: game)));
+        MaterialPageRoute(builder: (context) => GameDetailScreen(game: game)),);
   }
 
   @override

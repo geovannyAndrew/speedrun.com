@@ -22,7 +22,7 @@ class ResponseError{
   }
 
   String get messageError{
-    var json = bodyJson;
+    final json = bodyJson;
     if(json["message"] != null){
       return json["message"].toString();
     }

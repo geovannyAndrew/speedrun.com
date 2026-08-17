@@ -7,12 +7,12 @@ class CColor{
 
   CColor(
       this.light,
-      this.dark
+      this.dark,
   );
 
   factory CColor.fromJson(Map<String, dynamic> json){
     return CColor(json['light'].toString(),
-        json['dark'].toString());
+        json['dark'].toString(),);
   }
 
   Color hexToColor(String code) {

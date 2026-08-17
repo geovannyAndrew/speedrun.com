@@ -6,18 +6,16 @@ class AppBarGameView extends StatelessWidget {
   final String? idTag;
   final Function? onPressGame;
 
-  AppBarGameView({Key? key, this.game, this.idTag, this.onPressGame})
+  const AppBarGameView({Key? key, this.game, this.idTag, this.onPressGame})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       expandedHeight: 260.0,
-      floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        collapseMode: CollapseMode.parallax,
         title: ConstrainedBox(
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 160),
@@ -25,11 +23,11 @@ class AppBarGameView extends StatelessWidget {
               overflow: TextOverflow.fade,
               textAlign: TextAlign.center,
               maxLines: 2,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
-                  textBaseline: TextBaseline.alphabetic)),
+                  textBaseline: TextBaseline.alphabetic,),),
         ),
         background: Stack(
           children: <Widget>[
@@ -40,10 +38,10 @@ class AppBarGameView extends StatelessWidget {
             ),
             Container(
               color: Colors.black54,
-              padding: EdgeInsets.only(top: 50.0),
-              alignment: Alignment(0, 0),
-              child: this.game == null
-                  ? CircularProgressIndicator()
+              padding: const EdgeInsets.only(top: 50.0),
+              alignment: const Alignment(0, 0),
+              child: game == null
+                  ? const CircularProgressIndicator()
                   : Column(
                       children: <Widget>[
                         TextButton(
@@ -55,7 +53,7 @@ class AppBarGameView extends StatelessWidget {
                           child: Hero(
                             tag: idTag ?? "",
                             child: Image.network(
-                              game?.coverMedium?.uri ?? "",
+                              game?.coverMedium.uri ?? "",
                               height: 120,
                             ),
                           ),
@@ -64,7 +62,7 @@ class AppBarGameView extends StatelessWidget {
                           game?.platformsAvaible ?? "",
                           maxLines: 2,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
                           ),
@@ -72,10 +70,10 @@ class AppBarGameView extends StatelessWidget {
                         Text(
                           game?.released ?? "",
                           style: const TextStyle(color: Colors.white),
-                        )
+                        ),
                       ],
                     ),
-            )
+            ),
           ],
         ),
       ),

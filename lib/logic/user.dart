@@ -17,7 +17,7 @@ class User {
   final UserAssets? assets;
 
   User(this.id, this.names, this.country, this.region, this.colorStyle,
-      this.assetTwitch, this.assetYoutube, this.assetTwitter, this.assets);
+      this.assetTwitch, this.assetYoutube, this.assetTwitter, this.assets,);
 
   String? get urlIcon {
     return assets?.imageUri;
@@ -44,11 +44,11 @@ class User {
     if (json["location"] != null) {
       if (json["location"]["country"] != null) {
         country = Location.fromJson(
-            json["location"]["country"] as Map<String, dynamic>);
+            json["location"]["country"] as Map<String, dynamic>,);
       }
       if (json["location"]["region"] != null) {
         region = Location.fromJson(
-            json["location"]["region"] as Map<String, dynamic>);
+            json["location"]["region"] as Map<String, dynamic>,);
       }
     }
 
@@ -73,7 +73,7 @@ class User {
             : null,
         json["assets"] != null
             ? UserAssets.fromJson(json["assets"] as Map<String, dynamic>)
-            : null);
+            : null,);
   }
 
   LinearGradient get gradientStyle {
@@ -82,7 +82,7 @@ class User {
         end: Alignment.bottomLeft,
         colors: [
           colorStyle?.colorFrom?.darkColor ?? const Color(0xFF000000),
-          colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000)
-        ]);
+          colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000),
+        ],);
   }
 }

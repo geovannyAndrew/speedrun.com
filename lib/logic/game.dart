@@ -13,11 +13,11 @@ class Game {
   final List<Platform> platforms;
 
   Game(this.id, this.names, this.abbreviation, this.released, this.coverMedium,
-      this.coverLarge, this.background, this.platforms);
+      this.coverLarge, this.background, this.platforms,);
 
   factory Game.fromJson(Map<String, dynamic> json) {
     var platforms = <Platform>[];
-    if (!(json["platforms"] is List) && json["platforms"]["data"] != null) {
+    if (json["platforms"] is! List && json["platforms"]["data"] != null) {
       platforms = (json["platforms"]["data"] as List)
           .map((model) => Platform.fromJson(model as Map<String, dynamic>))
           .toList();
@@ -32,19 +32,19 @@ class Game {
         Asset.fromJson(json["assets"]["cover-large"] as Map<String, dynamic>),
         json["assets"]["background"] != null
             ? Asset.fromJson(
-                json["assets"]["background"] as Map<String, dynamic>)
+                json["assets"]["background"] as Map<String, dynamic>,)
             : null,
-        platforms);
+        platforms,);
   }
 
   String get platformsAvaible {
     var plats = "";
-    platforms.forEach((platform) {
+    for (final platform in platforms) {
       if (plats.isNotEmpty) {
         plats += ", ";
       }
       plats += platform.name;
-    });
+    }
     return plats;
   }
 

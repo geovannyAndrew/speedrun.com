@@ -8,7 +8,7 @@ class UserRunItemView extends StatelessWidget{
    final bool _showLoading;
    final Function(Run run) _onTap;
 
-   UserRunItemView(this._run,this._showLoading, this._onTap);
+   const UserRunItemView(this._run,this._showLoading, this._onTap);
 
 
    @override
@@ -17,20 +17,20 @@ class UserRunItemView extends StatelessWidget{
       children: <Widget>[
         TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
           ),
           child: Card(
+            color: colors.blackCard,
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
                       child: FadeInImage.assetNetwork(
-                          image: _run.game?.coverMedium?.uri ?? AppConfig.placeholderImageUrl,
+                          image: _run.game.coverMedium.uri ?? AppConfig.placeholderImageUrl,
                           placeholder: AppConfig.placeholderImageAsset,
                           width: 80.0,
                           height: 80.0,
@@ -48,73 +48,71 @@ class UserRunItemView extends StatelessWidget{
                         child: Container(
                           margin: const EdgeInsets.only( left: 8.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(_run.game?.names?.international ?? "",
-                                      style: TextStyle(
+                                    child: Text(_run.game.names.international ?? "",
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14.0
+                                          fontSize: 14.0,
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    _run.category?.name ?? "",
-                                    style: TextStyle(
+                                    _run.category.name ?? "",
+                                    style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 14.0
+                                        fontSize: 14.0,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
                                   Text(
                                     _run.submittedAgo,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 13.0
+                                        fontSize: 13.0,
                                     ),
                                   ),
                                 ],
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 2.0),
+                                padding: const EdgeInsets.only(top: 2.0),
                                 child: Row(
                                     children: <Widget>[
                                       Text(
                                         _run.times?.primaryString ?? "",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.0,
-                                            fontWeight: FontWeight.bold
+                                            fontWeight: FontWeight.bold,
                                         ),
-                                      )
-                                    ]
+                                      ),
+                                    ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        )
-                    )
+                        ),
+                    ),
                   ],
-                )
+                ),
             ),
-            color: colors.blackCard,
           ),
           onPressed: (){
               _onTap(_run);
-              return null;
+              return;
           },
         ),
-        _showLoading ? CircularProgressIndicator() : Container()
+        if (_showLoading) const CircularProgressIndicator() else Container(),
       ],
     );
   }

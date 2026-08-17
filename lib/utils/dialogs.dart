@@ -9,7 +9,7 @@ class Dialogs{
       required String buttonPositive,
       required Function onActionPositive,
       String? buttonNegative,
-      Function? onActionNegative}){
+      Function? onActionNegative,}){
     showDialog(
       context: buildContext,
       barrierDismissible: false,
@@ -23,19 +23,18 @@ class Dialogs{
                 Navigator.of(context).pop();
                 onActionPositive();
               },
-              child: Text(buttonPositive)
+              child: Text(buttonPositive),
             ),
-            buttonNegative != null ?
-            TextButton(
+            if (buttonNegative != null) TextButton(
                 onPressed: (){
                   Navigator.of(context).pop();
                   onActionNegative!();
                 },
-                child: Text(buttonNegative)
-            ) : Container()
+                child: Text(buttonNegative),
+            ) else Container(),
           ],
         );
-      }
+      },
     );
   }
 
@@ -43,16 +42,16 @@ class Dialogs{
     required String title,
     required String body,
     required String buttonAlert,
-    required Function onActionAlert
+    required Function onActionAlert,
   }) => Dialogs.showConfirmDialog(buildContext: buildContext,title: title,
-      body: body,buttonPositive: buttonAlert, onActionPositive: onActionAlert);
+      body: body,buttonPositive: buttonAlert, onActionPositive: onActionAlert,);
 
   static void showResponseErrroAlertDialog({required BuildContext buildContext,required ResponseError error, required Function onActionAlert}){
     showAlertDialog(buildContext: buildContext,
       title: "Conection Error",
       body: error.messageError,
       buttonAlert: "OK",
-      onActionAlert: onActionAlert
+      onActionAlert: onActionAlert,
     );
   }
 
@@ -62,14 +61,14 @@ class Dialogs{
         backgroundColor: Colors.white,
         content: Text(
           message,
-          style: TextStyle(
-            color:Colors.black
+          style: const TextStyle(
+            color:Colors.black,
           ),
-        )
-      )
+        ),
+      ),
     );
   }
 
-  static showResponseErrorSnackbar(BuildContext context, ResponseError error)=>
+  static dynamic showResponseErrorSnackbar(BuildContext context, ResponseError error)=>
       showSnackbar(context, error.messageError);
 }

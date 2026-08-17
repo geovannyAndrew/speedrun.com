@@ -17,7 +17,7 @@ class Run {
   final List<Asset>? videos;
 
   Run(this.id, this.date, this.comment, this.submitted, this.times,
-      this.category, this.game, this.players, this.videos);
+      this.category, this.game, this.players, this.videos,);
 
   User? get player {
     if (players.isNotEmpty) {
@@ -28,16 +28,16 @@ class Run {
   }
 
   String? get youtubeUrl {
-    var video = videos?.firstWhere((asset) => asset.isYoutube,
-        orElse: () => Asset("", 0, 0));
+    final video = videos?.firstWhere((asset) => asset.isYoutube,
+        orElse: () => Asset("", 0, 0),);
     return video?.uri;
   }
 
   String? get twitchUrl {
     return videos
         ?.firstWhere((asset) => asset.isTwitch,
-            orElse: () => Asset("", 0, 0))
-        ?.uri;
+            orElse: () => Asset("", 0, 0),)
+        .uri;
   }
 
   String get idTag {
@@ -46,7 +46,7 @@ class Run {
 
   String get submittedAgo {
     if (submitted != null) {
-      var datetime = DateTime.parse(submitted!);
+      final datetime = DateTime.parse(submitted!);
       return timeago.format(datetime);
     } else {
       return "";
@@ -73,6 +73,6 @@ class Run {
             ? (json["videos"]["links"] as List)
                 .map((model) => Asset.fromJson(model as Map<String, dynamic>))
                 .toList()
-            : null);
+            : null,);
   }
 }

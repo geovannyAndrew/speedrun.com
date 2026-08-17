@@ -7,14 +7,14 @@ class Names{
   Names(
       this.international,
       this.japanese,
-      this.twitch
+      this.twitch,
       );
 
   factory Names.fromJson(Map<String, dynamic> json){
     return Names(
       json["international"].toString(),
       json["japanese"].toString(),
-      json["twitch"].toString()
+      json["twitch"].toString(),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:speed_run/logic/user.dart';
 
 void saveInFile(String nameFile, String content) {
   getApplicationDocumentsDirectory().then((Directory directory) {
-    var file = File("${directory.path}/$nameFile");
+    final file = File("${directory.path}/$nameFile");
     if (!file.existsSync()) {
       file.createSync();
     }
@@ -16,9 +16,9 @@ void saveInFile(String nameFile, String content) {
 }
 
 void getContentFromFile(
-    String nameFile, Function(String content) onReadContent) {
+    String nameFile, Function(String content) onReadContent,) {
   getApplicationDocumentsDirectory().then((Directory directory) {
-    var file = File("${directory.path}/$nameFile");
+    final file = File("${directory.path}/$nameFile");
     if (file.existsSync()) {
       return onReadContent(file.readAsStringSync());
     } else {
@@ -32,9 +32,9 @@ void getRuns(Function(List<Run>) onRunsGot) {
     if (content.isEmpty) {
       onRunsGot([]);
     } else {
-      var json = jsonDecode(content);
-      var jsonData = json["data"] as List;
-      var runs = jsonData
+      final json = jsonDecode(content);
+      final jsonData = json["data"] as List;
+      final runs = jsonData
           .map((model) => Run.fromJson(model as Map<String, dynamic>))
           .toList();
       onRunsGot(runs);
@@ -47,9 +47,9 @@ void getGames(Function(List<Game>) onGamesGot) {
     if (content.isEmpty) {
       onGamesGot([]);
     } else {
-      var json = jsonDecode(content);
-      var jsonData = json["data"] as List;
-      var games = jsonData
+      final json = jsonDecode(content);
+      final jsonData = json["data"] as List;
+      final games = jsonData
           .map((model) => Game.fromJson(model as Map<String, dynamic>))
           .toList();
       onGamesGot(games);
@@ -62,9 +62,9 @@ void getUsers(Function(List<User>) onUsersGot) {
     if (content.isEmpty) {
       onUsersGot([]);
     } else {
-      var json = jsonDecode(content);
-      var jsonData = json["data"] as List;
-      var users = jsonData
+      final json = jsonDecode(content);
+      final jsonData = json["data"] as List;
+      final users = jsonData
           .map((model) => User.fromJson(model as Map<String, dynamic>))
           .toList();
       onUsersGot(users);

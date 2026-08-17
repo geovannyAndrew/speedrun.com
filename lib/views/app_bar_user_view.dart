@@ -23,7 +23,7 @@ class AppBarUserView extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
-            )),
+            ),),
         background: Stack(
           children: <Widget>[
             Container(
@@ -79,27 +79,25 @@ class AppBarUserView extends StatelessWidget {
                     children: <Widget>[
                       if (user?.assetTwitter != null)
                         _buildSocialButton(
-                            user!.assetTwitter!, "assets/images/twitter.png")
+                            user!.assetTwitter!, "assets/images/twitter.png",)
                       else
                         Container(),
                       if (user?.assetYoutube != null)
                         _buildSocialButton(
-                            user!.assetYoutube!, "assets/images/youtube.png")
+                            user!.assetYoutube!, "assets/images/youtube.png",)
                       else
                         Container(),
                       if (user?.assetTwitch != null)
                         _buildSocialButton(
-                            user!.assetTwitch!, "assets/images/twitch.png")
+                            user!.assetTwitch!, "assets/images/twitch.png",)
                       else
                         Container(),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
-            this.user == null
-                ? Center(child: CircularProgressIndicator())
-                : Container()
+            if (user == null) const Center(child: CircularProgressIndicator()) else Container(),
           ],
         ),
       ),
@@ -117,7 +115,7 @@ class AppBarUserView extends StatelessWidget {
             width: 40.0,
             height: 40.0,
             fit: BoxFit.fill,
-          )),
+          ),),
     );
   }
 

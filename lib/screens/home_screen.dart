@@ -5,7 +5,7 @@ import 'package:speed_run/screens/users_navigation_screen.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,27 +43,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: _widgetOptions[_selectedIndex]),
+            child: _widgetOptions[_selectedIndex],),
         bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
                 canvasColor: colors.blackDark,
                 primaryColor: colors.greenAccent,
                 textTheme: Theme.of(context)
                     .textTheme
-                    .copyWith(bodyMedium: TextStyle(color: Colors.white))),
+                    .copyWith(bodyMedium: const TextStyle(color: Colors.white)),),
             child: BottomNavigationBar(
-              items: <BottomNavigationBarItem>[
+              items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.directions_run), label: 'Runs'),
+                    icon: Icon(Icons.directions_run), label: 'Runs',),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.games), label: 'Games'),
+                    icon: Icon(Icons.games), label: 'Games',),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.supervised_user_circle),
-                    label: 'Users')
+                    label: 'Users',),
               ],
               currentIndex: _selectedIndex,
               onTap: _onMenuSelected,
-            ))
+            ),),
         );
   }
 }

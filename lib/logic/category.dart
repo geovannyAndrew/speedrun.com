@@ -12,7 +12,7 @@ class Category{
       this.name,
       this.weblink,
       this.type,
-      this.rules
+      this.rules,
       );
 
   factory Category.fromJson(Map<String, dynamic> json){
@@ -20,7 +20,7 @@ class Category{
         json['name'].toString(),
         json["weblink"].toString(),
         json["type"].toString(),
-        json["rules"].toString()
+        json["rules"].toString(),
     );
   }
 }

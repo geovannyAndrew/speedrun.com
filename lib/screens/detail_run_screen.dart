@@ -33,7 +33,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   }
 
   Future _getRun() {
-    var future = RestAPI.instance.getRun(
+    final future = RestAPI.instance.getRun(
         id: widget.run!.id,
         onSuccess: (run) {
           if (mounted) {
@@ -49,8 +49,8 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
               error: error,
               onActionAlert: () {
                 Navigator.of(context).pop();
-              });
-        });
+              },);
+        },);
     return future;
   }
 
@@ -66,7 +66,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                 onPressGame: () {
                   _goToGameDetail(_run?.game);
                 },
-              )
+              ),
             ];
           },
           body: Container(
@@ -78,7 +78,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                     title: "User",
                     content: TextButton(
                       style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(0.0),
+                        padding: const EdgeInsets.all(0.0),
                       ),
                       onPressed: () {
                         if (widget.linkToUser) {
@@ -88,7 +88,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                       child: Row(
                         children: <Widget>[
                           if (_run?.player == null)
-                            CircularProgressIndicator()
+                            const CircularProgressIndicator()
                           else
                             ClipRRect(
                               borderRadius: BorderRadius.circular(40.0),
@@ -114,7 +114,6 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                               child: Container(
                             margin: const EdgeInsets.only(left: 8.0),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
@@ -135,69 +134,65 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                         _run?.player?.country?.urlIcon ?? "",
                                         fit: BoxFit.fill,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Container(
-                                  alignment: Alignment(-1.0, 0),
+                                  alignment: const Alignment(-1.0, 0),
                                   child: Text(
                                     _run?.player?.countryRegionName ?? "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 13.0),
+                                        fontSize: 13.0,),
                                   ),
                                 ),
                               ],
                             ),
-                          ))
+                          ),),
                         ],
                       ),
-                    )),
+                    ),),
                 _buildCardInformation(
                     title: "Category",
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _run?.category?.name ?? "",
-                          style: TextStyle(
+                          _run?.category.name ?? "",
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
+                              fontSize: 16.0,),
                         ),
                         Text(
-                          _run?.category?.rules ?? "",
-                          style: TextStyle(
+                          _run?.category.rules ?? "",
+                          style: const TextStyle(
                             color: Colors.white,
                           ),
-                        )
+                        ),
                       ],
-                    )),
+                    ),),
                 _buildCardInformation(
                     title: "Time",
                     content: Text(
                       _run?.times?.primaryString ?? "",
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16.0),
-                    )),
-                _run?.youtubeUrl != null
-                    ? _buildVideoCard(
+                          fontSize: 16.0,),
+                    ),),
+                if (_run?.youtubeUrl != null) _buildVideoCard(
                         title: "Youtube",
                         url: _run?.youtubeUrl,
-                        asset: "assets/images/youtube_logo_dark.jpg")
-                    : Container(),
-                _run?.twitchUrl != null
-                    ? _buildVideoCard(
+                        asset: "assets/images/youtube_logo_dark.jpg",) else Container(),
+                if (_run?.twitchUrl != null) _buildVideoCard(
                         title: "Twitch",
                         url: _run?.twitchUrl,
-                        asset: "assets/images/twitch_logo.jpg")
-                    : Container()
-              ])),
+                        asset: "assets/images/twitch_logo.jpg",) else Container(),
+              ],),),
             ),
-          )),
+          ),),
     );
   }
 
@@ -205,22 +200,21 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
     return Card(
       color: colors.blackCard,
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12.0,
               ),
             ),
-            Divider(
+            const Divider(
               height: 4.0,
             ),
-            content
+            content,
           ],
         ),
       ),
@@ -228,12 +222,12 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
   }
 
   Card _buildVideoCard(
-      {required String title, String? url, required String asset}) {
+      {required String title, String? url, required String asset,}) {
     return _buildCardInformation(
         title: title,
         content: GestureDetector(
           child: Stack(
-            alignment: Alignment(0.0, 0.0),
+            alignment: const Alignment(0.0, 0.0),
             children: <Widget>[
               AspectRatio(
                 aspectRatio: 1.77,
@@ -242,11 +236,11 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                   child: Image.asset(asset, fit: BoxFit.cover),
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.play_arrow,
                 color: Colors.white,
                 size: 80.0,
-              )
+              ),
             ],
           ),
           onTap: () {
@@ -254,7 +248,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
               _launchURL(url);
             }
           },
-        ));
+        ),);
   }
 
   _launchURL(String url) async {
@@ -270,7 +264,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserDetailScreen(user: user)));
+              builder: (context) => UserDetailScreen(user: user),),);
     }
   }
 
@@ -279,7 +273,7 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => GameDetailScreen(game: game)));
+              builder: (context) => GameDetailScreen(game: game),),);
     }
   }
 }

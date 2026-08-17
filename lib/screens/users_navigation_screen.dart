@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:speed_run/network/response_error.dart';
@@ -7,10 +8,9 @@ import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
 import 'package:speed_run/utils/colors.dart' as colors;
 import 'package:speed_run/utils/dialogs.dart';
+import 'package:speed_run/utils/storage.dart' as storage;
 import 'package:speed_run/view_items/user_item_view.dart';
 import 'package:speed_run/views/screen_search_view.dart';
-import 'package:loadmore/loadmore.dart';
-import 'package:speed_run/utils/storage.dart' as storage;
 
 class UsersNavigationScreen extends StatefulWidget {
   final users = <User>[];
@@ -31,12 +31,8 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalObjectKey<ScreenSearchViewState> _screenSearchKey =
-      GlobalObjectKey<ScreenSearchViewState>("User");
+      const GlobalObjectKey<ScreenSearchViewState>("User");
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   Future _onRefresh() {
     return _getUsers(clearList: true);
@@ -63,7 +59,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
         widget.users.length > 10) {
       await _getUsers();
     } else {
-      await Future.delayed(Duration(seconds: 0, milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
     }
     return true;
   }
@@ -71,8 +67,8 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
   Future _getUsers({bool clearList = false}) {
     widget._loadingItems = true;
     _screenSearchKey.currentState?.visibleIcon = false;
-    var offset = clearList ? 0 : widget.users.length;
-    var future = RestAPI.instance.getUsers(
+    final offset = clearList ? 0 : widget.users.length;
+    final future = RestAPI.instance.getUsers(
         offset: offset,
         query: widget.querySearch,
         onSuccess: (users) {
@@ -95,7 +91,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
           _screenSearchKey.currentState?.visibleIcon = true;
           widget._loadingItems = false;
           _handleStatusError(error);
-        });
+        },);
     return future;
   }
 
@@ -103,7 +99,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
     switch (error.statusCode) {
       case 400:
         Dialogs.showSnackbar(context,
-            "Please make sure to use 3 or more characters in the search");
+            "Please make sure to use 3 or more characters in the search",);
         break;
       default:
         Dialogs.showResponseErrorSnackbar(context, error);
@@ -144,14 +140,14 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
               },
             ),
           ),
-        )),
+        ),),
       ),
     );
   }
 
   void _goToUserDetal(User user) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => UserDetailScreen(user: user)));
+        MaterialPageRoute(builder: (context) => UserDetailScreen(user: user)),);
   }
 
   @override

@@ -8,7 +8,7 @@ class RunItemView extends StatelessWidget{
    final bool _showLoading;
    final Function(Run run) _onTap;
 
-   RunItemView(this._run,this._showLoading, this._onTap);
+   const RunItemView(this._run,this._showLoading, this._onTap);
 
 
    @override
@@ -17,13 +17,13 @@ class RunItemView extends StatelessWidget{
       children: <Widget>[
         TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
           ),
           child: Card(
+            color: colors.blackCard,
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
@@ -34,7 +34,7 @@ class RunItemView extends StatelessWidget{
                         child: Hero(
                           tag: _run.idTag,
                           child: FadeInImage.assetNetwork(
-                              image:_run.game?.coverMedium?.uri ?? "",
+                              image:_run.game.coverMedium.uri ?? "",
                               placeholder: AppConfig.placeholderImageAsset,
                               fit:BoxFit.cover,
                               imageErrorBuilder: (context, error, stackTrace) {
@@ -50,32 +50,31 @@ class RunItemView extends StatelessWidget{
                         child: Container(
                           margin: const EdgeInsets.only( left: 8.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(_run.game?.names?.international ?? "",
-                                      style: TextStyle(
+                                    child: Text(_run.game.names.international ?? "",
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14.0
+                                          fontSize: 14.0,
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      _run.category?.name ?? "",
-                                      style: TextStyle(
+                                      _run.category.name ?? "",
+                                      style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 13.0
+                                          fontSize: 13.0,
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Padding(
@@ -92,17 +91,17 @@ class RunItemView extends StatelessWidget{
                                             image: NetworkImage(
                                               _run.player?.urlIcon ?? AppConfig.placeholderImageUrl,
                                             ),
-                                            fit:BoxFit.cover
+                                            fit:BoxFit.cover,
                                         ),
-                                        borderRadius: BorderRadius.all(Radius.circular(12.5)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(12.5)),
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        _run.player?.names?.international ?? "",
-                                        style: TextStyle(
+                                        _run.player?.names.international ?? "",
+                                        style: const TextStyle(
                                             color: Colors.white,
-                                            fontSize: 12.0
+                                            fontSize: 12.0,
                                         ),
                                       ),
                                     ),
@@ -113,40 +112,39 @@ class RunItemView extends StatelessWidget{
                                         _run.player?.country?.urlIcon ?? "",
                                         fit: BoxFit.fill,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 2.0),
+                                padding: const EdgeInsets.only(top: 2.0),
                                 child: Row(
                                     children: <Widget>[
                                       Text(
                                         _run.times?.primaryString ?? "",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 13.0,
-                                            fontWeight: FontWeight.bold
+                                            fontWeight: FontWeight.bold,
                                         ),
-                                      )
-                                    ]
+                                      ),
+                                    ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        )
-                    )
+                        ),
+                    ),
                   ],
-                )
+                ),
             ),
-            color: colors.blackCard,
           ),
           onPressed: (){
               _onTap(_run);
-              return null;
+              return;
           },
         ),
-        _showLoading ? CircularProgressIndicator() : Container()
+        if (_showLoading) const CircularProgressIndicator() else Container(),
       ],
     );
   }

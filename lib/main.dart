@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         textTheme: const TextTheme(
           displaySmall: TextStyle(
-              fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.white,),
           titleLarge: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white,),
           bodyMedium: TextStyle(fontSize: 14.0, color: Colors.white),
           labelLarge: TextStyle(color: Colors.white),
           titleSmall: TextStyle(color: Colors.white),
@@ -48,9 +48,9 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (context) => SplashScreen(),
-        "/home": (context) => HomeScreen(),
-        "/run_detail": (context) => RunDetailScreen(),
-        "/game_detail": (context) => GameDetailScreen()
+        "/home": (context) => const HomeScreen(),
+        "/run_detail": (context) => const RunDetailScreen(),
+        "/game_detail": (context) => const GameDetailScreen(),
       },
     );
   }

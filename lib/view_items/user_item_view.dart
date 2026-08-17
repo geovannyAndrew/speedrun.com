@@ -8,7 +8,7 @@ class UserItemView extends StatelessWidget {
   final bool _showLoading;
   final Function(User user) _onTap;
 
-  UserItemView(this._user, this._showLoading, this._onTap);
+  const UserItemView(this._user, this._showLoading, this._onTap);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class UserItemView extends StatelessWidget {
       children: <Widget>[
         TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
           ),
           child: Card(
             color: colors.blackCard,
@@ -68,28 +68,28 @@ class UserItemView extends StatelessWidget {
                                   _user.country?.urlIcon ?? "",
                                   fit: BoxFit.fill,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                           Container(
-                            alignment: Alignment(-1.0, 0),
+                            alignment: const Alignment(-1.0, 0),
                             child: Text(
                               _user.countryRegionName,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 13.0),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 13.0,),
                             ),
                           ),
                         ],
                       ),
-                    ))
+                    ),),
                   ],
-                )),
+                ),),
           ),
           onPressed: () {
             _onTap(_user);
           },
         ),
-        _showLoading ? CircularProgressIndicator() : Container()
+        if (_showLoading) const CircularProgressIndicator() else Container(),
       ],
     );
   }

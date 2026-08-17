@@ -8,7 +8,7 @@ class GameCategoryRunItemView extends StatelessWidget{
    final bool _showLoading;
    final Function(Run run) _onTap;
 
-   GameCategoryRunItemView(this._run,this._showLoading, this._onTap);
+   const GameCategoryRunItemView(this._run,this._showLoading, this._onTap);
 
 
    @override
@@ -17,6 +17,7 @@ class GameCategoryRunItemView extends StatelessWidget{
       children: <Widget>[
         GestureDetector(
           child: Card(
+            color: colors.blackCard,
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -42,16 +43,15 @@ class GameCategoryRunItemView extends StatelessWidget{
                         child: Container(
                           margin: const EdgeInsets.only( left: 8.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(_run.player?.name ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15.0
+                                          fontSize: 15.0,
                                       ),
                                     ),
                                   ),
@@ -60,55 +60,54 @@ class GameCategoryRunItemView extends StatelessWidget{
                                     width: 15.0,
                                     height: 13.0,
                                     fit: BoxFit.fill,
-                                  )
+                                  ),
                                 ],
                               ),
                               Container(
-                                alignment: Alignment(-1.0, 0),
+                                alignment: const Alignment(-1.0, 0),
                                 child: Text(
                                   _run.player?.countryRegionName ?? "",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12.0
+                                      fontSize: 12.0,
                                   ),
                                 ),
                               ),
                               Container(
-                                alignment: Alignment(-1.0, 0),
+                                alignment: const Alignment(-1.0, 0),
                                 child: Text(
                                   _run.submittedAgo,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12.0
+                                      fontSize: 12.0,
                                   ),
                                 ),
                               ),
                               Container(
-                                alignment: Alignment(-1.0, 0),
+                                alignment: const Alignment(-1.0, 0),
                                 child: Text(
                                   _run.times?.primaryString ?? "",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14.0
+                                      fontSize: 14.0,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        )
-                    )
+                        ),
+                    ),
                   ],
-                )
+                ),
             ),
-            color: colors.blackCard,
           ),
           onTap: (){
               _onTap(_run);
-              return null;
+              return;
           },
         ),
-        _showLoading ? CircularProgressIndicator() : Container()
+        if (_showLoading) const CircularProgressIndicator() else Container(),
       ],
     );
   }

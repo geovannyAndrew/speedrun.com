@@ -14,7 +14,7 @@ import 'package:speed_run/utils/dialogs.dart';
 class RunsNavigationScreen extends StatefulWidget {
   final runs = <Run>[];
   var _loadingItems = false;
-  var querySearch = "";
+  String querySearch = "";
 
   RunsNavigationScreen({Key? key}) : super(key: key);
 
@@ -52,15 +52,15 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
     if (!widget._loadingItems && widget.runs.length > 10) {
       await _getRuns();
     } else {
-      await Future.delayed(Duration(seconds: 0, milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
     }
     return true;
   }
 
   Future _getRuns({bool clearList = false}) {
     widget._loadingItems = true;
-    var offset = clearList ? 0 : widget.runs.length;
-    var future = RestAPI.instance.getRuns(
+    final offset = clearList ? 0 : widget.runs.length;
+    final future = RestAPI.instance.getRuns(
         offset: offset,
         onSuccess: (runs) {
           if (mounted) {
@@ -76,7 +76,7 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
         onError: (error) {
           widget._loadingItems = false;
           Dialogs.showResponseErrorSnackbar(context, error);
-        });
+        },);
     return future;
   }
 
@@ -84,43 +84,42 @@ class RunsNavigationScreenState extends State<RunsNavigationScreen>
   Widget build(BuildContext context) {
     return ScreenSearchView(
         title: "Runs",
-        body: Container(
+        body: DecoratedBox(
+          decoration: BoxDecoration(color: colors.blackBackground),
           child: Center(
               child: RefreshIndicator(
             key: _refreshIndicatorKey,
+            onRefresh: _onRefresh,
             child: LoadMore(
               textBuilder: DefaultLoadMoreTextBuilder.english,
               whenEmptyLoad: false,
-              delegate: DefaultLoadMoreDelegate(),
+              delegate: const DefaultLoadMoreDelegate(),
+              onLoadMore: _loadNextItems,
               child: ListView.builder(
                 itemCount: widget.runs.length,
-                padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                 itemBuilder: (BuildContext context, int index) {
-                  var run = widget.runs[index];
+                  final run = widget.runs[index];
                   return RunItemView(run, false, (run) {
                     _goToRunDetail(run);
                   });
                 },
               ),
-              onLoadMore: _loadNextItems,
-              isFinish: false,
             ),
-            onRefresh: _onRefresh,
-          )),
-          decoration: BoxDecoration(color: colors.blackBackground),
-        ));
+          ),),
+        ),);
   }
 
   void _goToRunDetail(Run run) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => RunDetailScreen(run: run, linkToUser: true)));
+            builder: (context) => RunDetailScreen(run: run, linkToUser: true),),);
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if (widget.runs.length == 0) {
+    if (widget.runs.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
   }
