@@ -142,7 +142,8 @@ class GamesFeedNotifier extends StateNotifier<FeedState<Game>> {
     state = state.copyWith(status: FeedStatus.loading);
 
     try {
-      final items = await _repository.getGames(offset: state.offset, query: query);
+      final items =
+          await _repository.getGames(offset: state.offset, query: query);
       state = state.copyWith(
         items: [...state.items, ...items],
         offset: state.offset + items.length,
@@ -226,7 +227,8 @@ class UsersFeedNotifier extends StateNotifier<FeedState<User>> {
     state = state.copyWith(status: FeedStatus.loading);
 
     try {
-      final items = await _repository.getUsers(offset: state.offset, query: query);
+      final items =
+          await _repository.getUsers(offset: state.offset, query: query);
       state = state.copyWith(
         items: [...state.items, ...items],
         offset: state.offset + items.length,
@@ -246,7 +248,8 @@ class CategoryRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
   final SpeedrunRepository _repository;
   final String _categoryId;
 
-  CategoryRunsFeedNotifier(this._repository, this._categoryId) : super(const FeedState<Run>());
+  CategoryRunsFeedNotifier(this._repository, this._categoryId)
+      : super(const FeedState<Run>());
 
   Future<void> loadInitial() async {
     if (state.status == FeedStatus.loading) return;
@@ -254,7 +257,8 @@ class CategoryRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading, error: null);
 
     try {
-      final response = await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
+      final response =
+          await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
       state = state.copyWith(
         items: response.items,
         offset: response.items.length,
@@ -275,7 +279,8 @@ class CategoryRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading, error: null);
 
     try {
-      final response = await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
+      final response =
+          await _repository.getCategoryRuns(offset: 0, idCategory: _categoryId);
       state = state.copyWith(
         items: response.items,
         offset: response.items.length,
@@ -296,7 +301,8 @@ class CategoryRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading);
 
     try {
-      final response = await _repository.getCategoryRuns(offset: state.offset, idCategory: _categoryId);
+      final response = await _repository.getCategoryRuns(
+          offset: state.offset, idCategory: _categoryId);
       state = state.copyWith(
         items: [...state.items, ...response.items],
         offset: state.offset + response.items.length,
@@ -316,7 +322,8 @@ class UserRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
   final SpeedrunRepository _repository;
   final String _userId;
 
-  UserRunsFeedNotifier(this._repository, this._userId) : super(const FeedState<Run>());
+  UserRunsFeedNotifier(this._repository, this._userId)
+      : super(const FeedState<Run>());
 
   Future<void> loadInitial() async {
     if (state.status == FeedStatus.loading) return;
@@ -324,7 +331,8 @@ class UserRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading, error: null);
 
     try {
-      final response = await _repository.getUserRuns(offset: 0, idUser: _userId);
+      final response =
+          await _repository.getUserRuns(offset: 0, idUser: _userId);
       state = state.copyWith(
         items: response.items,
         offset: response.items.length,
@@ -345,7 +353,8 @@ class UserRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading, error: null);
 
     try {
-      final response = await _repository.getUserRuns(offset: 0, idUser: _userId);
+      final response =
+          await _repository.getUserRuns(offset: 0, idUser: _userId);
       state = state.copyWith(
         items: response.items,
         offset: response.items.length,
@@ -366,7 +375,8 @@ class UserRunsFeedNotifier extends StateNotifier<FeedState<Run>> {
     state = state.copyWith(status: FeedStatus.loading);
 
     try {
-      final response = await _repository.getUserRuns(offset: state.offset, idUser: _userId);
+      final response =
+          await _repository.getUserRuns(offset: state.offset, idUser: _userId);
       state = state.copyWith(
         items: [...state.items, ...response.items],
         offset: state.offset + response.items.length,

@@ -16,8 +16,17 @@ class Run {
   final List<User> players;
   final List<Asset>? videos;
 
-  Run(this.id, this.date, this.comment, this.submitted, this.times,
-      this.category, this.game, this.players, this.videos,);
+  Run(
+    this.id,
+    this.date,
+    this.comment,
+    this.submitted,
+    this.times,
+    this.category,
+    this.game,
+    this.players,
+    this.videos,
+  );
 
   User? get player {
     if (players.isNotEmpty) {
@@ -28,15 +37,19 @@ class Run {
   }
 
   String? get youtubeUrl {
-    final video = videos?.firstWhere((asset) => asset.isYoutube,
-        orElse: () => Asset("", 0, 0),);
+    final video = videos?.firstWhere(
+      (asset) => asset.isYoutube,
+      orElse: () => Asset("", 0, 0),
+    );
     return video?.uri;
   }
 
   String? get twitchUrl {
     return videos
-        ?.firstWhere((asset) => asset.isTwitch,
-            orElse: () => Asset("", 0, 0),)
+        ?.firstWhere(
+          (asset) => asset.isTwitch,
+          orElse: () => Asset("", 0, 0),
+        )
         .uri;
   }
 
@@ -55,24 +68,25 @@ class Run {
 
   factory Run.fromJson(Map<String, dynamic> json) {
     return Run(
-        json['id'] as String,
-        json['date'] as String?,
-        json["comment"] as String?,
-        json["submitted"] as String?,
-        json["times"] != null
-            ? Times.fromJson(json["times"] as Map<String, dynamic>)
-            : null,
-        Category.fromJson(json["category"]["data"] as Map<String, dynamic>),
-        Game.fromJson(json["game"]["data"] as Map<String, dynamic>),
-        json["players"] is List
-            ? []
-            : (json["players"]["data"] as List)
-                .map((model) => User.fromJson(model as Map<String, dynamic>))
-                .toList(),
-        json["videos"] != null && json["videos"]["links"] is List
-            ? (json["videos"]["links"] as List)
-                .map((model) => Asset.fromJson(model as Map<String, dynamic>))
-                .toList()
-            : null,);
+      json['id'] as String,
+      json['date'] as String?,
+      json["comment"] as String?,
+      json["submitted"] as String?,
+      json["times"] != null
+          ? Times.fromJson(json["times"] as Map<String, dynamic>)
+          : null,
+      Category.fromJson(json["category"]["data"] as Map<String, dynamic>),
+      Game.fromJson(json["game"]["data"] as Map<String, dynamic>),
+      json["players"] is List
+          ? []
+          : (json["players"]["data"] as List)
+              .map((model) => User.fromJson(model as Map<String, dynamic>))
+              .toList(),
+      json["videos"] != null && json["videos"]["links"] is List
+          ? (json["videos"]["links"] as List)
+              .map((model) => Asset.fromJson(model as Map<String, dynamic>))
+              .toList()
+          : null,
+    );
   }
 }

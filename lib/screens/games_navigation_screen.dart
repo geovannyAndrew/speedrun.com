@@ -97,18 +97,18 @@ class _GamesNavigationScreenState extends ConsumerState<GamesNavigationScreen>
                   controller: _scrollController,
                   itemCount: feedState.items.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        MediaQuery.of(context).orientation == Orientation.landscape
-                            ? 4
-                            : 2,
+                    crossAxisCount: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? 4
+                        : 2,
                     childAspectRatio: 0.6,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
                   itemBuilder: (BuildContext context, int index) {
                     final item = feedState.items[index];
-                    final isLastElement =
-                        index >= feedState.items.length - 1 && feedState.hasMore;
+                    final isLastElement = index >= feedState.items.length - 1 &&
+                        feedState.hasMore;
                     return GameItemView(item, isLastElement, (game) {
                       _goToGameDetail(game);
                     });
@@ -125,7 +125,8 @@ class _GamesNavigationScreenState extends ConsumerState<GamesNavigationScreen>
   void _goToGameDetail(Game game) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GameDetailScreen(gameId: game.id)),
+      MaterialPageRoute(
+          builder: (context) => GameDetailScreen(gameId: game.id)),
     );
   }
 

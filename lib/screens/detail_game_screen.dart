@@ -55,13 +55,15 @@ class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
     final gameAsync = ref.watch(gameDetailProvider(widget.gameId));
     final categoriesAsync = ref.watch(gameCategoriesProvider(widget.gameId));
 
-    ref.listen<AsyncValue<Game>>(gameDetailProvider(widget.gameId), (prev, next) {
+    ref.listen<AsyncValue<Game>>(gameDetailProvider(widget.gameId),
+        (prev, next) {
       if (next.hasError) {
         Dialogs.showSnackbar(context, next.error.toString());
       }
     });
 
-    ref.listen<AsyncValue<List<Category>>>(gameCategoriesProvider(widget.gameId), (prev, next) {
+    ref.listen<AsyncValue<List<Category>>>(
+        gameCategoriesProvider(widget.gameId), (prev, next) {
       if (next.hasError) {
         Dialogs.showSnackbar(context, next.error.toString());
       }
@@ -69,16 +71,20 @@ class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
 
     return gameAsync.when(
       loading: () => _buildScaffold(null, const <Category>[], categoriesAsync),
-      error: (error, _) => _buildScaffold(null, const <Category>[], categoriesAsync),
+      error: (error, _) =>
+          _buildScaffold(null, const <Category>[], categoriesAsync),
       data: (game) => categoriesAsync.when(
-        loading: () => _buildScaffold(game, const <Category>[], categoriesAsync),
-        error: (error, _) => _buildScaffold(game, const <Category>[], categoriesAsync),
+        loading: () =>
+            _buildScaffold(game, const <Category>[], categoriesAsync),
+        error: (error, _) =>
+            _buildScaffold(game, const <Category>[], categoriesAsync),
         data: (categories) => _buildScaffold(game, categories, categoriesAsync),
       ),
     );
   }
 
-  Widget _buildScaffold(Game? game, List<Category> categories, AsyncValue<List<Category>> categoriesAsync) {
+  Widget _buildScaffold(Game? game, List<Category> categories,
+      AsyncValue<List<Category>> categoriesAsync) {
     if (game == null) {
       return Scaffold(
         appBar: AppBar(
@@ -98,7 +104,8 @@ class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
           alignment: const Alignment(0.0, 0.0),
           child: categoriesAsync.when(
             loading: () => const CircularProgressIndicator(),
-            error: (error, _) => Text('Error: $error', style: const TextStyle(color: Colors.white)),
+            error: (error, _) => Text('Error: $error',
+                style: const TextStyle(color: Colors.white)),
             data: (_) => const CircularProgressIndicator(),
           ),
         ),
@@ -147,10 +154,12 @@ class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
   }
 
   List<Widget> _buildViewTabs(List<Category> categories) {
-    return categories.map((category) => UserRunsListView(
-      idGame: widget.gameId,
-      idCategory: category.id,
-    )).toList();
+    return categories
+        .map((category) => UserRunsListView(
+              idGame: widget.gameId,
+              idCategory: category.id,
+            ))
+        .toList();
   }
 }
 
@@ -166,7 +175,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent,) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       color: colors.blackDark,
       child: _tabBar,
@@ -183,14 +195,17 @@ class UserRunsListView extends ConsumerStatefulWidget {
   final String idGame;
   final String idCategory;
 
-  const UserRunsListView({Key? key, required this.idGame, required this.idCategory}) : super(key: key);
+  const UserRunsListView(
+      {Key? key, required this.idGame, required this.idCategory})
+      : super(key: key);
 
   @override
   ConsumerState<UserRunsListView> createState() => _UserRunsListViewState();
 }
 
 class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   late ScrollController _scrollController;
 
   @override
@@ -198,7 +213,9 @@ class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
     super.initState();
     _scrollController = ScrollController()..addListener(_loadNextItems);
     Future.microtask(() {
-      ref.read(categoryRunsFeedProvider(widget.idCategory).notifier).loadInitial();
+      ref
+          .read(categoryRunsFeedProvider(widget.idCategory).notifier)
+          .loadInitial();
     });
   }
 
@@ -210,12 +227,16 @@ class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
   }
 
   Future<void> _onRefresh() {
-    return ref.read(categoryRunsFeedProvider(widget.idCategory).notifier).refresh();
+    return ref
+        .read(categoryRunsFeedProvider(widget.idCategory).notifier)
+        .refresh();
   }
 
   void _loadNextItems() {
     final state = ref.read(categoryRunsFeedProvider(widget.idCategory));
-    if (state.status != FeedStatus.loading && state.hasMore && state.items.length > 10) {
+    if (state.status != FeedStatus.loading &&
+        state.hasMore &&
+        state.items.length > 10) {
       ref.read(categoryRunsFeedProvider(widget.idCategory).notifier).loadMore();
     }
   }
@@ -224,7 +245,8 @@ class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
   Widget build(BuildContext context) {
     final feedState = ref.watch(categoryRunsFeedProvider(widget.idCategory));
 
-    ref.listen<FeedState<Run>>(categoryRunsFeedProvider(widget.idCategory), (prev, next) {
+    ref.listen<FeedState<Run>>(categoryRunsFeedProvider(widget.idCategory),
+        (prev, next) {
       if (next.error != null && prev?.error != next.error) {
         Dialogs.showSnackbar(context, next.error!);
       }
@@ -248,10 +270,14 @@ class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
               final run = runs[index];
               if (index >= runs.length - 1 && isLastElement) {
                 Future.microtask(() {
-                  ref.read(categoryRunsFeedProvider(widget.idCategory).notifier).loadMore();
+                  ref
+                      .read(
+                          categoryRunsFeedProvider(widget.idCategory).notifier)
+                      .loadMore();
                 });
               }
-              return GameCategoryRunItemView(run, isLastElement && index == runs.length - 1, (run) {
+              return GameCategoryRunItemView(
+                  run, isLastElement && index == runs.length - 1, (run) {
                 _goToRunDetail(run);
               });
             },
@@ -262,7 +288,9 @@ class _UserRunsListViewState extends ConsumerState<UserRunsListView> {
   }
 
   void _goToRunDetail(Run run) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(runId: run.id)),);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RunDetailScreen(runId: run.id)),
+    );
   }
 }

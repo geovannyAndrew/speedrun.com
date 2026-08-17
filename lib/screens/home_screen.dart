@@ -34,28 +34,36 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: _widgetOptions[_selectedIndex],),
-        bottomNavigationBar: Theme(
-            data: Theme.of(context).copyWith(
-                canvasColor: colors.blackDark,
-                primaryColor: colors.greenAccent,
-                textTheme: Theme.of(context)
-                    .textTheme
-                    .copyWith(bodyMedium: const TextStyle(color: Colors.white)),),
-            child: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.directions_run), label: 'Runs',),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.games), label: 'Games',),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.supervised_user_circle),
-                    label: 'Users',),
-              ],
-              currentIndex: _selectedIndex,
-              onTap: _onMenuSelected,
-            ),),
-        );
+      body: Center(
+        child: _widgetOptions[_selectedIndex],
+      ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: colors.blackDark,
+          primaryColor: colors.greenAccent,
+          textTheme: Theme.of(context)
+              .textTheme
+              .copyWith(bodyMedium: const TextStyle(color: Colors.white)),
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.directions_run),
+              label: 'Runs',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.games),
+              label: 'Games',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.supervised_user_circle),
+              label: 'Users',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onMenuSelected,
+        ),
+      ),
+    );
   }
 }

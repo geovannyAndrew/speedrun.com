@@ -6,13 +6,15 @@ class Asset {
   Asset(this.uri, this.width, this.height);
 
   bool get isYoutube {
-    final regex = RegExp(r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$");
+    final regex =
+        RegExp(r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$");
     return regex.hasMatch(uri);
   }
 
   String get youtubeId {
     final regExp = RegExp(
-        r"^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*",);
+      r"^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*",
+    );
     const String you = "";
     final Iterable<Match> matches = regExp.allMatches(uri);
     for (final Match match in matches) {
@@ -30,8 +32,9 @@ class Asset {
 
   factory Asset.fromJson(Map<String, dynamic> json) {
     return Asset(
-        json['uri']?.toString() ?? "",
-        json['width'] != null ? int.parse(json['width'].toString()) : 0,
-        json["height"] != null ? int.parse(json["height"].toString()) : 0,);
+      json['uri']?.toString() ?? "",
+      json['width'] != null ? int.parse(json['width'].toString()) : 0,
+      json["height"] != null ? int.parse(json["height"].toString()) : 0,
+    );
   }
 }

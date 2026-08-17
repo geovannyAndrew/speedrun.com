@@ -16,7 +16,9 @@ void saveInFile(String nameFile, String content) {
 }
 
 void getContentFromFile(
-    String nameFile, Function(String content) onReadContent,) {
+  String nameFile,
+  Function(String content) onReadContent,
+) {
   getApplicationDocumentsDirectory().then((Directory directory) {
     final file = File("${directory.path}/$nameFile");
     if (file.existsSync()) {

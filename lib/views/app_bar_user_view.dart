@@ -18,12 +18,14 @@ class AppBarUserView extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text(user?.name ?? "",
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-            ),),
+        title: Text(
+          user?.name ?? "",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+        ),
         background: Stack(
           children: <Widget>[
             Container(
@@ -79,17 +81,23 @@ class AppBarUserView extends StatelessWidget {
                     children: <Widget>[
                       if (user?.assetTwitter != null)
                         _buildSocialButton(
-                            user!.assetTwitter!, "assets/images/twitter.png",)
+                          user!.assetTwitter!,
+                          "assets/images/twitter.png",
+                        )
                       else
                         Container(),
                       if (user?.assetYoutube != null)
                         _buildSocialButton(
-                            user!.assetYoutube!, "assets/images/youtube.png",)
+                          user!.assetYoutube!,
+                          "assets/images/youtube.png",
+                        )
                       else
                         Container(),
                       if (user?.assetTwitch != null)
                         _buildSocialButton(
-                            user!.assetTwitch!, "assets/images/twitch.png",)
+                          user!.assetTwitch!,
+                          "assets/images/twitch.png",
+                        )
                       else
                         Container(),
                     ],
@@ -97,7 +105,10 @@ class AppBarUserView extends StatelessWidget {
                 ],
               ),
             ),
-            if (user == null) const Center(child: CircularProgressIndicator()) else Container(),
+            if (user == null)
+              const Center(child: CircularProgressIndicator())
+            else
+              Container(),
           ],
         ),
       ),
@@ -107,15 +118,16 @@ class AppBarUserView extends StatelessWidget {
   Container _buildSocialButton(Asset asset, String imageAsset) {
     return Container(
       child: IconButton(
-          onPressed: () {
-            _launchURL(asset.uri);
-          },
-          icon: Image.asset(
-            imageAsset,
-            width: 40.0,
-            height: 40.0,
-            fit: BoxFit.fill,
-          ),),
+        onPressed: () {
+          _launchURL(asset.uri);
+        },
+        icon: Image.asset(
+          imageAsset,
+          width: 40.0,
+          height: 40.0,
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 

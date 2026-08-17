@@ -14,7 +14,8 @@ class SpeedrunRepository {
   static const _gamesCacheKey = 'games';
   static const _usersCacheKey = 'users';
 
-  Future<List<Run>> getRuns({required int offset, bool forceRefresh = false}) async {
+  Future<List<Run>> getRuns(
+      {required int offset, bool forceRefresh = false}) async {
     if (offset == 0 && !forceRefresh) {
       final cached = await _readCache<List<Run>>(
         _runsCacheKey,

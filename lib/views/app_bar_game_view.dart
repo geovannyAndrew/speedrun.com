@@ -19,15 +19,18 @@ class AppBarGameView extends StatelessWidget {
         title: ConstrainedBox(
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 160),
-          child: Text(game?.name ?? "",
-              overflow: TextOverflow.fade,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                  textBaseline: TextBaseline.alphabetic,),),
+          child: Text(
+            game?.name ?? "",
+            overflow: TextOverflow.fade,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+              textBaseline: TextBaseline.alphabetic,
+            ),
+          ),
         ),
         background: Stack(
           children: <Widget>[

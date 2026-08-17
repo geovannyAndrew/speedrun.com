@@ -59,33 +59,40 @@ final usersFeedProvider =
   return UsersFeedNotifier(repository);
 });
 
-final runDetailProvider = FutureProvider.family<Run, String>((ref, runId) async {
+final runDetailProvider =
+    FutureProvider.family<Run, String>((ref, runId) async {
   final repository = ref.watch(speedrunRepositoryProvider);
   return repository.getRun(id: runId);
 });
 
-final gameDetailProvider = FutureProvider.family<Game, String>((ref, gameId) async {
+final gameDetailProvider =
+    FutureProvider.family<Game, String>((ref, gameId) async {
   final repository = ref.watch(speedrunRepositoryProvider);
   return repository.getGame(id: gameId);
 });
 
-final gameCategoriesProvider = FutureProvider.family<List<Category>, String>((ref, gameId) async {
+final gameCategoriesProvider =
+    FutureProvider.family<List<Category>, String>((ref, gameId) async {
   final repository = ref.watch(speedrunRepositoryProvider);
   final result = await repository.getGameCategories(idGame: gameId);
   return result.cast<Category>();
 });
 
-final userDetailProvider = FutureProvider.family<User, String>((ref, userId) async {
+final userDetailProvider =
+    FutureProvider.family<User, String>((ref, userId) async {
   final repository = ref.watch(speedrunRepositoryProvider);
   return repository.getUser(id: userId);
 });
 
-final categoryRunsFeedProvider = StateNotifierProvider.family<CategoryRunsFeedNotifier, FeedState<Run>, String>((ref, categoryId) {
+final categoryRunsFeedProvider = StateNotifierProvider.family<
+    CategoryRunsFeedNotifier, FeedState<Run>, String>((ref, categoryId) {
   final repository = ref.watch(speedrunRepositoryProvider);
   return CategoryRunsFeedNotifier(repository, categoryId);
 });
 
-final userRunsFeedProvider = StateNotifierProvider.family<UserRunsFeedNotifier, FeedState<Run>, String>((ref, userId) {
+final userRunsFeedProvider =
+    StateNotifierProvider.family<UserRunsFeedNotifier, FeedState<Run>, String>(
+        (ref, userId) {
   final repository = ref.watch(speedrunRepositoryProvider);
   return UserRunsFeedNotifier(repository, userId);
 });

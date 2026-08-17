@@ -16,8 +16,17 @@ class User {
   final Asset? assetTwitter;
   final UserAssets? assets;
 
-  User(this.id, this.names, this.country, this.region, this.colorStyle,
-      this.assetTwitch, this.assetYoutube, this.assetTwitter, this.assets,);
+  User(
+    this.id,
+    this.names,
+    this.country,
+    this.region,
+    this.colorStyle,
+    this.assetTwitch,
+    this.assetYoutube,
+    this.assetTwitter,
+    this.assets,
+  );
 
   String? get urlIcon {
     return assets?.imageUri;
@@ -44,45 +53,49 @@ class User {
     if (json["location"] != null) {
       if (json["location"]["country"] != null) {
         country = Location.fromJson(
-            json["location"]["country"] as Map<String, dynamic>,);
+          json["location"]["country"] as Map<String, dynamic>,
+        );
       }
       if (json["location"]["region"] != null) {
         region = Location.fromJson(
-            json["location"]["region"] as Map<String, dynamic>,);
+          json["location"]["region"] as Map<String, dynamic>,
+        );
       }
     }
 
     return User(
-        json["id"].toString(),
-        json["names"] != null
-            ? Names.fromJson(json["names"] as Map<String, dynamic>)
-            : Names("", "", ""),
-        country,
-        region,
-        json["name-style"] != null
-            ? ColorStyle.fromJson(json["name-style"] as Map<String, dynamic>)
-            : null,
-        json["twitch"] != null
-            ? Asset.fromJson(json["twitch"] as Map<String, dynamic>)
-            : null,
-        json["youtube"] != null
-            ? Asset.fromJson(json["youtube"] as Map<String, dynamic>)
-            : null,
-        json["twitter"] != null
-            ? Asset.fromJson(json["twitter"] as Map<String, dynamic>)
-            : null,
-        json["assets"] != null
-            ? UserAssets.fromJson(json["assets"] as Map<String, dynamic>)
-            : null,);
+      json["id"].toString(),
+      json["names"] != null
+          ? Names.fromJson(json["names"] as Map<String, dynamic>)
+          : Names("", "", ""),
+      country,
+      region,
+      json["name-style"] != null
+          ? ColorStyle.fromJson(json["name-style"] as Map<String, dynamic>)
+          : null,
+      json["twitch"] != null
+          ? Asset.fromJson(json["twitch"] as Map<String, dynamic>)
+          : null,
+      json["youtube"] != null
+          ? Asset.fromJson(json["youtube"] as Map<String, dynamic>)
+          : null,
+      json["twitter"] != null
+          ? Asset.fromJson(json["twitter"] as Map<String, dynamic>)
+          : null,
+      json["assets"] != null
+          ? UserAssets.fromJson(json["assets"] as Map<String, dynamic>)
+          : null,
+    );
   }
 
   LinearGradient get gradientStyle {
     return LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          colorStyle?.colorFrom?.darkColor ?? const Color(0xFF000000),
-          colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000),
-        ],);
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [
+        colorStyle?.colorFrom?.darkColor ?? const Color(0xFF000000),
+        colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000),
+      ],
+    );
   }
 }

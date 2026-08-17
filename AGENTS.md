@@ -40,9 +40,9 @@ SplashScreen (2s) → HomeScreen (bottom nav: Runs | Games | Users)
 
 ## Key Patterns
 
-- **API client**: `RestAPI` is a singleton (`RestAPI.instance`). All methods use callback-based `onSuccess`/`onError` pattern.
+- **API client**: `RestAPI` is injected via Riverpod providers. All methods return typed `Future` results.
 - **Codegen**: Models in `lib/logic/` use `freezed` + `json_serializable`. After editing a model, run `flutter pub run build_runner build`. Generated files are `*.freezed.dart` and `*.g.dart`.
-- **Offline cache**: `lib/utils/storage.dart` saves first page of runs/games/users to app documents directory via `path_provider`. Data is loaded from cache on startup, then refreshed from API.
+- **Offline cache**: `CacheStore` abstraction in `lib/data/cache_store.dart` with `FileCacheStore` implementation. SpeedrunRepository handles cache policy.
 - **Pagination**: Runs and users use `LoadMore` widget. Games use manual `ScrollController` listener with a 500px threshold.
 - **Linting**: Uses `lint` package (not `flutter_lints`). Analysis rules in `analysis_options.yaml` include `parameter_assignments` and `missing_required_param` as errors.
 

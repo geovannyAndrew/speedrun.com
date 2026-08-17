@@ -8,10 +8,11 @@ class Times {
 
   factory Times.fromJson(Map<String, dynamic> json) {
     return Times(
-        json['primary']?.toString(),
-        double.parse(json['primary_t'].toString()),
-        json["realtime"].toString(),
-        double.parse(json["realtime_t"].toString()),);
+      json['primary']?.toString(),
+      double.parse(json['primary_t'].toString()),
+      json["realtime"].toString(),
+      double.parse(json["realtime_t"].toString()),
+    );
   }
 
   String get primaryString {

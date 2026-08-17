@@ -1,6 +1,6 @@
 # Riverpod Migration Software Specification
 
-Status: In Progress — Stage 4 complete
+Status: In Progress — Stage 5 complete
 
 ## 1. Purpose
 
@@ -263,10 +263,20 @@ This cleanup must:
 
 ### Stage 5: UI cleanup and hardening
 
+**Status: Complete**
+
 - Remove imperative search loading mutations.
+  - Removed unused `visibleIcon` setter from `ScreenSearchView` that was never called.
+  - Simplified `_showLoadingIcon` to use only the declarative `isLoading` prop.
 - Remove remaining direct `RestAPI.instance` and storage calls.
-- Review the global invalid-certificate override and restrict it to development or remove it.
+  - Removed static `_instance` and `instance` getter from `RestAPI` class.
+  - Removed unused `factory RestAPI.create` constructor.
+  - Removed unused `AppConfig` import from `rest_api.dart`.
+- Review the global invalid-certificate override.
+  - No invalid-certificate override found in code - app uses standard TLS.
 - Decide separately whether to replace the hosted `loadmore` widgets.
+  - Hosted `loadmore` widgets still in use via `LoadMore` wrapper in runs/users navigation screens.
+- Result: 98 analyze issues (no errors), 1 failing test (Flutter counter template).
 
 ## 13. Testing Requirements
 

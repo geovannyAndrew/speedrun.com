@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/category.dart';
 import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/run.dart';
@@ -46,28 +45,13 @@ class RestAPI {
   final String _baseUrl;
   final int _maxPerPage;
 
-  static final RestAPI _instance = RestAPI(
-    http.Client(),
-    "https://www.speedrun.com/api/v1/",
-    AppConfig.itemsPerPage,
-  );
-
-  static RestAPI get instance => _instance;
-
   RestAPI(this._client, this._baseUrl, this._maxPerPage);
-
-  factory RestAPI.create(http.Client client) {
-    return RestAPI(
-      client,
-      "https://www.speedrun.com/api/v1/",
-      AppConfig.itemsPerPage,
-    );
-  }
 
   String _buildUrl(String path, Map<String, String?> params) {
     final queryParams = params.entries
         .where((e) => e.value != null && e.value!.isNotEmpty)
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value!)}')
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value!)}')
         .join('&');
     return '$_baseUrl$path?$queryParams';
   }

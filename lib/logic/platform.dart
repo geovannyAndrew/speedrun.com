@@ -1,20 +1,19 @@
-
-class Platform{
+class Platform {
   final String id;
   final String name;
   final String released;
 
   Platform(
-      this.id,
-      this.name,
-      this.released,
-      );
+    this.id,
+    this.name,
+    this.released,
+  );
 
-  factory Platform.fromJson(Map<String, dynamic> json){
+  factory Platform.fromJson(Map<String, dynamic> json) {
     return Platform(
-        json["id"].toString(),
-        json["name"].toString(),
-        json["released"].toString(),
+      json["id"].toString(),
+      json["name"].toString(),
+      json["released"].toString(),
     );
   }
 }

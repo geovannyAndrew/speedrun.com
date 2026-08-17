@@ -21,31 +21,31 @@ class UserItemView extends StatelessWidget {
           child: Card(
             color: colors.blackCard,
             child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 50.0,
-                      height: 50.0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(40.0),
-                        child: Hero(
-                          tag: _user.id,
-                          child: FadeInImage.assetNetwork(
-                            placeholder: AppConfig.placeholderImageAsset,
-                            imageErrorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                AppConfig.placeholderImageAsset,
-                              );
-                            },
-                            image: _user.urlIcon ?? "",
-                            fit: BoxFit.cover,
-                          ),
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 50.0,
+                    height: 50.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40.0),
+                      child: Hero(
+                        tag: _user.id,
+                        child: FadeInImage.assetNetwork(
+                          placeholder: AppConfig.placeholderImageAsset,
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              AppConfig.placeholderImageAsset,
+                            );
+                          },
+                          image: _user.urlIcon ?? "",
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    Expanded(
-                        child: Container(
+                  ),
+                  Expanded(
+                    child: Container(
                       margin: const EdgeInsets.only(left: 8.0),
                       child: Column(
                         children: <Widget>[
@@ -76,14 +76,18 @@ class UserItemView extends StatelessWidget {
                             child: Text(
                               _user.countryRegionName,
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 13.0,),
+                                color: Colors.white,
+                                fontSize: 13.0,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),),
-                  ],
-                ),),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           onPressed: () {
             _onTap(_user);

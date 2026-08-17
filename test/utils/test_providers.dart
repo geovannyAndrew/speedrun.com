@@ -128,6 +128,7 @@ List<Override> testProviderOverrides({
     if (client != null) httpClientOverride(client),
     if (cache != null) cacheStoreOverride(cache),
     if (api != null) apiProvider.overrideWithValue(api),
-    if (repository != null) speedrunRepositoryProvider.overrideWithValue(repository),
+    if (repository != null)
+      speedrunRepositoryProvider.overrideWithValue(repository),
   ];
 }

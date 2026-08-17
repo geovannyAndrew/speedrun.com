@@ -7,8 +7,10 @@ class Location {
   Location(this.code, this.names);
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(json['code'].toString(),
-        Names.fromJson(json["names"] as Map<String, dynamic>),);
+    return Location(
+      json['code'].toString(),
+      Names.fromJson(json["names"] as Map<String, dynamic>),
+    );
   }
 
   String get urlIcon {

@@ -12,8 +12,16 @@ class Game {
   final Asset? background;
   final List<Platform> platforms;
 
-  Game(this.id, this.names, this.abbreviation, this.released, this.coverMedium,
-      this.coverLarge, this.background, this.platforms,);
+  Game(
+    this.id,
+    this.names,
+    this.abbreviation,
+    this.released,
+    this.coverMedium,
+    this.coverLarge,
+    this.background,
+    this.platforms,
+  );
 
   factory Game.fromJson(Map<String, dynamic> json) {
     var platforms = <Platform>[];
@@ -24,17 +32,19 @@ class Game {
     }
 
     return Game(
-        json["id"].toString(),
-        Names.fromJson(json["names"] as Map<String, dynamic>),
-        json["abbreviation"].toString(),
-        json["released"].toString(),
-        Asset.fromJson(json["assets"]["cover-medium"] as Map<String, dynamic>),
-        Asset.fromJson(json["assets"]["cover-large"] as Map<String, dynamic>),
-        json["assets"]["background"] != null
-            ? Asset.fromJson(
-                json["assets"]["background"] as Map<String, dynamic>,)
-            : null,
-        platforms,);
+      json["id"].toString(),
+      Names.fromJson(json["names"] as Map<String, dynamic>),
+      json["abbreviation"].toString(),
+      json["released"].toString(),
+      Asset.fromJson(json["assets"]["cover-medium"] as Map<String, dynamic>),
+      Asset.fromJson(json["assets"]["cover-large"] as Map<String, dynamic>),
+      json["assets"]["background"] != null
+          ? Asset.fromJson(
+              json["assets"]["background"] as Map<String, dynamic>,
+            )
+          : null,
+      platforms,
+    );
   }
 
   String get platformsAvaible {

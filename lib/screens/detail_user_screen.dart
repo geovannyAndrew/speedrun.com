@@ -24,7 +24,8 @@ class UserDetailScreen extends ConsumerStatefulWidget {
 
 class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     with AfterLayoutMixin<UserDetailScreen> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   late ScrollController _scrollController;
 
   @override
@@ -50,7 +51,9 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
 
   void _loadNextItems() {
     final state = ref.read(userRunsFeedProvider(widget.userId));
-    if (state.status != FeedStatus.loading && state.hasMore && state.items.length > 10) {
+    if (state.status != FeedStatus.loading &&
+        state.hasMore &&
+        state.items.length > 10) {
       ref.read(userRunsFeedProvider(widget.userId).notifier).loadMore();
     }
   }
@@ -60,13 +63,15 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     final userAsync = ref.watch(userDetailProvider(widget.userId));
     final feedState = ref.watch(userRunsFeedProvider(widget.userId));
 
-    ref.listen<AsyncValue<dynamic>>(userDetailProvider(widget.userId), (prev, next) {
+    ref.listen<AsyncValue<dynamic>>(userDetailProvider(widget.userId),
+        (prev, next) {
       if (next.hasError) {
         Dialogs.showSnackbar(context, next.error.toString());
       }
     });
 
-    ref.listen<FeedState<Run>>(userRunsFeedProvider(widget.userId), (prev, next) {
+    ref.listen<FeedState<Run>>(userRunsFeedProvider(widget.userId),
+        (prev, next) {
       if (next.error != null && prev?.error != next.error) {
         Dialogs.showSnackbar(context, next.error!);
       }
@@ -110,14 +115,18 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
             child: ListView.builder(
               key: PageStorageKey<String>(widget.userId),
               itemCount: feedState.items.length,
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
                 final run = feedState.items[index];
                 final isLastElement = feedState.items.length > 10 &&
-                    index >= feedState.items.length - 1 && feedState.hasMore;
+                    index >= feedState.items.length - 1 &&
+                    feedState.hasMore;
                 if (isLastElement) {
                   Future.microtask(() {
-                    ref.read(userRunsFeedProvider(widget.userId).notifier).loadMore();
+                    ref
+                        .read(userRunsFeedProvider(widget.userId).notifier)
+                        .loadMore();
                   });
                 }
                 return UserRunItemView(run, isLastElement, (run) {
@@ -132,8 +141,10 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
   }
 
   void _goToRunDetail(Run run) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RunDetailScreen(runId: run.id)),);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RunDetailScreen(runId: run.id)),
+    );
   }
 
   @override

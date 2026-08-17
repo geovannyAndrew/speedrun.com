@@ -1,29 +1,22 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatefulWidget{
-
-
+class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _SplashScreenState();
   }
-
-
 }
 
-
-class _SplashScreenState extends State<SplashScreen>{
-
-  Future<Timer> _delayTimer() async{
+class _SplashScreenState extends State<SplashScreen> {
+  Future<Timer> _delayTimer() async {
     const duration = Duration(seconds: 2);
-    return Timer(duration,_goToHomeScreen);
+    return Timer(duration, _goToHomeScreen);
   }
 
-  _goToHomeScreen(){
+  _goToHomeScreen() {
     Navigator.pushReplacementNamed(context, "/home");
   }
 
@@ -57,8 +50,8 @@ class _SplashScreenState extends State<SplashScreen>{
               const Text(
                 "Speedrun API",
                 style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -67,5 +60,4 @@ class _SplashScreenState extends State<SplashScreen>{
       ),
     );
   }
-
 }
