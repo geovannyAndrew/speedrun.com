@@ -24,7 +24,6 @@ An unofficial Flutter application for [speedrun.com](https://www.speedrun.com) �
 - [speedrun.com API v1](https://github.com/speedruncomorg/api)
 - [freezed](https://pub.dev/packages/freezed) + `json_serializable` for model codegen
 - [loadmore](loadmore/) — local package for ListView pagination
-- [flutter_youtube](flutter_youtube/) — local package for YouTube playback
 
 ## Getting Started
 
@@ -69,4 +68,4 @@ flutter test
 
 ## License
 
-See individual packages (`flutter_youtube/LICENSE`, `loadmore/LICENSE`) for their respective licenses.
+See individual packages (`loadmore/LICENSE`) for the license.

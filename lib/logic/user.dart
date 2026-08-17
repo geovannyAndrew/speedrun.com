@@ -3,27 +3,28 @@ import 'package:speed_run/logic/asset.dart';
 import 'package:speed_run/logic/color_style.dart';
 import 'package:speed_run/logic/country.dart';
 import 'package:speed_run/logic/names.dart';
-import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/logic/user_assets.dart';
 
 class User {
   final String id;
   final Names names;
-  final Location country;
-  final Location region;
-  final ColorStyle colorStyle;
-  final Asset assetTwitch;
-  final Asset assetYoutube;
-  final Asset assetTwitter;
+  final Location? country;
+  final Location? region;
+  final ColorStyle? colorStyle;
+  final Asset? assetTwitch;
+  final Asset? assetYoutube;
+  final Asset? assetTwitter;
+  final UserAssets? assets;
 
   User(this.id, this.names, this.country, this.region, this.colorStyle,
-      this.assetTwitch, this.assetYoutube, this.assetTwitter);
+      this.assetTwitch, this.assetYoutube, this.assetTwitter, this.assets,);
 
-  String get urlIcon {
-    return "${RestAPI.host}/themes/user/$name/image.png";
+  String? get urlIcon {
+    return assets?.imageUri;
   }
 
   String get name {
-    return names?.international;
+    return names.international;
   }
 
   String get countryRegionName {
@@ -38,22 +39,24 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    Location country;
-    Location region;
+    Location? country;
+    Location? region;
     if (json["location"] != null) {
       if (json["location"]["country"] != null) {
         country = Location.fromJson(
-            json["location"]["country"] as Map<String, dynamic>);
+            json["location"]["country"] as Map<String, dynamic>,);
       }
       if (json["location"]["region"] != null) {
         region = Location.fromJson(
-            json["location"]["region"] as Map<String, dynamic>);
+            json["location"]["region"] as Map<String, dynamic>,);
       }
     }
 
     return User(
         json["id"].toString(),
-        Names.fromJson(json["names"] as Map<String, dynamic>),
+        json["names"] != null
+            ? Names.fromJson(json["names"] as Map<String, dynamic>)
+            : Names("", "", ""),
         country,
         region,
         json["name-style"] != null
@@ -67,7 +70,10 @@ class User {
             : null,
         json["twitter"] != null
             ? Asset.fromJson(json["twitter"] as Map<String, dynamic>)
-            : null);
+            : null,
+        json["assets"] != null
+            ? UserAssets.fromJson(json["assets"] as Map<String, dynamic>)
+            : null,);
   }
 
   LinearGradient get gradientStyle {
@@ -75,8 +81,8 @@ class User {
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: [
-          colorStyle?.colorFrom?.darkColor,
-          colorStyle?.colorTo?.darkColor
-        ]);
+          colorStyle?.colorFrom?.darkColor ?? const Color(0xFF000000),
+          colorStyle?.colorTo?.darkColor ?? const Color(0xFF000000),
+        ],);
   }
 }

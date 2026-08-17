@@ -1,100 +1,113 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/asset.dart';
-import 'package:speed_run/logic/game.dart';
 import 'package:speed_run/logic/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AppBarUserView extends StatelessWidget{
-
-  final User user;
+class AppBarUserView extends StatelessWidget {
+  final User? user;
   final String idUser;
 
-  AppBarUserView({Key key,this.user,this.idUser}) : super(key: key);
+  const AppBarUserView({Key? key, this.user, required this.idUser})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SliverAppBar(
       expandedHeight: 250.0,
-      floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        collapseMode: CollapseMode.parallax,
         title: Text(user?.name ?? "",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
-            )
-        ),
+            ),),
         background: Stack(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                gradient: user?.gradientStyle ?? LinearGradient(
-                  colors: [Colors.black,Colors.black]
-                )
+                gradient: user?.gradientStyle ??
+                    const LinearGradient(colors: [Colors.black, Colors.black]),
               ),
-              padding: EdgeInsets.only(top:50.0),
-              alignment: Alignment(0, 0),
+              padding: const EdgeInsets.only(top: 50.0),
+              alignment: Alignment.center,
               child: Column(
                 children: <Widget>[
                   ClipOval(
                     child: Hero(
-                      tag:idUser,
+                      tag: idUser,
                       child: FadeInImage.assetNetwork(
-                        image:user?.urlIcon ?? AppConfig.placeholderImageUrl,
+                        image: user?.urlIcon ?? AppConfig.placeholderImageUrl,
                         placeholder: AppConfig.placeholderImageAsset,
                         height: 90,
                         width: 90,
                         fit: BoxFit.cover,
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            AppConfig.placeholderImageAsset,
+                            height: 90,
+                            width: 90,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       user?.countryRegionName ?? "",
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0
-                      ),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 15.0),
                     ),
                   ),
-                  user?.country?.urlIcon == null ?
-                      Container():
-                      Image.network(
-                        user?.country?.urlIcon,
-                        width: 20.0,
-                        height: 15.0,
-                        fit: BoxFit.fill,
-                      ),
+                  if (user?.country?.urlIcon == null)
+                    Container()
+                  else
+                    Image.network(
+                      user?.country?.urlIcon ?? "",
+                      width: 20.0,
+                      height: 15.0,
+                      fit: BoxFit.fill,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      user?.assetTwitter != null ? _buildSocialButton(user.assetTwitter,"assets/images/twitter.png") : Container(),
-                      user?.assetYoutube != null ? _buildSocialButton(user.assetYoutube,"assets/images/youtube.png") : Container(),
-                      user?.assetTwitch != null ? _buildSocialButton(user.assetTwitch,"assets/images/twitch.png") : Container(),
+                      if (user?.assetTwitter != null)
+                        _buildSocialButton(
+                            user!.assetTwitter!, "assets/images/twitter.png",)
+                      else
+                        Container(),
+                      if (user?.assetYoutube != null)
+                        _buildSocialButton(
+                            user!.assetYoutube!, "assets/images/youtube.png",)
+                      else
+                        Container(),
+                      if (user?.assetTwitch != null)
+                        _buildSocialButton(
+                            user!.assetTwitch!, "assets/images/twitch.png",)
+                      else
+                        Container(),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
-            this.user == null ? Center(child: CircularProgressIndicator()) : Container()
+            if (user == null) const Center(child: CircularProgressIndicator()) else Container(),
           ],
         ),
       ),
     );
   }
 
-  Container _buildSocialButton(Asset asset, String imageAsset){
+  Container _buildSocialButton(Asset asset, String imageAsset) {
     return Container(
       child: IconButton(
-          onPressed: (){
+          onPressed: () {
             _launchURL(asset.uri);
           },
           icon: Image.asset(
@@ -102,17 +115,15 @@ class AppBarUserView extends StatelessWidget{
             width: 40.0,
             height: 40.0,
             fit: BoxFit.fill,
-          )
-      ),
+          ),),
     );
   }
 
   _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }
   }
-
 }

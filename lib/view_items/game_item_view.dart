@@ -10,16 +10,16 @@ class GameItemView extends StatelessWidget{
   final bool _showLoading;
   final Function(Game game) _onTap;
 
-  GameItemView(this._game,this._showLoading, this._onTap);
+  const GameItemView(this._game,this._showLoading, this._onTap);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GridTile(
         child: InkResponse(
           child: Card(
+            color: colors.blackCard,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
               child: Column(
                 children: <Widget>[
                   AspectRatio(
@@ -29,53 +29,56 @@ class GameItemView extends StatelessWidget{
                       child: Hero(
                         tag: _game.id,
                         child: FadeInImage.assetNetwork(
-                            image:_game?.coverLarge?.uri ?? "",
+                            image:_game.coverLarge.uri ?? "",
                             placeholder: AppConfig.placeholderImageAsset,
-                            fit:BoxFit.cover
+                            fit:BoxFit.cover,
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                AppConfig.placeholderImageAsset,
+                                fit: BoxFit.cover,
+                              );
+                            },
                         ),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      alignment:Alignment(0.0, -1.0),
-                      margin: EdgeInsets.only(top: 4.0),
+                      alignment:const Alignment(0.0, -1.0),
+                      margin: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         _game.name,
                         textAlign: TextAlign.center,
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14.0,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 2.0),
+                    margin: const EdgeInsets.only(top: 2.0),
                     child: Center(
                       child: Text(
                         _game.released,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 13.0,
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-            color: colors.blackCard,
           ),
           onTap: (){
             _onTap(_game);
           },
         ),
-
-        //_showLoading ? CircularProgressIndicator() : Container()
 
     );
   }

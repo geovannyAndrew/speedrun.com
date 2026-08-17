@@ -7,9 +7,7 @@ class ResponseError{
 
   Response response;
 
-  ResponseError(Response response){
-    this.response= response;
-  }
+  ResponseError(this.response);
 
   int get statusCode{
     return response.statusCode;
@@ -24,7 +22,7 @@ class ResponseError{
   }
 
   String get messageError{
-    var json = bodyJson;
+    final json = bodyJson;
     if(json["message"] != null){
       return json["message"].toString();
     }

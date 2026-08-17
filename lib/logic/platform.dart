@@ -7,19 +7,14 @@ class Platform{
   Platform(
       this.id,
       this.name,
-      this.released
+      this.released,
       );
 
   factory Platform.fromJson(Map<String, dynamic> json){
-    if(json!=null){
-      return Platform(
-          json["id"].toString(),
-          json["name"].toString(),
-          json["released"].toString()
-      );
-    }
-    else{
-      return null;
-    }
+    return Platform(
+        json["id"].toString(),
+        json["name"].toString(),
+        json["released"].toString(),
+    );
   }
 }

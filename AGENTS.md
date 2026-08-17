@@ -6,7 +6,6 @@ Flutter app for speedrun.com (unofficial). Browse verified speedruns, games, and
 
 ## Local Packages
 
-- `flutter_youtube/` — YouTube playback plugin (path dependency)
 - `loadmore/` — ListView pagination widget (path dependency)
 
 ## Development Commands
@@ -49,12 +48,9 @@ SplashScreen (2s) → HomeScreen (bottom nav: Runs | Games | Users)
 - **Codegen**: Models in `lib/logic/` use `freezed` + `json_serializable`. After editing a model, run `flutter pub run build_runner build`. Generated files are `*.freezed.dart` and `*.g.dart`.
 - **Offline cache**: `lib/utils/storage.dart` saves first page of runs/games/users to app documents directory via `path_provider`. Data is loaded from cache on startup, then refreshed from API.
 - **Pagination**: Runs and users use `LoadMore` widget. Games use manual `ScrollController` listener with a 500px threshold.
-- **YouTube integration**: `detail_run_screen.dart` imports `flutter_youtube` and `internal/keys.dart` (contains `API_KEY_YOUTUBE` — not in repo, must be provided).
 - **Linting**: Uses `lint` package (not `flutter_lints`). Analysis rules in `analysis_options.yaml` include `parameter_assignments` and `missing_required_param` as errors.
 
 ## Gotchas
 
 - SDK constraint is very old: `>=2.0.0-dev.68.0 <3.0.0` — pre-null-safety Dart.
-- `internal/keys.dart` is imported but not in the repo — required for YouTube API key.
 - The default `test/widget_test.dart` is the Flutter template test; it does not test this app.
-- `flutter_youtube` and `loadmore` are pinned to Flutter `<2.0.0` — may not work with modern Flutter.

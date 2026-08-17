@@ -75,3 +75,14 @@ build/
 lib/internal/*
 android/key.properties
 *.code-workspace
+
+# Environment variables
+env.json
+
+# Flutter auto-generated files
+.flutter-plugins-dependencies
+
+# Local package generated files
+loadmore/.metadata
+loadmore/android/
+loadmore/lib/main.dart

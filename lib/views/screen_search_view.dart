@@ -4,14 +4,14 @@ class ScreenSearchView extends StatefulWidget {
 
   final Widget body;
   final String title;
-  final String querySearch;
-  final Function(String query) onSearch;
-  final Function() onClose;
+  final String? querySearch;
+  final Function(String query)? onSearch;
+  final Function()? onClose;
 
-  ScreenSearchView({
-    Key key,
-    this.title,
-    this.body,
+  const ScreenSearchView({
+    Key? key,
+    required this.title,
+    required this.body,
     this.querySearch,
     this.onSearch,
     this.onClose,
@@ -19,16 +19,15 @@ class ScreenSearchView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ScreenSearchViewState();
   }
 
 }
 
 class ScreenSearchViewState extends State<ScreenSearchView>{
-  TextEditingController _filter;
-  Icon _searchIcon;
-  Widget _appBarTitle;
+  late TextEditingController _filter;
+  late Icon _searchIcon;
+  late Widget _appBarTitle;
   bool _visibleIcon = true;
 
   set visibleIcon(bool value) {
@@ -39,10 +38,9 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _filter = new TextEditingController(text: widget.querySearch);
-    if(this.widget.querySearch == null || this.widget.querySearch?.isEmpty == true){
+    _filter = TextEditingController(text: widget.querySearch);
+    if(widget.querySearch == null || widget.querySearch?.isEmpty == true){
       _configureAppBarTitle();
     }
     else{
@@ -51,33 +49,33 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
   }
 
   void _configureAppBarTitle(){
-    this._searchIcon = new Icon(Icons.search);
-    this._appBarTitle = Text(
-      widget.title ?? "",
-      style: TextStyle(
+    _searchIcon = const Icon(Icons.search);
+    _appBarTitle = Text(
+      widget.title,
+      style: const TextStyle(
           fontSize: 18.0,
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
       ),
     );
     _filter.clear();
   }
 
   void _configureAppBarSearch(){
-    this._searchIcon = new Icon(Icons.close);
-    this._appBarTitle = new TextField(
+    _searchIcon = const Icon(Icons.close);
+    _appBarTitle = TextField(
       autofocus: true,
       controller: _filter,
       cursorColor: Colors.white,
-      style: TextStyle(
+      style: const TextStyle(
           color: Colors.white,
-          fontSize: 16.0
+          fontSize: 16.0,
       ),
-      decoration: new InputDecoration(
-          prefixIcon: new Icon(Icons.search,color: Colors.white,),
+      decoration: const InputDecoration(
+          prefixIcon: Icon(Icons.search,color: Colors.white,),
           hintText: 'Search...',
           hintStyle: TextStyle(
-              color: Colors.white70
-          )
+              color: Colors.white70,
+          ),
       ),
       textInputAction: TextInputAction.search,
       onSubmitted: (query){
@@ -85,7 +83,7 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
           if(query.trim().isEmpty){
             _configureAppBarTitle();
           }
-          widget.onSearch(query);
+          widget.onSearch?.call(query);
         });
       },
     );
@@ -94,13 +92,12 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
         AppBar(
             title: _appBarTitle,
             centerTitle: true,
-            actions: widget.onSearch !=null ?
+            actions: widget.onSearch != null ?
             <Widget>[
               Visibility(
                 visible: _visibleIcon,
@@ -108,22 +105,22 @@ class ScreenSearchViewState extends State<ScreenSearchView>{
                   icon: _searchIcon,
                   onPressed: (){
                     setState(() {
-                      if (this._searchIcon.icon == Icons.search) {
+                      if (_searchIcon.icon == Icons.search) {
                         _configureAppBarSearch();
                       } else {
                         _filter.clear();
                         _configureAppBarTitle();
                         if(widget.onClose != null){
-                          widget.onClose();
+                          widget.onClose!();
                         }
                       }
                     });
                   },
                 ),
-              )
-            ] : null
+              ),
+            ] : null,
         ),
-        Expanded(child: widget.body)
+        Expanded(child: widget.body),
       ],
     );
   }
