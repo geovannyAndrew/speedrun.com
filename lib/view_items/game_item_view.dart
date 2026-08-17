@@ -30,7 +30,13 @@ class GameItemView extends StatelessWidget{
                         child: FadeInImage.assetNetwork(
                             image:_game?.coverLarge?.uri ?? "",
                             placeholder: AppConfig.placeholderImageAsset,
-                            fit:BoxFit.cover
+                            fit:BoxFit.cover,
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                AppConfig.placeholderImageAsset,
+                                fit: BoxFit.cover,
+                              );
+                            },
                         ),
                       ),
                     ),

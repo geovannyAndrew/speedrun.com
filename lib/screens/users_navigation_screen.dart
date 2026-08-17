@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speed_run/config/app_config.dart';
 import 'package:speed_run/logic/user.dart';
+import 'package:speed_run/network/response_error.dart';
 import 'package:speed_run/network/rest_api.dart';
 import 'package:speed_run/screens/detail_user_screen.dart';
 import 'package:speed_run/utils/after_layout.dart';
@@ -14,7 +15,7 @@ import 'package:speed_run/utils/storage.dart' as storage;
 class UsersNavigationScreen extends StatefulWidget {
   final users = <User>[];
   var _loadingItems = false;
-  var querySearch = "";
+  String querySearch = "";
   var _allLoaded = false;
 
   UsersNavigationScreen({Key? key}) : super(key: key);
@@ -93,9 +94,21 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
         onError: (error) {
           _screenSearchKey.currentState?.visibleIcon = true;
           widget._loadingItems = false;
-          Dialogs.showResponseErrorSnackbar(context, error);
+          _handleStatusError(error);
         });
     return future;
+  }
+
+  void _handleStatusError(ResponseError error) {
+    switch (error.statusCode) {
+      case 400:
+        Dialogs.showSnackbar(context,
+            "Please make sure to use 3 or more characters in the search");
+        break;
+      default:
+        Dialogs.showResponseErrorSnackbar(context, error);
+    }
+    Dialogs.showResponseErrorSnackbar(context, error);
   }
 
   @override
@@ -108,30 +121,30 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
       },
       onClose: _restoreUsers,
       querySearch: widget.querySearch,
-      body: Container(
+      body: DecoratedBox(
+        decoration: BoxDecoration(color: colors.blackBackground),
         child: Center(
             child: RefreshIndicator(
           key: _refreshIndicatorKey,
+          onRefresh: _onRefresh,
           child: LoadMore(
             textBuilder: DefaultLoadMoreTextBuilder.english,
             whenEmptyLoad: false,
-            delegate: DefaultLoadMoreDelegate(),
+            onLoadMore: _loadNextItems,
+            isFinish: widget._allLoaded,
             child: ListView.builder(
               itemCount: widget.users.length,
-              padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
-                var item = widget.users[index];
+                final item = widget.users[index];
                 return UserItemView(item, false, (user) {
                   _goToUserDetal(user);
                 });
               },
             ),
-            onLoadMore: _loadNextItems,
-            isFinish: widget._allLoaded,
           ),
-          onRefresh: _onRefresh,
         )),
-        decoration: BoxDecoration(color: colors.blackBackground),
       ),
     );
   }
@@ -143,7 +156,7 @@ class UsersNavigationScreenState extends State<UsersNavigationScreen>
 
   @override
   void afterFirstLayout(BuildContext context) {
-    if (widget.users.length == 0) {
+    if (widget.users.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
   }

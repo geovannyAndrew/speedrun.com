@@ -101,7 +101,15 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                 placeholder: AppConfig.placeholderImageAsset,
                                 width: 50.0,
                                 height: 50.0,
-                                fit:BoxFit.cover),
+                                fit:BoxFit.cover,
+                                imageErrorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    AppConfig.placeholderImageAsset,
+                                    width: 50.0,
+                                    height: 50.0,
+                                    fit: BoxFit.cover,
+                                  );
+                                },),
                             ),
                           Expanded(
                               child: Container(
@@ -121,11 +129,13 @@ class _RunDetailScreenState extends State<RunDetailScreen> {
                                             ),
                                           ),
                                         ),
-                                        Image.network(
-                                          _run?.player?.country?.urlIcon ?? "",
+                                        SizedBox(
                                           width: 15.0,
                                           height: 13.0,
-                                          fit: BoxFit.fill,
+                                          child: Image.network(
+                                            _run?.player?.country?.urlIcon ?? "",
+                                            fit: BoxFit.fill,
+                                          ),
                                         )
                                       ],
                                     ),

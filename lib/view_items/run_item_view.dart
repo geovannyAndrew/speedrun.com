@@ -24,19 +24,26 @@ class RunItemView extends StatelessWidget{
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Hero(
-                        tag: _run.idTag,
-                        child: FadeInImage.assetNetwork(
-                            image:_run.game?.coverMedium?.uri ?? "",
-                            placeholder: AppConfig.placeholderImageAsset,
-                            width: 80.0,
-                            height: 80.0,
-                            fit:BoxFit.cover),
+                    SizedBox(
+                      width: 80.0,
+                      height: 80.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4.0),
+                        child: Hero(
+                          tag: _run.idTag,
+                          child: FadeInImage.assetNetwork(
+                              image:_run.game?.coverMedium?.uri ?? "",
+                              placeholder: AppConfig.placeholderImageAsset,
+                              fit:BoxFit.cover,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  AppConfig.placeholderImageAsset,
+                                  fit: BoxFit.cover,
+                                );
+                              },),
+                        ),
                       ),
                     ),
                     Expanded(

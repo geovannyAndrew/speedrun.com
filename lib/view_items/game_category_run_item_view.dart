@@ -28,7 +28,15 @@ class GameCategoryRunItemView extends StatelessWidget{
                           placeholder: AppConfig.placeholderImageAsset,
                           width: 50.0,
                           height: 50.0,
-                          fit:BoxFit.cover),
+                          fit:BoxFit.cover,
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              AppConfig.placeholderImageAsset,
+                              width: 50.0,
+                              height: 50.0,
+                              fit: BoxFit.cover,
+                            );
+                          },),
                     ),
                     Expanded(
                         child: Container(

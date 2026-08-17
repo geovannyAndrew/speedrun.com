@@ -87,8 +87,8 @@ class RestAPI {
       {required String id,
       required Function(Run) onSuccess,
       required Function(ResponseError) onError}) async {
-    final response = await http
-        .get(Uri.parse("${urlApi}runs/$id?embed=players,game,category,platform"));
+    final response = await http.get(
+        Uri.parse("${urlApi}runs/$id?embed=players,game,category,platform"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var run = Run.fromJson(json["data"] as Map<String, dynamic>);
@@ -128,7 +128,8 @@ class RestAPI {
       {required String id,
       required Function(Game) onSuccess,
       required Function(ResponseError) onError}) async {
-    final response = await http.get(Uri.parse("${urlApi}games/$id?embed=platforms"));
+    final response =
+        await http.get(Uri.parse("${urlApi}games/$id?embed=platforms"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var game = Game.fromJson(json["data"] as Map<String, dynamic>);
@@ -142,7 +143,8 @@ class RestAPI {
       {required String idGame,
       required Function(List<Category>) onSuccess,
       required Function(ResponseError) onError}) async {
-    final response = await http.get(Uri.parse("${urlApi}games/$idGame/categories"));
+    final response =
+        await http.get(Uri.parse("${urlApi}games/$idGame/categories"));
     if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
       var jsonData = json["data"] as List;
@@ -162,7 +164,9 @@ class RestAPI {
       required Function(ResponseError) onError}) async {
     String url =
         "${urlApi}users?offset=$offset&max=${AppConfig.itemsPerPage}&orderby=signup";
-    if (query != null) {
+    if (query == null || query.isEmpty) {
+      url += "&name=abc";
+    } else {
       url += "&name=$query";
     }
     final response = await http.get(Uri.parse(url));

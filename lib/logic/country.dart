@@ -12,7 +12,7 @@ class Location {
   }
 
   String get urlIcon {
-    return "https://www.countryflags.io/$code/flat/64.png";
+    return "https://flagsapi.com/${code.toUpperCase()}/flat/64.png";
   }
 
   String get name {

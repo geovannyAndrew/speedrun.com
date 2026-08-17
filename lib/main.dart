@@ -29,12 +29,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: colors.blackDark,
         primaryColorDark: Colors.black,
-        colorScheme: ColorScheme.dark().copyWith(
+        colorScheme: const ColorScheme.dark().copyWith(
           secondary: colors.greenAccent,
         ),
         dialogBackgroundColor: colors.blackBackground,
         fontFamily: 'OpenSans',
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           displaySmall: TextStyle(
               fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.white),
           titleLarge: TextStyle(

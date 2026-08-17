@@ -3,7 +3,7 @@ import 'package:speed_run/logic/asset.dart';
 import 'package:speed_run/logic/color_style.dart';
 import 'package:speed_run/logic/country.dart';
 import 'package:speed_run/logic/names.dart';
-import 'package:speed_run/network/rest_api.dart';
+import 'package:speed_run/logic/user_assets.dart';
 
 class User {
   final String id;
@@ -14,12 +14,13 @@ class User {
   final Asset? assetTwitch;
   final Asset? assetYoutube;
   final Asset? assetTwitter;
+  final UserAssets? assets;
 
   User(this.id, this.names, this.country, this.region, this.colorStyle,
-      this.assetTwitch, this.assetYoutube, this.assetTwitter);
+      this.assetTwitch, this.assetYoutube, this.assetTwitter, this.assets);
 
-  String get urlIcon {
-    return "${RestAPI.host}/themes/user/$name/image.png";
+  String? get urlIcon {
+    return assets?.imageUri;
   }
 
   String get name {
@@ -69,6 +70,9 @@ class User {
             : null,
         json["twitter"] != null
             ? Asset.fromJson(json["twitter"] as Map<String, dynamic>)
+            : null,
+        json["assets"] != null
+            ? UserAssets.fromJson(json["assets"] as Map<String, dynamic>)
             : null);
   }
 

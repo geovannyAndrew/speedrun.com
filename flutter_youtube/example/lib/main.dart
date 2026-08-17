@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 
+const String apiKey = String.fromEnvironment('YOUTUBE_API_KEY');
+
 void main() => runApp(new MyApp());
 
 class MyApp extends StatefulWidget {
@@ -19,7 +21,7 @@ class _MyAppState extends State<MyApp> {
 
   void playYoutubeVideo() {
     FlutterYoutube.playYoutubeVideoByUrl(
-      apiKey: "YOUR_API_KEY",
+      apiKey: apiKey,
       videoUrl: "https://www.youtube.com/watch?v=fhWaJi1Hsfo",
     );
   }
@@ -32,7 +34,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoByUrl(
-      apiKey: "YOUR_API_KEY",
+      apiKey: apiKey,
       videoUrl: textEditingControllerUrl.text,
     );
   }
@@ -45,7 +47,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoById(
-      apiKey: "YOUR_API_KEY",
+      apiKey: apiKey,
       videoId: textEditingControllerId.text,
     );
   }
@@ -58,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     FlutterYoutube.playYoutubeVideoById(
-        apiKey: "YOUR_API_KEY",
+        apiKey: apiKey,
         videoId: textEditingControllerId.text,
         autoPlay: true);
   }

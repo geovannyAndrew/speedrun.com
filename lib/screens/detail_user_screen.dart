@@ -116,14 +116,16 @@ class _UserDetailScreenState extends State<UserDetailScreen>
               child: RefreshIndicator(
             key: _refreshIndicatorKey,
             displacement: 60.0,
+            onRefresh: _onRefresh,
             child: ListView.builder(
               key: PageStorageKey<String>(_user!.id),
-              itemCount: this._runs.length,
-              padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              itemCount: _runs.length,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               itemBuilder: (BuildContext context, int index) {
-                var run = this._runs[index];
+                final run = _runs[index];
                 final isLastElement =
-                    index >= this._runs.length - 1 && !this._allLoaded;
+                    index >= _runs.length - 1 && !this._allLoaded;
                 if (isLastElement) {
                   _loadNextItems();
                 }
@@ -132,7 +134,6 @@ class _UserDetailScreenState extends State<UserDetailScreen>
                 });
               },
             ),
-            onRefresh: _onRefresh,
           )),
         ));
   }

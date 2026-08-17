@@ -22,14 +22,13 @@ dependencies:
   path_provider: ^2.0.0
   timeago: ^3.0.0
   url_launcher: ^6.0.0
+  loadmore: ^2.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_youtube:
     path: flutter_youtube
-  loadmore:
-    path: loadmore
   build_runner: ^2.0.0
   flutter_launcher_icons: ^0.10.0
   freezed: ^2.0.0

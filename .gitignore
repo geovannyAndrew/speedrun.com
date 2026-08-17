@@ -76,6 +76,9 @@ lib/internal/*
 android/key.properties
 *.code-workspace
 
+# Environment variables
+env.json
+
 # Flutter auto-generated files
 .flutter-plugins-dependencies
 
