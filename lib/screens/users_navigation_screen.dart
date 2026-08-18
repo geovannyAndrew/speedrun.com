@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/data/feed_state.dart';
 import 'package:speed_run/di/providers.dart';
 import 'package:speed_run/logic/user.dart';
@@ -24,9 +23,11 @@ class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   String? _currentQuery;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController()..addListener(_loadNextItems);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFeed();
@@ -54,16 +55,14 @@ class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
     ref.read(usersFeedProvider.notifier).loadInitial(query: null);
   }
 
-  Future<bool> _loadNextItems() async {
+  void _loadNextItems() {
     final feedState = ref.read(usersFeedProvider);
-    if (!feedState.isLoadingMore &&
+    if (_scrollController.position.extentAfter < 500 &&
+        !feedState.isLoadingMore &&
         feedState.hasMore &&
         feedState.items.length > 10) {
-      await ref.read(usersFeedProvider.notifier).loadMore();
-    } else {
-      await Future.delayed(const Duration(milliseconds: 100));
+      ref.read(usersFeedProvider.notifier).loadMore();
     }
-    return true;
   }
 
   Future<void> _onRefresh() {
@@ -104,22 +103,17 @@ class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: _onRefresh,
-            child: LoadMore(
-              textBuilder: DefaultLoadMoreTextBuilder.english,
-              whenEmptyLoad: false,
-              onLoadMore: _loadNextItems,
-              isFinish: !feedState.hasMore,
-              child: ListView.builder(
-                itemCount: feedState.items.length,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  final item = feedState.items[index];
-                  return UserItemView(item, false, (user) {
-                    _goToUserDetail(user);
-                  });
-                },
-              ),
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: feedState.items.length,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              itemBuilder: (BuildContext context, int index) {
+                final item = feedState.items[index];
+                return UserItemView(item, false, (user) {
+                  _goToUserDetail(user);
+                });
+              },
             ),
           ),
         ),
@@ -141,5 +135,11 @@ class _UsersNavigationScreenState extends ConsumerState<UsersNavigationScreen>
     if (feedState.items.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_loadNextItems);
+    super.dispose();
   }
 }

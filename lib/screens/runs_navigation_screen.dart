@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:loadmore/loadmore.dart';
 import 'package:speed_run/data/feed_state.dart';
 import 'package:speed_run/di/providers.dart';
 import 'package:speed_run/logic/run.dart';
@@ -23,13 +22,25 @@ class _RunsNavigationScreenState extends ConsumerState<RunsNavigationScreen>
     with AfterLayoutMixin<RunsNavigationScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  late ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController()..addListener(_loadNextItems);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFeed();
     });
+  }
+
+  void _loadNextItems() {
+    final feedState = ref.read(runsFeedProvider);
+    if (_scrollController.position.extentAfter < 500 &&
+        !feedState.isLoadingMore &&
+        feedState.hasMore &&
+        feedState.items.length > 10) {
+      ref.read(runsFeedProvider.notifier).loadMore();
+    }
   }
 
   void _initializeFeed() {
@@ -41,18 +52,6 @@ class _RunsNavigationScreenState extends ConsumerState<RunsNavigationScreen>
 
   Future<void> _onRefresh() {
     return ref.read(runsFeedProvider.notifier).refresh();
-  }
-
-  Future<bool> _loadNextItems() async {
-    final feedState = ref.read(runsFeedProvider);
-    if (!feedState.isLoadingMore &&
-        feedState.hasMore &&
-        feedState.items.length > 10) {
-      await ref.read(runsFeedProvider.notifier).loadMore();
-    } else {
-      await Future.delayed(const Duration(milliseconds: 100));
-    }
-    return true;
   }
 
   @override
@@ -73,22 +72,17 @@ class _RunsNavigationScreenState extends ConsumerState<RunsNavigationScreen>
           child: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: _onRefresh,
-            child: LoadMore(
-              textBuilder: DefaultLoadMoreTextBuilder.english,
-              whenEmptyLoad: false,
-              delegate: const DefaultLoadMoreDelegate(),
-              onLoadMore: _loadNextItems,
-              child: ListView.builder(
-                itemCount: feedState.items.length,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                itemBuilder: (BuildContext context, int index) {
-                  final run = feedState.items[index];
-                  return RunItemView(run, false, (run) {
-                    _goToRunDetail(run);
-                  });
-                },
-              ),
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: feedState.items.length,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              itemBuilder: (BuildContext context, int index) {
+                final run = feedState.items[index];
+                return RunItemView(run, false, (run) {
+                  _goToRunDetail(run);
+                });
+              },
             ),
           ),
         ),
@@ -111,5 +105,11 @@ class _RunsNavigationScreenState extends ConsumerState<RunsNavigationScreen>
     if (feedState.items.isEmpty) {
       _refreshIndicatorKey.currentState?.show();
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_loadNextItems);
+    super.dispose();
   }
 }

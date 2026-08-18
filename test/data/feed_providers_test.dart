@@ -23,7 +23,8 @@ class MockRepository implements SpeedrunRepository {
   Exception? errorToThrow;
 
   @override
-  Future<List<Run>> getRuns({required int offset, bool forceRefresh = false}) async {
+  Future<List<Run>> getRuns(
+      {required int offset, bool forceRefresh = false}) async {
     if (errorToThrow != null) throw errorToThrow!;
     return onGetRuns?.call() ?? [];
   }
@@ -92,29 +93,51 @@ class MockRepository implements SpeedrunRepository {
 }
 
 Run _makeRun(String id) => Run(
-  id, null, null, null, null,
-  Category('cat1', 'Any%', '', '', ''),
-  Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0), Asset('', 0, 0), null, []),
-  [User('user1', Names('Test User', '', ''), null, null, null, null, null, null, null)],
-  null,
-);
+      id,
+      null,
+      null,
+      null,
+      null,
+      Category('cat1', 'Any%', '', '', ''),
+      Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0),
+          Asset('', 0, 0), null, []),
+      [
+        User('user1', Names('Test User', '', ''), null, null, null, null, null,
+            null, null)
+      ],
+      null,
+    );
 
 List<Run> _makeRuns(int count) {
   return List.generate(count, (i) => _makeRun('run$i'));
 }
 
 Game _makeGame(String id) => Game(
-  id, Names('Test Game', '', ''), '', '',
-  Asset('', 0, 0), Asset('', 0, 0), null, [],
-);
+      id,
+      Names('Test Game', '', ''),
+      '',
+      '',
+      Asset('', 0, 0),
+      Asset('', 0, 0),
+      null,
+      [],
+    );
 
 List<Game> _makeGames(int count) {
   return List.generate(count, (i) => _makeGame('game$i'));
 }
 
 User _makeUser(String id) => User(
-  id, Names('Test User', '', ''), null, null, null, null, null, null, null,
-);
+      id,
+      Names('Test User', '', ''),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    );
 
 List<User> _makeUsers(int count) {
   return List.generate(count, (i) => _makeUser('user$i'));
@@ -236,7 +259,8 @@ void main() {
   group('CategoryRunsFeedNotifier', () {
     test('loadInitial fetches category runs', () async {
       final repo = MockRepository();
-      repo.onGetCategoryRuns = () => PaginatedResponse(_makeRuns(50), true, null);
+      repo.onGetCategoryRuns =
+          () => PaginatedResponse(_makeRuns(50), true, null);
       final notifier = CategoryRunsFeedNotifier(repo, 'cat1');
 
       await notifier.loadInitial();

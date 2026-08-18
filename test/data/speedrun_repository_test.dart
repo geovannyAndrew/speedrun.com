@@ -89,21 +89,43 @@ class MockRestAPI implements RestAPI {
 }
 
 Run _makeRun(String id) => Run(
-  id, null, null, null, null,
-  Category('cat1', 'Any%', '', '', ''),
-  Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0), Asset('', 0, 0), null, []),
-  [User('user1', Names('Test User', '', ''), null, null, null, null, null, null, null)],
-  null,
-);
+      id,
+      null,
+      null,
+      null,
+      null,
+      Category('cat1', 'Any%', '', '', ''),
+      Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0),
+          Asset('', 0, 0), null, []),
+      [
+        User('user1', Names('Test User', '', ''), null, null, null, null, null,
+            null, null)
+      ],
+      null,
+    );
 
 Game _makeGame(String id) => Game(
-  id, Names('Test Game', '', ''), '', '',
-  Asset('', 0, 0), Asset('', 0, 0), null, [],
-);
+      id,
+      Names('Test Game', '', ''),
+      '',
+      '',
+      Asset('', 0, 0),
+      Asset('', 0, 0),
+      null,
+      [],
+    );
 
 User _makeUser(String id) => User(
-  id, Names('Test User', '', ''), null, null, null, null, null, null, null,
-);
+      id,
+      Names('Test User', '', ''),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    );
 
 void main() {
   group('SpeedrunRepository', () {
@@ -119,7 +141,8 @@ void main() {
 
     group('getRuns', () {
       test('fetches from API when cache is empty', () async {
-        api.onGetRuns = () => PaginatedResponse([_makeRun('api-run')], false, null);
+        api.onGetRuns =
+            () => PaginatedResponse([_makeRun('api-run')], false, null);
 
         final result = await repository.getRuns(offset: 0);
 
@@ -127,7 +150,8 @@ void main() {
       });
 
       test('skips cache when forceRefresh is true', () async {
-        api.onGetRuns = () => PaginatedResponse([_makeRun('fresh-run')], false, null);
+        api.onGetRuns =
+            () => PaginatedResponse([_makeRun('fresh-run')], false, null);
 
         final result = await repository.getRuns(offset: 0, forceRefresh: true);
 
@@ -153,7 +177,8 @@ void main() {
 
     group('getGames', () {
       test('fetches from API on search query', () async {
-        api.onGetGames = () => PaginatedResponse([_makeGame('search-game')], false, null);
+        api.onGetGames =
+            () => PaginatedResponse([_makeGame('search-game')], false, null);
 
         final result = await repository.getGames(offset: 0, query: 'mario');
 
@@ -163,9 +188,11 @@ void main() {
 
     group('getCategoryRuns', () {
       test('returns runs from API', () async {
-        api.onGetCategoryRuns = () => PaginatedResponse([_makeRun('cat-run')], true, null);
+        api.onGetCategoryRuns =
+            () => PaginatedResponse([_makeRun('cat-run')], true, null);
 
-        final result = await repository.getCategoryRuns(offset: 0, idCategory: 'cat1');
+        final result =
+            await repository.getCategoryRuns(offset: 0, idCategory: 'cat1');
 
         expect(result.items.first.id, equals('cat-run'));
         expect(result.hasMore, isTrue);
@@ -174,7 +201,8 @@ void main() {
 
     group('getUserRuns', () {
       test('returns runs from API', () async {
-        api.onGetUserRuns = () => PaginatedResponse([_makeRun('user-run')], false, null);
+        api.onGetUserRuns =
+            () => PaginatedResponse([_makeRun('user-run')], false, null);
 
         final result = await repository.getUserRuns(offset: 0, idUser: 'user1');
 

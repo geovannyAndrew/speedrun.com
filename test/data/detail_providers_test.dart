@@ -18,33 +18,39 @@ class MockRepository implements SpeedrunRepository {
   Exception? errorToThrow;
 
   @override
-  Future<List<Run>> getRuns({required int offset, bool forceRefresh = false}) async => [];
+  Future<List<Run>> getRuns(
+          {required int offset, bool forceRefresh = false}) async =>
+      [];
 
   @override
   Future<List<Game>> getGames({
     required int offset,
     String? query,
     bool forceRefresh = false,
-  }) async => [];
+  }) async =>
+      [];
 
   @override
   Future<List<User>> getUsers({
     required int offset,
     String? query,
     bool forceRefresh = false,
-  }) async => [];
+  }) async =>
+      [];
 
   @override
   Future<PaginatedResponse<Run>> getCategoryRuns({
     required int offset,
     required String idCategory,
-  }) async => PaginatedResponse([], false, null);
+  }) async =>
+      PaginatedResponse([], false, null);
 
   @override
   Future<PaginatedResponse<Run>> getUserRuns({
     required int offset,
     required String idUser,
-  }) async => PaginatedResponse([], false, null);
+  }) async =>
+      PaginatedResponse([], false, null);
 
   @override
   Future<Run> getRun({required String id}) async {
@@ -72,21 +78,43 @@ class MockRepository implements SpeedrunRepository {
 }
 
 Run _makeRun(String id) => Run(
-  id, null, null, null, null,
-  Category('cat1', 'Any%', '', '', ''),
-  Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0), Asset('', 0, 0), null, []),
-  [User('user1', Names('Test User', '', ''), null, null, null, null, null, null, null)],
-  null,
-);
+      id,
+      null,
+      null,
+      null,
+      null,
+      Category('cat1', 'Any%', '', '', ''),
+      Game('game1', Names('Test', '', ''), '', '', Asset('', 0, 0),
+          Asset('', 0, 0), null, []),
+      [
+        User('user1', Names('Test User', '', ''), null, null, null, null, null,
+            null, null)
+      ],
+      null,
+    );
 
 Game _makeGame(String id) => Game(
-  id, Names('Test Game', '', ''), '', '',
-  Asset('', 0, 0), Asset('', 0, 0), null, [],
-);
+      id,
+      Names('Test Game', '', ''),
+      '',
+      '',
+      Asset('', 0, 0),
+      Asset('', 0, 0),
+      null,
+      [],
+    );
 
 User _makeUser(String id) => User(
-  id, Names('Test User', '', ''), null, null, null, null, null, null, null,
-);
+      id,
+      Names('Test User', '', ''),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    );
 
 void main() {
   group('Detail Providers', () {
@@ -159,7 +187,8 @@ void main() {
 
       addTearDown(container.dispose);
 
-      final result = await container.read(gameCategoriesProvider('game1').future);
+      final result =
+          await container.read(gameCategoriesProvider('game1').future);
 
       expect(result.length, equals(2));
       expect(result.first.name, equals('Any%'));

@@ -23,31 +23,14 @@ class GameDetailScreen extends ConsumerStatefulWidget {
   ConsumerState<GameDetailScreen> createState() => _GameDetailScreenState();
 }
 
-class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
+class _GameDetailScreenState extends ConsumerState<GameDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 0, vsync: this);
     Future.microtask(() {
       ref.read(gameDetailProvider(widget.gameId));
       ref.read(gameCategoriesProvider(widget.gameId));
     });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  void _updateTabController(int length) {
-    if (_tabController.length != length) {
-      _tabController.dispose();
-      _tabController = TabController(length: length, vsync: this);
-    }
   }
 
   @override
@@ -111,8 +94,6 @@ class _GameDetailScreenState extends ConsumerState<GameDetailScreen>
         ),
       );
     }
-
-    _updateTabController(categories.length);
 
     return Scaffold(
       backgroundColor: colors.blackBackground,
