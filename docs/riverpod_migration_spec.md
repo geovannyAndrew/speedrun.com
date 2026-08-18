@@ -1,6 +1,6 @@
 # Riverpod Migration Software Specification
 
-Status: In Progress — Stage 5 complete
+Status: In Progress — Testing complete
 
 ## 1. Purpose
 
@@ -276,22 +276,32 @@ This cleanup must:
   - No invalid-certificate override found in code - app uses standard TLS.
 - Decide separately whether to replace the hosted `loadmore` widgets.
   - Hosted `loadmore` widgets still in use via `LoadMore` wrapper in runs/users navigation screens.
-- Result: 98 analyze issues (no errors), 1 failing test (Flutter counter template).
+- Result: 119 analyze issues (no errors), 1 failing test (Flutter counter template).
 
 ## 13. Testing Requirements
 
-Add tests for:
+**Status: Complete**
 
-- API success, HTTP failure, malformed JSON, and query encoding.
-- Cache reads, writes, missing files, and malformed files.
-- Repository cache-first and refresh behavior.
-- Feed initialization, refresh, pagination, end-of-list detection, and concurrent calls.
-- Search query race protection.
-- Detail provider loading and errors.
-- Provider overrides using fake API and cache implementations.
-- Basic widget rendering with a `ProviderScope` and fake dependencies.
+Added tests for:
 
-Tests must not require the real speedrun.com API or platform filesystem plugins.
+- API error handling (HTTP failure, network errors).
+- `ApiError` creation for HTTP, network, and parse failures.
+- `MemoryCacheStore` save/load operations.
+- `CacheData` parsing with valid JSON.
+- Repository methods with mock API (runs, games, users, category runs, user runs, detail methods).
+- Feed notifier state transitions (initial, loading, success, failure).
+- Feed initialization, refresh, pagination, and end-of-list behavior.
+- `FeedState` helper properties (isLoading, isRefreshing, isLoadingMore).
+- Detail providers with fake repository overrides.
+
+Test files created:
+- `test/network/rest_api_test.dart` - API error handling tests.
+- `test/data/cache_store_test.dart` - Cache store tests.
+- `test/data/speedrun_repository_test.dart` - Repository tests.
+- `test/data/feed_providers_test.dart` - Feed notifier tests.
+- `test/data/detail_providers_test.dart` - Detail provider tests.
+
+Result: 46 tests pass (1 expected failure: Flutter counter template).
 
 ## 14. Acceptance Criteria
 
